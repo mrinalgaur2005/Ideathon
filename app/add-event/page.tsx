@@ -1,6 +1,9 @@
-export default function addEventPage() {
+import dbConnect from "@/lib/connectDb"
+
+export default async function addEventPage() {
 
   return (
+
     <>
       <div className="flex flex-col w-full h-screen items-center  justify-center">
         <div className="flex flex-col w-2/5 h-4/5 justify-evenly items-center border-4 border-solid rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50 text-lg bg-gradient-to-br from-gray-200/60 to-gray-50/60">
