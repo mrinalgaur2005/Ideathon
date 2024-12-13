@@ -7,7 +7,7 @@ export default function EventsPage() {
 
   return (
     <>
-      <div className="flex flex-row w-full ">
+      <div className="flex flex-row w-full">
         <div className="flex flex-col w-4/5 items-center">
           <EventCard/>
           <EventCard />
