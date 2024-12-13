@@ -10,7 +10,7 @@ export default function EventCard() {
           className="h-full w-1/3 object-cover"
         />
         <div className="flex flex-col ml-4 w-2/3 h-full">
-          <div className="flex flex-row justify-between w-full h-1/6 mt-4 ">
+          <div className="flex flex-row justify-between w-full h-1/6 bg-green-300">
             <div className="text-3xl font-bold">
               Heading
             </div>
@@ -18,11 +18,10 @@ export default function EventCard() {
               Club
             </div>
           </div>
-          <div className="w-full mt-2 h-2/5 pr-2">
-            The sun dipped below the horizon, painting the sky with hues of orange and pink. A gentle breeze carried the
-            scent of blooming flowers, while leaves rustled softly in the tree. while leaves rustled softly in the tree.
+          <div className="w-full h-1/2 pt-1 pr-2 bg-red-400 text-wrap overflow-hidden contain-content">
+            The sun dipped below the horizon, painting the sky with hues of orange and pink. A gentle breeze carried the scent of blooming flowers, while leaves rustled softly in the tree. while leaves rustled softly in the tree. The sun dipped below the horizon, painting the sky with hues of orange and pink. A gentle breeze carried the scent of blooming flowers, while leaves rustled softly in the tree. while leaves rustled softly in the tree.
           </div>
-          <div className="flex flex-row w-full h-1/6 font-bold">
+          <div className="flex flex-row w-full h-1/6 items-center font-bold bg-blue-200">
             <div className="text-xl font-bold">
               Tags:
             </div>
@@ -30,7 +29,7 @@ export default function EventCard() {
             <Tag />
             <Tag />
           </div>
-          <div className="flex flex-row justify-between items-center w-full h-1/6">
+          <div className="flex flex-row justify-between items-center w-full h-1/6 bg-green-300">
             <div className="text-xl font-bold">
               Time:
             </div>
