@@ -1,4 +1,4 @@
-import ClubCard from "@/components/student/clubCard";
+import ClubCard from "../student/clubCard";
 
 export default function Profile() {
 
