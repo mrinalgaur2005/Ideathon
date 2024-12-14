@@ -1,6 +1,6 @@
 "use client"
-import EventCard from "@/components/events/card";
-import FilterBox from "@/components/events/filterbox";
+import EventCard from "../../components/events/card"
+import FilterBox from "../../components/events/filterbox"
 
 export default function EventsPage() {
 

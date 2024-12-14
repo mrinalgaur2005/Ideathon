@@ -1,4 +1,4 @@
-import dbConnect from "@/lib/connectDb"
+import dbConnect from "../../lib/connectDb";
 
 export default async function addEventPage() {
   await dbConnect();

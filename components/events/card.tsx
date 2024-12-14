@@ -1,4 +1,4 @@
-import Tag from "@/components/events/tag";
+import Tag from "./tag";
 
 export default function EventCard() {
   return (
