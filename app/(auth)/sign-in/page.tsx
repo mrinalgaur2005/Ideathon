@@ -10,13 +10,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
+} from 'components/ui/form';
+import { Button } from '../../../components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/hooks/use-toast';
-import { signInSchema } from '@/schemas/signInSchema';
+import { useToast } from '../../../hooks/use-toast';
+import { signInSchema } from '../../../schemas/signInSchema';
 
 
 export default function SignInForm() {

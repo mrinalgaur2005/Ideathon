@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '../../../../components/ui/button';
 import {
   Form,
   FormField,
@@ -9,14 +9,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import { ApiResponse } from '@/types/ApiResponse';
+import { useToast } from '../../../../hooks/use-toast';
+import { ApiResponse } from '../../../../types/ApiResponse';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios, { AxiosError } from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { verifySchema } from '@/schemas/verifySchema';
+import { verifySchema } from '../../../../schemas/verifySchema';
 
 export default function VerifyAccount() {
   const router = useRouter();

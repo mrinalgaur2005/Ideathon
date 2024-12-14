@@ -6,31 +6,46 @@ type MarksStudentMap = {
 };
 
 export interface User extends Document {
+    username: string;
     email: string;
     password: string;
-    is_teacher: boolean;
-    is_admin: boolean;
+    verifyCode: string;
+    verifyCodeExpiry: Date;
+    isVerified: boolean;
+    isTeacher: boolean;
 }
 
 const UserSchema: Schema<User> = new Schema({
+    username: {
+        type: String,
+        required: [true, 'username is required'],
+        unique: true,
+    },
     email: {
         type: String,
-        required: [true, "Email is required"],
-        trim: true,
+        required: [true, 'email is required'],
         unique: true,
-        match: [/.+\@.+\..+/, 'Please use a valid email address'],
+        match: [/^[a-zA-Z0-9._%+-]+@pec\.edu\.in$/, 'please use college email id'],
     },
     password: {
         type: String,
         required: [true, "Password is required"],
     },
-    is_teacher: {
+    verifyCode: {
+        type: String,
+        required: [true, 'Verification Code is required'],
+    },
+    verifyCodeExpiry: {
+        type: Date,
+        required: [true, 'Expiry is required'],
+    },
+    isVerified: {
         type: Boolean,
         default: false,
     },
-    is_admin: {
+    isTeacher: {
         type: Boolean,
-        default: false,
+        default: false, // Default to false, only true if admin updates the field
     },
 });
 

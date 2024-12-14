@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
-<<<<<<< HEAD
-=======
     "target": "ES2017",
->>>>>>> upstream/main
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -22,11 +19,7 @@
       }
     ],
     "paths": {
-<<<<<<< HEAD
-      "@/*": ["./src/*"]
-=======
-      "@/*": ["./*"]
->>>>>>> upstream/main
+      "@/*": ["./src/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
