@@ -1,4 +1,4 @@
-import Profile from "@/components/student/profile";
+import Profile from "../../components/student/profile"
 
 export default function Test() {
 
