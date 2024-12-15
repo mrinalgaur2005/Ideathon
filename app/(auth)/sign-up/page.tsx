@@ -22,6 +22,7 @@ import axios, { AxiosError } from 'axios';
 import { Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signUpSchema } from '../../../schemas/signUpSchema';
+import { Checkbox } from '../../../components/ui/checkbox';
 
 export default function SignUpForm() {
   const [usernameMessage, setUsernameMessage] = useState('');
@@ -38,6 +39,7 @@ export default function SignUpForm() {
       username: '',
       email: '',
       password: '',
+      isStudent: false, // Default value for the checkbox
     },
   });
 
@@ -161,6 +163,21 @@ export default function SignUpForm() {
                 </FormItem>
               )}
             />
+              <FormField
+                  name="isStudent"
+                  control={form.control}
+                  render={({ field }) => (
+                  <FormItem>
+                  <FormLabel>Are you a student?</FormLabel>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={(checked) => field.onChange(checked)}
+                  />
+                  <FormMessage />
+                  </FormItem>
+                  )}
+              />
+            
             <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>

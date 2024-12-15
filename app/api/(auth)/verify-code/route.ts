@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '../../../lib/connectDb';
-import { UserModel } from '../../../model/User';
+import dbConnect from '../../../../lib/connectDb';
+import { UserModel } from '../../../../model/User';
 
 export async function POST(request: NextRequest) {
     // Connect to the database

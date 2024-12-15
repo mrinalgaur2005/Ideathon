@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
+import { v4 as uuidv4 } from 'uuid'
 
 type MarksStudentMap = {
     midsem: Record<string, number>;
@@ -12,6 +13,7 @@ export interface User extends Document {
     verifyCode: string;
     verifyCodeExpiry: Date;
     isVerified: boolean;
+    isStudent:boolean
     isTeacher: boolean;
 }
 
@@ -43,11 +45,60 @@ const UserSchema: Schema<User> = new Schema({
         type: Boolean,
         default: false,
     },
+    isStudent: {
+        type: Boolean,
+        default: false,
+    },
     isTeacher: {
         type: Boolean,
         default: false, // Default to false, only true if admin updates the field
     },
 });
+UserSchema.post('save', async function (this: User) {
+    if (this.isStudent) {
+        try {
+            let studentId = `S-${uuidv4()}`; 
+            const newStudent = new StudentModel({
+                user_id: this._id,
+                name: this.username,
+                student_id: studentId,
+                semester: 1,
+                branch: 'Unknown',
+                sid_verification: false,
+                enrolledSubjectId: [],
+                teacherSubjectMap: {},
+                attendanceSubjectMap: {},
+                marksStudentMap: { midsem: {}, endsem: {} },
+                clubsPartOf: [],
+                interestedEvents: [],
+                clubsHeadOf: [],
+            });
+
+            await newStudent.save();
+        } catch (error) {
+            console.error('Error creating student:', error);
+        }
+    }
+});
+UserSchema.post('save', async function (this: User) {
+    if (this.isTeacher) {
+        try {
+            let teacherId = `S-${uuidv4()}`; 
+            const newTeacher= new TeacherModel({
+                user_id: this._id,
+                teacher_id: teacherId,
+                admin_verification: false,
+                subjectTeaching: [],
+                StudentsMarksMap: {},
+            });
+
+            await newTeacher.save();
+        } catch (error) {
+            console.error('Error creating teacher:', error);
+        }
+    }
+});
+
 
 export interface Student extends Document {
     user_id: mongoose.Schema.Types.ObjectId;
@@ -73,7 +124,7 @@ const StudentSchema: Schema<Student> = new Schema({
         required: true,
     },
     name: { type: String, required: true },
-    student_id: { type: String, required: true, unique: true },
+    student_id: { type: String, required: false, unique: true },
     semester: { type: Number, required: true },
     phoneNumber: { type: Number },
     branch: { type: String, required: true },

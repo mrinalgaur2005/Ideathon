@@ -1,12 +1,12 @@
-import dbConnect from '../../../lib/connectDb';
-import { UserModel } from '../../../model/User';
+import dbConnect from '../../../../lib/connectDb';
+import { UserModel } from '../../../../model/User';
 import bcrypt from 'bcryptjs';
-import { sendVerificationEmail } from '../../../helpers/sendVerificationEmail'
+import { sendVerificationEmail } from '../../../../helpers/sendVerificationEmail';
 export async function POST(request: Request) {
     await dbConnect();
     
     try {
-      const { username, email, password } = await request.json();
+      const { username, email, password,isStudent } = await request.json();
       console.log('Received data:', { username, email, password });
   
       // Check if the username or email already exists
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
           verifyCode,
           verifyCodeExpiry: expiryDate,
           isVerified: false,
-          isAcceptingMessages: true,
+          isStudent:true
         });
   
         await newUser.save();
