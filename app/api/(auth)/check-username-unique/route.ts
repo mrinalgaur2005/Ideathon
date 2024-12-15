@@ -1,6 +1,5 @@
-import dbConnect from "../../../lib/connectDb";
-import { UserModel } from "../../../model/User";
-
+import dbConnect from "../../../../lib/connectDb";
+import { UserModel } from "../../../../model/User";
 export async function GET(request: Request) {
       if(request.method!== 'GET'){
         return Response.json({
