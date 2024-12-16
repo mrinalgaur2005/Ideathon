@@ -1,0 +1,14 @@
+Index: .env
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>MONGODB_URI=\"mongodb+srv://prajanyasharmabt23ele:QH6xK7vCsM3tmHFN@cluster.bunll.mongodb.net/mydatabase?retryWrites=true&w=majority\"\n\nRESEND_API_KEY=\"re_VVAmCXFT_FoNDW5fCNAjSq8oVecPkpbKz\"\nNEXTAUTH_URL=http://localhost:3000 # Use your app's URL (change for production)\nNEXTAUTH_SECRET=7DMNZNlksSwl01a0NojXskcu+cRZ9oWLmK4NZQVeu\n
+===================================================================
+diff --git a/.env b/.env
+--- a/.env	(revision ae68a325f2e0f485d8c7b3b522d33dcd9b5b3074)
++++ b/.env	(date 1734193203563)
+@@ -1,4 +1,4 @@
+-MONGODB_URI="mongodb+srv://prajanyasharmabt23ele:QH6xK7vCsM3tmHFN@cluster.bunll.mongodb.net/mydatabase?retryWrites=true&w=majority"
++MONGO_DB_URI="mongodb+srv://prajanyasharmabt23ele:QH6xK7vCsM3tmHFN@cluster.bunll.mongodb.net/mydatabase?retryWrites=true&w=majority"
+ 
+ RESEND_API_KEY="re_VVAmCXFT_FoNDW5fCNAjSq8oVecPkpbKz"
+ NEXTAUTH_URL=http://localhost:3000 # Use your app's URL (change for production)

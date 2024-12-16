@@ -1,10 +1,10 @@
-import Profile from "../../components/student/profile"
+import EventPage from "../../components/events/eventPage";
 
 export default function Test() {
 
   return (
     <>
-      <Profile />
+      <EventPage />
     </>
   )
 }

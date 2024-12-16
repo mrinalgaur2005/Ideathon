@@ -2,7 +2,7 @@ export default function FilterBox() {
 
   return (
     <>
-      <div className="flex flex-col w-4/5 h-1/6 pl-4 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
+      <div className="flex flex-col w-4/5 h-60 pl-4 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
         <div className="text-2xl font-bold text-center mt-4 mb-4">
           Filter Options
         </div>

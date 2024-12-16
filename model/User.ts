@@ -5,7 +5,6 @@ type MarksStudentMap = {
     midsem: Record<string, number>;
     endsem: Record<string, number>;
 };
-
 export interface User extends Document {
     username: string;
     email: string;
