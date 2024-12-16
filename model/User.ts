@@ -1,10 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { v4 as uuidv4 } from 'uuid'
 
-type MarksStudentMap = {
-    midsem: Record<string, number>;
-    endsem: Record<string, number>;
-};
 export interface User extends Document {
     username: string;
     email: string;
@@ -72,7 +68,7 @@ UserSchema.post('save', async function (this: User) {
                 interestedEvents: [],
                 clubsHeadOf: [],
             });
-
+            
             await newStudent.save();
         } catch (error) {
             console.error('Error creating student:', error);
@@ -90,7 +86,7 @@ UserSchema.post('save', async function (this: User) {
                 subjectTeaching: [],
                 StudentsMarksMap: {},
             });
-
+            
             await newTeacher.save();
         } catch (error) {
             console.error('Error creating teacher:', error);
@@ -98,11 +94,21 @@ UserSchema.post('save', async function (this: User) {
     }
 });
 
+export interface MarksEntry {
+    midsem: number;
+    endsem: number;
+    quiz1: number;
+    quiz2?: number;
+    quiz3?: number;
+    quiz4?: number;
+    labquiz1: number;
+    labquiz2?: number;
+}
 
 export interface Student extends Document {
     user_id: mongoose.Schema.Types.ObjectId;
     name: string;
-    student_id: string;
+    student_id?: string;
     semester: number;
     phoneNumber?: number;
     branch: string;
@@ -110,11 +116,22 @@ export interface Student extends Document {
     enrolledSubjectId: string[];
     teacherSubjectMap: Record<string, mongoose.Schema.Types.ObjectId>;
     attendanceSubjectMap: Record<number, string>;
-    marksStudentMap: MarksStudentMap;
+    marksStudentMap: Record<string, MarksEntry>;
     clubsPartOf: mongoose.Schema.Types.ObjectId[];
     interestedEvents: mongoose.Schema.Types.ObjectId[];
     clubsHeadOf: mongoose.Schema.Types.ObjectId[];
 }
+
+const MarksEntrySchema = new Schema({
+    midsem: { type: Number, required: true },
+    endsem: { type: Number, required: true },
+    quiz1: { type: Number, required: true },
+    quiz2: { type: Number },
+    quiz3: { type: Number },
+    quiz4: { type: Number },
+    labquiz1: { type: Number, required: true },
+    labquiz2: { type: Number },
+});
 
 const StudentSchema: Schema<Student> = new Schema({
     user_id: {
@@ -123,7 +140,7 @@ const StudentSchema: Schema<Student> = new Schema({
         required: true,
     },
     name: { type: String, required: true },
-    student_id: { type: String, required: false, unique: true },
+    student_id: { type: String, unique: true },
     semester: { type: Number, required: true },
     phoneNumber: { type: Number },
     branch: { type: String, required: true },
@@ -138,26 +155,21 @@ const StudentSchema: Schema<Student> = new Schema({
         of: String,
     },
     marksStudentMap: {
-        midsem: {
-            type: Map,
-            of: Number,
-        },
-        endsem: {
-            type: Map,
-            of: Number,
-        },
+        type: Map,
+        of: MarksEntrySchema,
     },
     clubsPartOf: [{ type: Schema.Types.ObjectId, ref: "Club" }],
     interestedEvents: [{ type: Schema.Types.ObjectId, ref: "Event" }],
     clubsHeadOf: [{ type: Schema.Types.ObjectId, ref: "Club" }],
 });
 
+
 export interface Teacher extends Document {
     user_id: mongoose.Schema.Types.ObjectId;
     teacher_id: string;
     admin_verification: boolean;
     subjectTeaching: string[];
-    StudentsMarksMap: Record<string, MarksStudentMap>;
+    // StudentsMarksMap: Record<string, MarksStudentMap>;
 }
 
 const TeacherSchema: Schema<Teacher> = new Schema({
@@ -169,19 +181,19 @@ const TeacherSchema: Schema<Teacher> = new Schema({
     teacher_id: { type: String, required: true, unique: true },
     admin_verification: { type: Boolean, default: false },
     subjectTeaching: [{ type: String }],
-    StudentsMarksMap: {
-        type: Map,
-        of: {
-            midsem: {
-                type: Map,
-                of: Number,
-            },
-            endsem: {
-                type: Map,
-                of: Number,
-            },
-        },
-    },
+    // StudentsMarksMap: {
+    //     type: Map,
+    //     of: {
+    //         midsem: {
+    //             type: Map,
+    //             of: Number,
+    //         },
+    //         endsem: {
+    //             type: Map,
+    //             of: Number,
+    //         },
+    //     },
+    // },
 });
 
 export interface Club extends Document {
