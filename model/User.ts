@@ -52,7 +52,7 @@ const UserSchema: Schema<User> = new Schema({
 UserSchema.post('save', async function (this: User) {
     if (this.isStudent) {
         try {
-            let studentId = `S-${uuidv4()}`; 
+            const studentId = `S-${uuidv4()}`;
             const newStudent = new StudentModel({
                 user_id: this._id,
                 name: this.username,
@@ -78,7 +78,7 @@ UserSchema.post('save', async function (this: User) {
 UserSchema.post('save', async function (this: User) {
     if (this.isTeacher) {
         try {
-            let teacherId = `S-${uuidv4()}`; 
+            const teacherId = `S-${uuidv4()}`;
             const newTeacher= new TeacherModel({
                 user_id: this._id,
                 teacher_id: teacherId,
