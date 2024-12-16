@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-import { EventModel, ClubModel } from '../../../model/User';
-import { StudentModel } from '../../../model/User'; 
-import dbConnect from '../../../lib/connectDb';
+import { EventModel, ClubModel } from '../../../../model/User';
+import { StudentModel } from '../../../../model/User'; 
+import dbConnect from '../../../../lib/connectDb';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../(auth)/auth/[...nextauth]/options';
+import { authOptions } from '../../(auth)/auth/[...nextauth]/options';
 import { User } from 'next-auth';
 
 export async function POST(req: Request) {
@@ -45,7 +45,8 @@ export async function POST(req: Request) {
                 { status: 404 }
             );
         }
-
+        
+        
         const student = await StudentModel.findOne({ user_id: userId });
         if (!student) {
             return NextResponse.json({ error: 'Student not found.' }, { status: 404 });
@@ -56,7 +57,7 @@ export async function POST(req: Request) {
                 { status: 403 }
             );
         }
-
+        
         const newEvent = new EventModel({
             eventHostedBy: club._id,
             eventVenue,
@@ -68,6 +69,8 @@ export async function POST(req: Request) {
             tags,
         });
         const savedEvent = await newEvent.save();
+        
+        club.clubEvents.push(newEvent._id as mongoose.Schema.Types.ObjectId)
 
         return NextResponse.json(savedEvent, { status: 201 });
     } catch (error) {
