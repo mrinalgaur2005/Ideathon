@@ -5,7 +5,7 @@ import {NextResponse} from "next/server";
 import {ClubModel} from "../../../../model/User";
 import mongoose from "mongoose";
 
-export default async function GET() {
+export  async function GET() {
   try {
     await dbConnect();
 
@@ -31,7 +31,8 @@ export default async function GET() {
       }
     ]);
 
-    if (!clubsHeadOf) {
+    
+    if (clubsHeadOf.length===0) {
       return NextResponse.json({error: 'User is not head of any club.'}, {status: 403});
     }
 
