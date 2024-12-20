@@ -19,13 +19,13 @@ export default function AddEventPage() {
   const [date, setDate] = useState<string>('');
   const [time, setTime] = useState<string>('');
 
-  function handlePosterUpload(result) {
+  function handlePosterUpload(result:any) {
     if (result.event === "success") {
       setPoster(result.info.secure_url);
     }
   }
 
-  function handleEventAttachmentsUpload(result) {
+  function handleEventAttachmentsUpload(result:any) {
     if (result.event === "success") {
       seteventAttachments((prev) => [...prev, result.info.secure_url]);
     }
@@ -42,7 +42,7 @@ export default function AddEventPage() {
 
     const eventTime = new Date(`${date}T${time}`);
 
-    const res = await axios.post('https://localhost:3000/api/events/add-event', {
+    const res = await axios.post('http://localhost:3000/api/events/add-event', {
       eventHostedBy,
       poster,
       heading,
@@ -61,12 +61,11 @@ export default function AddEventPage() {
   useEffect(function () {
     setClubs([]);
     async function fetchClubs() {
-      await axios.get('https://localhost:3000/api/club/head').then((response) => {
-        if (response.status == 403) {
-          redirect('/');
-        }
+      await axios.get('http://localhost:3000/api/club/head').then((response) => {
+        console.log("here")
         setClubs(response.data)
       }).catch((err) => {
+        console.log(err.req)
         console.log(err);
         redirect('/');
       })

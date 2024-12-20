@@ -9,13 +9,13 @@ export const config = {
 export async function middleware(request: NextRequest) {
   const token = await getToken({ req: request });
   const url = request.nextUrl;
-  console.log(token);
+  // console.log(token);
   
   if (
     token &&
     (url.pathname.startsWith('/sign-in') ||
       url.pathname.startsWith('/sign-up') ||
-      url.pathname.startsWith('/verify'))
+      url.pathname.startsWith('/verify')) 
   ) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
