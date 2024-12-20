@@ -203,6 +203,7 @@ export interface Event extends Document {
     eventTime: Date;
     interestedMembersArr: mongoose.Schema.Types.ObjectId[];
     eventAttachments?: string[];
+    poster: string;
     heading: string;
     description: string;
     tags: string[];

@@ -1,6 +1,4 @@
-import HeadCard from "../student/headCard";
 import StudentCard from "../student/studentCard";
-import Tag from "./tag";
 
 export default function EventPage() {
 

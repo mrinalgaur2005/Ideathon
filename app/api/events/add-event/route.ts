@@ -21,6 +21,7 @@ export async function POST(req: Request) {
     
     try {
         const {
+            poster,
             eventHostedBy,
             eventVenue,
             eventTime,
@@ -29,15 +30,15 @@ export async function POST(req: Request) {
             description,
             tags,
         } = await req.json();
-        
-        const club = await ClubModel.findOne({ clubName: eventHostedBy });
 
-        if (!eventHostedBy || !eventVenue || !eventTime || !heading || !description) {
+        if (!eventHostedBy || !eventVenue || !eventTime || !heading || !description || !poster) {
             return NextResponse.json(
-                { error: 'All required fields must be provided.' },
-                { status: 400 }
+              { error: 'All required fields must be provided.' },
+              { status: 400 }
             );
         }
+
+        const club = await ClubModel.findOne({ clubName: eventHostedBy });
 
         if (!club) {
             return NextResponse.json(
@@ -62,6 +63,7 @@ export async function POST(req: Request) {
             eventHostedBy: club._id,
             eventVenue,
             eventTime,
+            poster,
             interestedMembersArr:[],
             eventAttachments: eventAttachments || [],
             heading,
@@ -72,7 +74,7 @@ export async function POST(req: Request) {
         
         club.clubEvents.push(newEvent._id as mongoose.Schema.Types.ObjectId)
 
-        return NextResponse.json(savedEvent, { status: 201 });
+        return NextResponse.json(savedEvent, { status: 200 });
     } catch (error) {
         console.error(error);
         return NextResponse.json(

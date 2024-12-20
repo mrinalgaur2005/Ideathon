@@ -1,8 +1,9 @@
 import React from 'react'
+import Profile from "../../../components/student/profile";
 
 const student = () => {
   return (
-    <div>student</div>
+    <Profile />
   )
 }
 
