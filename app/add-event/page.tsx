@@ -1,6 +1,6 @@
 "use client"
 
-import {SetStateAction, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {redirect} from "next/navigation";
 import {CldUploadButton} from "next-cloudinary";
@@ -14,18 +14,18 @@ export default function AddEventPage() {
   const [description, setDescription] = useState<string>("");
   const [poster, setPoster] = useState<string>("");
   const [eventAttachments, seteventAttachments] = useState<string[]>([]);
-  const [clubs, setClubs] = useState<{ clubName: string }[]>([]);
+  const [clubs, setClubs] = useState<{clubName: string}[]>([]);
   const [eventVenue, setEventVenue] = useState<string>("");
   const [date, setDate] = useState<string>('');
   const [time, setTime] = useState<string>('');
 
-  function handlePosterUpload(result: { event: string; info: { secure_url: SetStateAction<string>; }; }) {
+  function handlePosterUpload(result) {
     if (result.event === "success") {
       setPoster(result.info.secure_url);
     }
   }
 
-  function handleEventAttachmentsUpload(result: { event: string; info: { secure_url: string; }; }) {
+  function handleEventAttachmentsUpload(result) {
     if (result.event === "success") {
       seteventAttachments((prev) => [...prev, result.info.secure_url]);
     }
