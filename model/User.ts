@@ -49,59 +49,66 @@ const UserSchema: Schema<User> = new Schema({
         default: false, // Default to false, only true if admin updates the field
     },
 });
-UserSchema.post('save', async function (this: User) {
+
+UserSchema.post("save", async function (this: User) {
     if (this.isStudent) {
+        
         try {
+            const existingStudent = await StudentModel.findOne({ user_id: this._id });
+            if (existingStudent) {
+                console.log(`Student with user_id ${this._id} already exists.`);
+                return; 
+            }
             const studentId = `S-${uuidv4()}`;
             const newStudent = new StudentModel({
                 user_id: this._id,
                 name: this.username,
                 student_id: studentId,
                 semester: 1,
-                branch: 'Unknown',
+                branch: "Unknown",
                 sid_verification: false,
                 enrolledSubjectId: [],
                 teacherSubjectMap: {},
                 attendanceSubjectMap: {},
-                marksStudentMap: { midsem: {}, endsem: {} },
+                marksStudentMap: {},
                 clubsPartOf: [],
                 interestedEvents: [],
                 clubsHeadOf: [],
             });
-            
+
             await newStudent.save();
         } catch (error) {
-            console.error('Error creating student:', error);
+            console.error("Error creating student:", error);
         }
     }
-});
-UserSchema.post('save', async function (this: User) {
+
     if (this.isTeacher) {
         try {
-            const teacherId = `S-${uuidv4()}`;
-            const newTeacher= new TeacherModel({
+            const teacherId = `T-${uuidv4()}`;
+            const newTeacher = new TeacherModel({
                 user_id: this._id,
                 teacher_id: teacherId,
                 admin_verification: false,
                 subjectTeaching: [],
-                StudentsMarksMap: {},
+                // StudentsMarksMap: {},
             });
-            
+
             await newTeacher.save();
         } catch (error) {
-            console.error('Error creating teacher:', error);
+            console.error("Error creating teacher:", error);
         }
     }
 });
 
+
 export interface MarksEntry {
-    midsem: number;
-    endsem: number;
-    quiz1: number;
+    midsem?: number;
+    endsem?: number;
+    quiz1?: number;
     quiz2?: number;
     quiz3?: number;
     quiz4?: number;
-    labquiz1: number;
+    labquiz1?: number;
     labquiz2?: number;
 }
 
@@ -126,11 +133,11 @@ const MarksEntrySchema = new Schema({
     midsem: { type: Number, required: true },
     endsem: { type: Number, required: true },
     quiz1: { type: Number, required: true },
-    quiz2: { type: Number },
-    quiz3: { type: Number },
-    quiz4: { type: Number },
+    quiz2: { type: Number,required:false },
+    quiz3: { type: Number ,required:false },
+    quiz4: { type: Number ,required:false },
     labquiz1: { type: Number, required: true },
-    labquiz2: { type: Number },
+    labquiz2: { type: Number ,required:false },
 });
 
 const StudentSchema: Schema<Student> = new Schema({
