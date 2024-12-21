@@ -1,4 +1,4 @@
-import Tag from "./tag";
+// import Tag from "./tag";
 
 export default function SmallEventCard() {
 
@@ -26,9 +26,9 @@ export default function SmallEventCard() {
             <div className="text-xl font-bold">
               Tags:
             </div>
-            <Tag />
-            <Tag />
-            <Tag />
+            {/*<Tag />*/}
+            {/*<Tag />*/}
+            {/*<Tag />*/}
           </div>
           <div className="flex flex-row justify-between items-center w-full h-1/5">
             <div className="text-xl font-bold">

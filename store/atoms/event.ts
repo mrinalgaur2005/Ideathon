@@ -17,3 +17,8 @@ export const eventsState = atom<Event[]>({
   key: "eventsState",
   default: [],
 })
+
+export const page = atom<number>({
+  key: "page",
+  default: 1,
+})

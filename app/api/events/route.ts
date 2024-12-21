@@ -31,11 +31,22 @@ export async function GET(request: Request) {
           }
         },
         {
+          $lookup: {
+            from: "clubs",
+            localField: "eventHostedBy",
+            foreignField: "_id",
+            as: "eventHostedBy"
+          }
+        },
+        {
+          $unwind: "$eventHostedBy"
+        },
+        {
           $project: {
             _id: 1,
             poster: 1,
             heading: 1,
-            eventHostedBy: 1,
+            eventHostedBy: "$eventHostedBy.clubName",
             description: 1,
             tags: 1,
             eventTime: 1,
