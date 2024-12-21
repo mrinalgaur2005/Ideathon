@@ -18,10 +18,12 @@ export  async function GET() {
 
     const userId = new mongoose.Types.ObjectId(user._id);
 
+    console.log(userId);
+
     const clubsHeadOf = await ClubModel.aggregate([
       {
         $match: {
-          clubIdSecs: [userId]
+          clubIdSecs:{$in: [userId] }
         }
       },
       {
@@ -30,6 +32,10 @@ export  async function GET() {
         }
       }
     ]);
+    
+
+    console.log(clubsHeadOf);
+    
 
     
     if (clubsHeadOf.length===0) {
