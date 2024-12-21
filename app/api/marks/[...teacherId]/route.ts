@@ -1,45 +1,28 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getServerSession, User } from "next-auth";
+import { writeFile, createReadStream } from "fs";
+import { unlink } from "fs/promises";
+import { join } from "path";
+import csvParser from "csv-parser";
+import { authOptions } from "../../(auth)/auth/[...nextauth]/options";
 import dbConnect from "../../../../lib/connectDb";
 import { StudentModel } from "../../../../model/User";
-import { getServerSession, User } from "next-auth";
-import { authOptions } from "../../(auth)/auth/[...nextauth]/options";
-import multer from "multer";
-import csvParser from "csv-parser";
-import fs from "fs/promises";
-import path from "path";
 
-const tempDir = path.join(process.cwd(), "public", "temp");
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: tempDir,
-    filename: (req, file, cb) => cb(null, file.originalname),
-  }),
-  fileFilter: (req, file, cb) => {
-    if (file.mimetype === "text/csv") {
-      cb(null, true);
-    } else {
-      cb(new Error("Invalid file type. Only CSV files are allowed.") as any, false);
-    }
-  },
-});
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+interface CSVRow {
+  student_id: string;
+  [key: string]: string;
+}
 
 export async function PATCH(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { teacherId: string } }
 ) {
+  let filePath: string | null = null;
+
   try {
     await dbConnect();
     const session = await getServerSession(authOptions);
-    console.log("Session:", session);
     const user: User = session?.user as User;
-    console.log("User:", user);
 
     if (!session || !user) {
       return NextResponse.json(
@@ -49,69 +32,122 @@ export async function PATCH(
     }
 
     const teacherId = params.teacherId;
-    const subjectId = "MHN2001"; 
+    const subjectId = "MHN2001";
     if (!teacherId || !subjectId) {
       return NextResponse.json(
         { error: "Teacher ID and Subject ID are required." },
         { status: 400 }
       );
     }
-    const filePath = await new Promise<string>((resolve, reject) => {
-      const uploadHandler = upload.single("file");
-      const reqBody = req as any; 
-      uploadHandler(reqBody, {} as any, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(path.join(tempDir, reqBody.file.originalname));
-        }
+
+    // Handle file upload
+    const formData = await req.formData();
+    const file = formData.get('file') as File;
+
+    if (!file) {
+      return NextResponse.json(
+        { error: "No file uploaded" },
+        { status: 400 }
+      );
+    }
+
+    // Verify file type
+    if (!file.name.endsWith('.csv')) {
+      return NextResponse.json(
+        { error: "Only CSV files are allowed" },
+        { status: 400 }
+      );
+    }
+
+    // Create temporary file
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    // Create a unique filename
+    const timestamp = Date.now();
+    filePath = join('/tmp', `upload-${timestamp}.csv`);
+
+    // Write the file
+    await new Promise((resolve, reject) => {
+      writeFile(filePath!, buffer, (err) => {
+        if (err) reject(err);
+        else resolve(true);
       });
     });
-    
-    const fileStream = await fs.open(filePath, "r");
-    const students = await StudentModel.find();
-    const studentMap = students.reduce(
-      (acc, student) => ({ ...acc, [student.student_id as string] : student }),
-      {} as Record<string, any>
+
+    // Fetch all students in one query for better performance
+    const students = await StudentModel.find({}, { student_id: 1, marksStudentMap: 1 });
+    const studentMap = new Map(
+      students.map(student => [student.student_id, student])
     );
 
-    await new Promise<void>((resolve, reject) => {
-      const stream = fileStream.createReadStream();
-      stream
-        .pipe(csvParser())
-        .on("data", (row: Record<string, string>) => {
-          const studentId = row["student_id"];
-          if (!studentId || !studentMap[studentId]) return;
+    // Process CSV with proper error handling
+    const updates = new Map<string, { [key: string]: number }>();
 
-          const student = studentMap[studentId];
-          for (const key in row) {
-            if (key !== "student_id") {
-              const marks = parseFloat(row[key]);
-              if (!isNaN(marks)) {
-                student.marks[key] = (student.marks[key] || 0) + marks;
-              }
+    await new Promise<void>((resolve, reject) => {
+      createReadStream(filePath!)
+        .pipe(csvParser())
+        .on("data", (row: CSVRow) => {
+          const studentId = row.student_id;
+          if (!studentId || !studentMap.has(studentId)) return;
+
+          const marksUpdate: { [key: string]: number } = {};
+          let hasValidMarks = false;
+
+          for (const [key, value] of Object.entries(row)) {
+            if (key === "student_id") continue;
+
+            const marks = parseFloat(value);
+            if (!isNaN(marks) && marks >= 0) {
+              // Create the dot notation for nested field updates
+              marksUpdate[`marksStudentMap.${subjectId}.${key}`] = marks;
+              hasValidMarks = true;
             }
+          }
+
+          if (hasValidMarks) {
+            updates.set(studentId, marksUpdate);
           }
         })
         .on("end", resolve)
         .on("error", reject);
     });
-    const savePromises = Object.values(studentMap).map((student) =>
-      student.save()
-    );
-    await Promise.all(savePromises);
 
-    await fs.unlink(filePath);
+    // Create bulk operations with proper atomic operators and dot notation
+    const bulkOps = Array.from(updates.entries()).map(([studentId, marksUpdate]) => ({
+      updateOne: {
+        filter: { student_id: studentId },
+        update: { $set: marksUpdate }
+      }
+    }));
 
+    if (bulkOps.length > 0) {
+      await StudentModel.bulkWrite(bulkOps);
+    }
+
+    return NextResponse.json({
+      message: "CSV processed and marks updated successfully.",
+      studentsUpdated: updates.size,
+    });
+
+  } catch (error) {
+    console.error("CSV processing error:", error);
     return NextResponse.json(
-      { message: "CSV processed and marks updated successfully." },
-      { status: 200 }
-    );
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json(
-      { error: "An error occurred while processing the file." },
+      { 
+        error: "An error occurred while processing the file.",
+        details: error instanceof Error ? error.message : "Unknown error"
+      },
       { status: 500 }
     );
+
+  } finally {
+    // Clean up uploaded file
+    if (filePath) {
+      try {
+        await unlink(filePath);
+      } catch (error) {
+        console.error("Failed to delete temporary file:", error);
+      }
+    }
   }
 }
