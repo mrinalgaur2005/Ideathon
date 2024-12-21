@@ -61,7 +61,7 @@ export default function AddEventPage() {
   useEffect(function () {
     setClubs([]);
     async function fetchClubs() {
-      await axios.get(`${process.env.BACKEND_URL}/api/club/head`).then((response) => {
+      await axios.get(`http://localhost:3000/api/club/head`).then((response) => {
         if (response.status == 403) {
           redirect('/');
         }
@@ -75,7 +75,7 @@ export default function AddEventPage() {
     fetchClubs();
     if (clubs.length == 0) redirect('/');
   }, [])
-
+  
   return (
     <>
       <div className="flex flex-col w-full h-screen items-center  justify-center">
