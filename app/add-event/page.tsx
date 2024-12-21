@@ -42,7 +42,7 @@ export default function AddEventPage() {
 
     const eventTime = new Date(`${date}T${time}`);
 
-    const res = await axios.post(`${process.env.BACKEND_URL}/api/events/add-event`, {
+    const res = await axios.post(`http://localhost:3000/api/events/add-event`, {
       eventHostedBy,
       poster,
       heading,
