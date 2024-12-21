@@ -37,7 +37,9 @@ export async function PATCH(
   try {
     await dbConnect();
     const session = await getServerSession(authOptions);
+    console.log("Session:", session);
     const user: User = session?.user as User;
+    console.log("User:", user);
 
     if (!session || !user) {
       return NextResponse.json(
