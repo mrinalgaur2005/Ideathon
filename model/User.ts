@@ -127,6 +127,7 @@ export interface Student extends Document {
     clubsPartOf: mongoose.Schema.Types.ObjectId[];
     interestedEvents: mongoose.Schema.Types.ObjectId[];
     clubsHeadOf: mongoose.Schema.Types.ObjectId[];
+    profile?: string;
 }
 
 const MarksEntrySchema = new Schema({
@@ -168,6 +169,10 @@ const StudentSchema: Schema<Student> = new Schema({
     clubsPartOf: [{ type: Schema.Types.ObjectId, ref: "Club" }],
     interestedEvents: [{ type: Schema.Types.ObjectId, ref: "Event" }],
     clubsHeadOf: [{ type: Schema.Types.ObjectId, ref: "Club" }],
+    profile: {
+        type: String,
+        required: false,
+    }
 });
 
 
@@ -237,6 +242,7 @@ const EventSchema: Schema<Event> = new Schema({
     eventTime: { type: Date, required: true },
     interestedMembersArr: [{ type: Schema.Types.ObjectId, ref: "Student" }],
     eventAttachments: [{ type: String }],
+    poster: { type: String, required: true },
     heading: { type: String, required: true },
     description: { type: String, required: true },
     tags: [{ type: String }],

@@ -19,13 +19,13 @@ export default function AddEventPage() {
   const [date, setDate] = useState<string>('');
   const [time, setTime] = useState<string>('');
 
-  function handlePosterUpload(result) {
+  function handlePosterUpload(result: any) {
     if (result.event === "success") {
       setPoster(result.info.secure_url);
     }
   }
 
-  function handleEventAttachmentsUpload(result) {
+  function handleEventAttachmentsUpload(result: any) {
     if (result.event === "success") {
       seteventAttachments((prev) => [...prev, result.info.secure_url]);
     }
