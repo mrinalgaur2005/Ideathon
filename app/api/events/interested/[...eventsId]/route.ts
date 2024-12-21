@@ -41,7 +41,15 @@ export async function PATCH(
         const alreadyInterested = event.interestedMembersArr.includes(student._id as mongoose.Schema.Types.ObjectId);
 
         if (alreadyInterested) {
-            return NextResponse.json({ error: "You have already marked interest in this event." }, { status: 400 });
+            event.interestedMembersArr.filter((id) => id != student._id);
+            student.interestedEvents.filter((id) => id != event._id);
+            await event.save();
+            await student.save();
+
+            return NextResponse.json(
+              { success: true, message: "Interest removed successfully.", event, student },
+              { status: 200 }
+            );
         }
 
         event.interestedMembersArr.push(student._id as mongoose.Schema.Types.ObjectId) ;

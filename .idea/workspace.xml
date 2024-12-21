@@ -5,21 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/api/club/head/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/context/StoreProvider.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/cloudinary.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_11_24,_8_46 PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_11_24__8_46PM__Changes_.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/store/atoms/filteredEvents.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/add-event/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/add-event/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/events/add-event/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/add-event/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/student/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/student/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/events/eventPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/eventPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/events/interested/[...eventsId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/interested/[...eventsId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/events/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/events/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/events/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/card.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/events/filterbox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/filterbox.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/events/tag.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/tag.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/student/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/store/atoms/eventFilter.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,8 +24,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -130,7 +125,10 @@
       <workItem from="1734587553335" duration="2223000" />
       <workItem from="1734622604490" duration="6450000" />
       <workItem from="1734672636682" duration="3862000" />
-      <workItem from="1734697995805" duration="2454000" />
+      <workItem from="1734697995805" duration="4210000" />
+      <workItem from="1734709695437" duration="1288000" />
+      <workItem from="1734719253317" duration="6275000" />
+      <workItem from="1734766424331" duration="14927000" />
     </task>
     <servers />
   </component>

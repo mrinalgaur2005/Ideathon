@@ -42,7 +42,7 @@ export default function AddEventPage() {
 
     const eventTime = new Date(`${date}T${time}`);
 
-    const res = await axios.post('https://localhost:3000/api/events/add-event', {
+    const res = await axios.post(`${process.env.BACKEND_URL}/api/events/add-event`, {
       eventHostedBy,
       poster,
       heading,
@@ -61,7 +61,7 @@ export default function AddEventPage() {
   useEffect(function () {
     setClubs([]);
     async function fetchClubs() {
-      await axios.get('https://localhost:3000/api/club/head').then((response) => {
+      await axios.get(`${process.env.BACKEND_URL}/api/club/head`).then((response) => {
         if (response.status == 403) {
           redirect('/');
         }
