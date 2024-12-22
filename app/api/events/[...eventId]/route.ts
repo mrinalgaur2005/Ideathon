@@ -7,7 +7,7 @@ import {NextResponse} from "next/server";
 
 export async function GET(
     req: Request,
-    { params }: { params: { eventId: mongoose.Types.ObjectId } }
+    { params }: { params: { eventId: string } }
 ) {
     try {
         await dbConnect();
@@ -20,22 +20,23 @@ export async function GET(
         }
 
         const userId = new mongoose.Types.ObjectId(user._id);
-
-        const { eventId } =  params;
-
-        if (!params.eventId) {
+           if (!params.eventId) {
             return new Response(
                 JSON.stringify({ success: false, message: 'Event ID is required' }),
                 { status: 400, headers: { 'Content-Type': 'application/json' } }
             );
         }
-
-        if (!mongoose.Types.ObjectId.isValid(eventId)) {
+        
+        console.log(params.eventId[0]);
+        
+        if (!mongoose.Types.ObjectId.isValid(params.eventId[0])) {
             return new Response(
                 JSON.stringify({ success: false, message: 'Invalid event ID' }),
                 { status: 400, headers: { 'Content-Type': 'application/json' } }
             );
         }
+
+        const eventId = new mongoose.Types.ObjectId(params.eventId[0])
 
         const event = await EventModel.aggregate([
             {
@@ -89,7 +90,8 @@ export async function GET(
             },
 
         ])
-
+        console.log(event);
+        
         if (!event || event.length === 0) {
             return new Response(
                 JSON.stringify({ success: false, message: 'Event not found' }),

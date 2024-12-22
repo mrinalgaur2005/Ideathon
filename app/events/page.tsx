@@ -3,6 +3,7 @@ import EventCard from "../../components/events/card";
 import FilterBox from "../../components/events/filterbox";
 import { useEffect, useState, useMemo } from "react";
 import { useModel } from "../../hooks/user-model-store";
+import { Loader2 } from "lucide-react";
 
 export default function EventsPage() {
   const { allEvents, isLoading, setAllEvents, setLoading } = useModel();
@@ -39,7 +40,9 @@ export default function EventsPage() {
       <div className="flex flex-col w-4/5 h-full items-center mt-12">
         <div className="flex flex-col w-full h-5/6 items-center overflow-y-auto">
           {isLoading ? (
-            <div>Loading...</div>
+            <div>
+              Loading...
+            .</div>
           ) : (
             selectedEvents.map((event) => (
               <EventCard
