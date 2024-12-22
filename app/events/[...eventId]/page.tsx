@@ -15,29 +15,29 @@ export default function Event() {
     if (!eventId) return;
 
     async function fetchData() {
-      setLoading(true); // Set loading to true
+      setLoading(true); 
       try {
         const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${eventId}`);
         if (res.status === 200) {
-          setSingleEvent(res.data.data); // Update Zustand state with the fetched event
+          setSingleEvent(res.data.data);
         } else {
-          router.push("/"); // Client-side redirect if response is not successful
+          router.push("/");
         }
       } catch (error) {
         console.error("Error fetching event data:", error);
-        router.push("/"); // Redirect on error
+        router.push("/"); 
       } finally {
-        setLoading(false); // Set loading to false after the request finishes
+        setLoading(false);
       }
     }
 
     fetchData();
-  }, [eventId, setSingleEvent, setLoading]); // Dependencies
+  }, [eventId, setSingleEvent, setLoading]);
 
   if (!singleEvent) {
-    return <div>Loading...</div>; // Show loading state while event data is being fetched
+    return <div>Loading...</div>; 
   }
-  const event = singleEvent; // Dependency on eventId to trigger re-fetch
+  const event = singleEvent;
 
   // async function handleInterested() {
   //   if (!event) {
