@@ -7,7 +7,7 @@ import {NextResponse} from "next/server";
 
 export async function GET(
     req: Request,
-    { params }: { params: { eventId: string } }
+    { params }: { params: { eventId: string[] } }
 ) {
     try {
         await dbConnect();
@@ -20,13 +20,13 @@ export async function GET(
         }
 
         const userId = new mongoose.Types.ObjectId(user._id);
-           if (!params.eventId) {
+        if (!params.eventId) {
             return new Response(
                 JSON.stringify({ success: false, message: 'Event ID is required' }),
                 { status: 400, headers: { 'Content-Type': 'application/json' } }
             );
         }
-        
+
         console.log(params.eventId[0]);
         
         if (!mongoose.Types.ObjectId.isValid(params.eventId[0])) {

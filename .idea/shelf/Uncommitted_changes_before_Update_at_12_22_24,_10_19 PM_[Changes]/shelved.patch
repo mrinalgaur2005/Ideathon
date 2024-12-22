@@ -1,0 +1,644 @@
+Index: store/atoms/filteredEvents.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import {selector} from \"recoil\";\nimport {eventsState} from \"./event\";\nimport {eventFilterState} from \"./eventFilter\";\n\nexport const filteredEventsState = selector({\n  key: \"filteredEventsState\",\n  get: ({ get }) => {\n    const events = get(eventsState)\n    const filters = get(eventFilterState)\n\n    return events.filter((event) => event.tags.some((tag) => filters.tags.includes(tag)));\n  }\n})
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/store/atoms/filteredEvents.ts b/store/atoms/filteredEvents.ts
+--- a/store/atoms/filteredEvents.ts	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/store/atoms/filteredEvents.ts	(date 1734868653564)
+@@ -5,8 +5,8 @@
+ export const filteredEventsState = selector({
+   key: "filteredEventsState",
+   get: ({ get }) => {
+-    const events = get(eventsState)
+-    const filters = get(eventFilterState)
++    const events = get(eventsState);
++    const filters = get(eventFilterState);
+ 
+     return events.filter((event) => event.tags.some((tag) => filters.tags.includes(tag)));
+   }
+Index: app/api/events/interested/[...eventsId]/route.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/api/events/interested/[...eventsId]/route.ts b/app/api/events/interested/[...eventId]/route.ts
+rename from app/api/events/interested/[...eventsId]/route.ts
+rename to app/api/events/interested/[...eventId]/route.ts
+--- a/app/api/events/interested/[...eventsId]/route.ts	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/app/api/events/interested/[...eventId]/route.ts	(date 1734886031854)
+@@ -8,18 +8,19 @@
+ 
+ export async function PATCH(
+     req:Request,
+-    {params}:{params:{eventId:string}}
++    {params}:{params:{eventId:string[]}}
+ ) {
+     try {
+         await dbConnect();
+         const session = await getServerSession(authOptions);
+         const user: User = session?.user as User;
+-        
++
+         if (!session || !user) {
+             return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });
+         }
+         
+-        const eventId = params.eventId;
++        const eventId = await params.eventId[0];
++        console.log(typeof eventId);
+         if (!eventId) {
+             return NextResponse.json({ error: "Event ID is required." }, { status: 400 });
+         }
+Index: store/atoms/event.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import {atom} from \"recoil\";\nimport mongoose from \"mongoose\";\n\ninterface Event {\n  _id: mongoose.Types.ObjectId\n  eventHostedBy: string,\n  heading: string,\n  eventTime: Date,\n  description: string,\n  eventVenue: string,\n  poster: string,\n  tags: string[],\n  isInterested: boolean,\n}\n\nexport const eventsState = atom<Event[]>({\n  key: \"eventsState\",\n  default: [],\n})\n\nexport const page = atom<number>({\n  key: \"page\",\n  default: 1,\n})
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/store/atoms/event.ts b/store/atoms/event.ts
+--- a/store/atoms/event.ts	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/store/atoms/event.ts	(date 1734868653572)
+@@ -18,7 +18,7 @@
+   default: [],
+ })
+ 
+-export const page = atom<number>({
+-  key: "page",
++export const pageState = atom<number>({
++  key: "pageState",
+   default: 1,
+ })
+\ No newline at end of file
+Index: components/club/clubCard.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>export default function ClubCard() {\n\n  return (\n    <>\n      <div\n        className=\"flex flex-row items-center justify-between w-4/5 h-1/4 ml-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n        <img\n          src=\"https://next-images.123rf.com/index/_next/image/?url=https://assets-cdn.123rf.com/index/static/assets/top-section-bg.jpeg&w=3840&q=75\"\n          alt=\"\"\n          className=\"h-20 w-20 object-cover rounded-full ml-4\"\n        />\n        <div className=\"text-2xl font-bold\">\n          Club Name\n        </div>\n        <div className=\"text-2xl font-bold mr-4\">\n          Club Category\n        </div>\n        <button className=\"text-xl font-bold h-1/2 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4\">\n          Show Club Details\n        </button>\n      </div>\n    </>\n  )\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/components/club/clubCard.tsx b/components/club/clubCard.tsx
+--- a/components/club/clubCard.tsx	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/components/club/clubCard.tsx	(date 1734868653576)
+@@ -2,8 +2,7 @@
+ 
+   return (
+     <>
+-      <div
+-        className="flex flex-row items-center justify-between w-4/5 h-1/4 ml-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
++      <div className="flex flex-row items-center justify-between w-4/5 h-1/4 mt-6 ml-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
+         <img
+           src="https://next-images.123rf.com/index/_next/image/?url=https://assets-cdn.123rf.com/index/static/assets/top-section-bg.jpeg&w=3840&q=75"
+           alt=""
+@@ -11,9 +10,6 @@
+         />
+         <div className="text-2xl font-bold">
+           Club Name
+-        </div>
+-        <div className="text-2xl font-bold mr-4">
+-          Club Category
+         </div>
+         <button className="text-xl font-bold h-1/2 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4">
+           Show Club Details
+Index: components/events/card.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import mongoose from \"mongoose\";\nimport axios from \"axios\";\n\ninterface EventCardProps {\n  _id: mongoose.Types.ObjectId;\n  poster: string;\n  heading: string;\n  eventHostedBy: mongoose.Types.ObjectId;\n  description: string;\n  tags: string[];\n  eventTime: Date | string;\n  eventVenue: string;\n  interestedArr: mongoose.Types.ObjectId[];\n  userId: string;\n}\n\nexport default function EventCard({\n  _id,\n  poster,\n  heading,\n  eventHostedBy,\n  description,\n  tags,\n  eventTime,\n  eventVenue,\n  interestedArr=[],\n  userId,\n}: EventCardProps) {\n  const isInterested = interestedArr.some((id) => id.toString() === userId);\n\n  async function handleInterested() {\n    try {\n      const res = await axios.patch(\n        `${process.env.BACKEND_URL || \"http://localhost:3000\"}/api/events/interested/${_id}`\n      );\n      if (res.status === 200) {\n        console.log(\"Interest status updated\");\n        // Update local interestedArr state or trigger a re-fetch\n      }\n    } catch (error) {\n      console.error(\"Error updating interest status:\", error);\n    }\n  }\n  \n  return (\n    <div className=\"flex flex-row w-3/5 h-52 mt-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n      <img src={poster} alt={heading} className=\"h-full w-1/3 object-cover\" />\n      <div className=\"flex flex-col ml-4 w-2/3 h-full\">\n        <div className=\"flex flex-row justify-between w-full h-1/5 items-center\">\n          <div className=\"text-3xl font-bold\">{heading}</div>\n        </div>\n        <div className=\"w-full h-2/5 pl-2\">{description}</div>\n        <div className=\"flex flex-row w-full h-1/5 items-center font-bold\">\n          <div className=\"text-xl font-bold\">Tags:</div>\n          {tags.map((tag) => (\n            <span\n              key={tag}\n              className=\"ml-2 text-cyan-600 bg-cyan-200 rounded-full px-2 py-1\"\n            >\n              {tag}\n            </span>\n          ))}\n        </div>\n        <div className=\"flex flex-row justify-between items-center w-full h-1/5\">\n          <div className=\"text-xl font-bold\">\n            Time: {new Date(eventTime).toLocaleString()}\n          </div>\n          <div className=\"text-xl font-bold\">Venue: {eventVenue}</div>\n          <button\n            onClick={handleInterested}\n            className={`text-xl font-bold h-4/5 ${\n              isInterested\n                ? \"bg-red-600\"\n                : \"bg-gradient-to-br from-cyan-600 to-cyan-400\"\n            } text-white w-1/4 rounded-3xl mr-4`}\n          >\n            {isInterested ? \"Interested\" : \"Not Interested\"}\n          </button>\n        </div>\n      </div>\n    </div>\n  );\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/components/events/card.tsx b/components/events/card.tsx
+--- a/components/events/card.tsx	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/components/events/card.tsx	(date 1734881575678)
+@@ -1,83 +1,86 @@
++"use client"
+ import mongoose from "mongoose";
+ import axios from "axios";
++import Tag from "./tag";
+ 
+ interface EventCardProps {
+-  _id: mongoose.Types.ObjectId;
+-  poster: string;
+-  heading: string;
+-  eventHostedBy: mongoose.Types.ObjectId;
+-  description: string;
+-  tags: string[];
+-  eventTime: Date | string;
+-  eventVenue: string;
+-  interestedArr: mongoose.Types.ObjectId[];
+-  userId: string;
++  _id: string,
++  poster: string,
++  heading: string,
++  eventHostedBy: string,
++  description: string,
++  tags: string[],
++  eventTime: Date,
++  eventVenue: string,
++  isInterested: boolean,
+ }
+ 
+-export default function EventCard({
+-  _id,
+-  poster,
+-  heading,
+-  eventHostedBy,
+-  description,
+-  tags,
+-  eventTime,
+-  eventVenue,
+-  interestedArr=[],
+-  userId,
+-}: EventCardProps) {
+-  const isInterested = interestedArr.some((id) => id.toString() === userId);
+-
++export default function EventCard({_id, poster, heading, eventHostedBy, description, tags, eventTime, eventVenue, isInterested,}: EventCardProps) {
+   async function handleInterested() {
+     try {
+-      const res = await axios.patch(
+-        `${process.env.BACKEND_URL || "http://localhost:3000"}/api/events/interested/${_id}`
+-      );
++      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id}`);
+       if (res.status === 200) {
+         console.log("Interest status updated");
+         // Update local interestedArr state or trigger a re-fetch
++        isInterested = !isInterested;
+       }
+     } catch (error) {
+-      console.error("Error updating interest status:", error);
++      console.log("Error updating interest status:", error);
+     }
+   }
+-  
++
+   return (
+-    <div className="flex flex-row w-3/5 h-52 mt-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
+-      <img src={poster} alt={heading} className="h-full w-1/3 object-cover" />
+-      <div className="flex flex-col ml-4 w-2/3 h-full">
+-        <div className="flex flex-row justify-between w-full h-1/5 items-center">
+-          <div className="text-3xl font-bold">{heading}</div>
+-        </div>
+-        <div className="w-full h-2/5 pl-2">{description}</div>
+-        <div className="flex flex-row w-full h-1/5 items-center font-bold">
+-          <div className="text-xl font-bold">Tags:</div>
+-          {tags.map((tag) => (
+-            <span
+-              key={tag}
+-              className="ml-2 text-cyan-600 bg-cyan-200 rounded-full px-2 py-1"
+-            >
+-              {tag}
+-            </span>
+-          ))}
+-        </div>
+-        <div className="flex flex-row justify-between items-center w-full h-1/5">
+-          <div className="text-xl font-bold">
+-            Time: {new Date(eventTime).toLocaleString()}
+-          </div>
+-          <div className="text-xl font-bold">Venue: {eventVenue}</div>
+-          <button
+-            onClick={handleInterested}
+-            className={`text-xl font-bold h-4/5 ${
+-              isInterested
+-                ? "bg-red-600"
+-                : "bg-gradient-to-br from-cyan-600 to-cyan-400"
+-            } text-white w-1/4 rounded-3xl mr-4`}
+-          >
+-            {isInterested ? "Interested" : "Not Interested"}
+-          </button>
+-        </div>
+-      </div>
+-    </div>
++    <>
++      <div
++        className="flex flex-row w-3/5 h-64 mt-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50"
++      >
++        <img
++          src={poster}
++          alt=""
++          className="h-full w-1/3 object-cover"
++        />
++        <div className="flex flex-col ml-4 w-2/3 h-full">
++          <div className="flex flex-row justify-between w-full h-1/5 items-center">
++            <div className="text-2xl font-bold">
++              {heading}
++            </div>
++            <div className="text-2xl font-bold mr-4">
++              {eventHostedBy}
++            </div>
++          </div>
++          <div className="w-full h-2/5 pl-2">
++            {description}
++          </div>
++          <div className="flex flex-row w-full h-1/5 items-center font-bold ">
++            <div className="text-lg font-bold">
++              Tags:
++            </div>
++            {tags.map((tag) =>
++              <Tag tag={tag} key={tag}/>
++            )}
++          </div>
++          <div className="flex flex-row justify-between items-center w-full h-1/5">
++            <div className="flex flex-col w-2/3 h-full">
++              <div className=" font-bold">
++                Time:   <span className="ml-3">{new Date(eventTime).toLocaleString()}</span>
++              </div>
++              <div className=" font-bold">
++                Venue:   <span className="ml-3">{eventVenue}</span>
++              </div>
++            </div>
++            <button
++              className={`text-lg font-bold h-3/5 ${
++                isInterested
++                  ? "bg-red-600"
++                  : "bg-gradient-to-br from-cyan-600 to-cyan-400"
++              } text-white w-1/3 rounded-3xl mr-4`}
++              onClick={handleInterested}
++            >
++              {isInterested ? "Interested" : "Not Interested"}
++            </button>
++          </div>
++        </div>
++      </div>
++    </>
+   );
+ }
+Index: app/events/page.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"use client\";\nimport EventCard from \"../../components/events/card\";\nimport FilterBox from \"../../components/events/filterbox\";\nimport { useEffect, useState, useMemo } from \"react\";\nimport { useModel } from \"../../hooks/user-model-store\";\n\nexport default function EventsPage() {\n  const { allEvents, isLoading, setAllEvents, setLoading } = useModel();\n  const [page, setPage] = useState(1);\n\n  const maxPage = Math.ceil(allEvents.length / 10);\n\n  const selectedEvents = useMemo(() => {\n    if (allEvents.length === 0) return [];\n    return allEvents.slice((page - 1) * 10, page * 10);\n  }, [allEvents, page]);\n\n\n  useEffect(() => {\n    const fetchAllEvents = async () => {\n      setLoading(true);\n      try {\n        const response = await fetch(\"http://localhost:3000/api/events\");\n        const events = await response.json();\n        setAllEvents(events);\n                \n      } catch (error) {\n        console.error(\"Failed to fetch all events:\", error);\n      } finally {\n        setLoading(false);\n      }\n    };\n    fetchAllEvents();\n  }, [setAllEvents, setLoading]);\n  \n  console.log(allEvents);\n  return (\n    <div className=\"flex flex-row h-screen w-full\">\n      <div className=\"flex flex-col w-4/5 h-full items-center mt-12\">\n        <div className=\"flex flex-col w-full h-5/6 items-center overflow-y-auto\">\n          {isLoading ? (\n            <div>Loading...</div>\n          ) : (\n            selectedEvents.map((event) => (\n              <EventCard\n                key={(event._id as any).toString()}\n                _id={event._id as any}\n                poster={event.poster}\n                heading={event.heading}\n                eventHostedBy={event.eventHostedBy as any}\n                description={event.description}\n                tags={event.tags}\n                eventTime={event.eventTime}\n                eventVenue={event.eventVenue}\n                interestedArr={event.interestedMembersArr as any} \n                userId={\"currentUserId\"} // Replace with actual userId from context/store\n              />\n            ))\n          )}\n        </div>\n        <div className=\"flex flex-row items-center justify-around w-1/3 h-20\">\n          <button\n            onClick={() => page > 1 && setPage(page - 1)}\n            className=\"text-xl font-bold h-12 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4\"\n          >\n            Prev\n          </button>\n          <div>{page}</div>\n          <button\n            onClick={() => page < maxPage && setPage(page + 1)}\n            className=\"text-xl font-bold h-12 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4\"\n          >\n            Next\n          </button>\n        </div>\n      </div>\n      <div className=\"flex flex-col w-1/5 items-center mt-8\">\n        <button className=\"text-xl font-bold bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-36 rounded-3xl mb-8 mt-2\">\n          Add Event\n        </button>\n        <FilterBox />\n      </div>\n    </div>\n  );\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/events/page.tsx b/app/events/page.tsx
+--- a/app/events/page.tsx	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/app/events/page.tsx	(date 1734885802434)
+@@ -3,6 +3,7 @@
+ import FilterBox from "../../components/events/filterbox";
+ import { useEffect, useState, useMemo } from "react";
+ import { useModel } from "../../hooks/user-model-store";
++import axios from "axios";
+ 
+ export default function EventsPage() {
+   const { allEvents, isLoading, setAllEvents, setLoading } = useModel();
+@@ -20,8 +21,8 @@
+     const fetchAllEvents = async () => {
+       setLoading(true);
+       try {
+-        const response = await fetch("http://localhost:3000/api/events");
+-        const events = await response.json();
++        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events`);
++        const events = await response.data;
+         setAllEvents(events);
+                 
+       } catch (error) {
+@@ -43,17 +44,16 @@
+           ) : (
+             selectedEvents.map((event) => (
+               <EventCard
+-                key={(event._id as any).toString()}
+-                _id={event._id as any}
++                key={event.heading}
++                _id={event._id}
+                 poster={event.poster}
+                 heading={event.heading}
+-                eventHostedBy={event.eventHostedBy as any}
++                eventHostedBy={event.eventHostedBy}
+                 description={event.description}
+                 tags={event.tags}
+                 eventTime={event.eventTime}
+                 eventVenue={event.eventVenue}
+-                interestedArr={event.interestedMembersArr as any} 
+-                userId={"currentUserId"} // Replace with actual userId from context/store
++                isInterested={event.isInterested}
+               />
+             ))
+           )}
+Index: hooks/user-model-store.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { create } from \"zustand\";\nimport { Event } from \"../model/User\";\n\ninterface ModelStore {\n    allEvents: Event[];\n    filteredEvents: Event[];\n    isLoading: boolean;\n    setAllEvents: (events: Event[]) => void;\n    setFilteredEvents: (events: Event[]) => void;\n    setLoading: (loading: boolean) => void;\n}\n\nexport const useModel = create<ModelStore>((set) => ({\n    allEvents: [],\n    filteredEvents: [],\n    isLoading: false,\n    setAllEvents: (events) => set({ allEvents: events }),\n    setFilteredEvents: (events) => set({ filteredEvents: events }),\n    setLoading: (loading) => set({ isLoading: loading }),\n}));\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/hooks/user-model-store.ts b/hooks/user-model-store.ts
+--- a/hooks/user-model-store.ts	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/hooks/user-model-store.ts	(date 1734885802439)
+@@ -1,5 +1,16 @@
+ import { create } from "zustand";
+-import { Event } from "../model/User";
++
++interface Event {
++    _id: string,
++    poster: string,
++    heading: string,
++    eventHostedBy: string,
++    description: string,
++    tags: string[],
++    eventTime: Date,
++    eventVenue: string,
++    isInterested: boolean,
++}
+ 
+ interface ModelStore {
+     allEvents: Event[];
+Index: app/api/events/route.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import dbConnect from \"../../../lib/connectDb\";\nimport { EventModel } from \"../../../model/User\";\nimport { NextResponse } from \"next/server\";\nimport {getServerSession, User} from \"next-auth\";\nimport {authOptions} from \"../(auth)/auth/[...nextauth]/options\";\nimport mongoose from \"mongoose\";\n\nexport async function GET(request: Request) {\n    try {\n      await dbConnect();\n\n      const session = await getServerSession(authOptions);\n      const user: User = session?.user as User;\n\n      if (!session || !user) {\n        return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });\n      }\n\n      const userId = new mongoose.Types.ObjectId(user._id);\n\n      const events = await EventModel.aggregate([\n        {\n          $addFields: {\n            isInterested: {\n              $cond: {\n                if: { $in: [userId, \"$interestedMembersArr\"] },\n                then: true,\n                else: false,\n              }\n            }\n          }\n        },\n        {\n          $lookup: {\n            from: \"clubs\",\n            localField: \"eventHostedBy\",\n            foreignField: \"_id\",\n            as: \"eventHostedBy\"\n          }\n        },\n        {\n          $unwind: \"$eventHostedBy\"\n        },\n        {\n          $project: {\n            _id: 1,\n            poster: 1,\n            heading: 1,\n            eventHostedBy: \"$eventHostedBy.clubName\",\n            description: 1,\n            tags: 1,\n            eventTime: 1,\n            eventVenue: 1,\n            isInterested: 1,\n          }\n        }\n      ]);\n\n      if (!events) {\n        return NextResponse.json({error: 'No events found'}, {status: 404});\n      }\n      return NextResponse.json(events, { status: 200 });\n\n    } catch (error) {\n      console.error(error);\n      return NextResponse.json({ error: 'An error occurred while fetching events.' }, { status: 500 });\n    }\n  }
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/api/events/route.ts b/app/api/events/route.ts
+--- a/app/api/events/route.ts	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/app/api/events/route.ts	(date 1734886031847)
+@@ -56,6 +56,7 @@
+         }
+       ]);
+ 
++      console.log(events)
+       if (!events) {
+         return NextResponse.json({error: 'No events found'}, {status: 404});
+       }
+Index: app/events/[...eventId]/page.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"use client\"\nimport {useEffect, useState} from \"react\";\nimport {useRouter} from \"next/router\";\nimport axios from \"axios\";\nimport {redirect} from \"next/navigation\";\nimport StudentCard from \"../../../components/student/studentCard\";\nimport mongoose from \"mongoose\";\n\ninterface Event {\n  _id: mongoose.Types.ObjectId;\n  poster: string;\n  heading: string;\n  eventHostedBy: string;\n  description: string;\n  tags: string[];\n  eventTime: Date;\n  eventVenue: string;\n  isInterested: boolean;\n  interestedMembersArr: {\n    name: string;\n    student_id: string;\n    profile: string\n  } [];\n  eventAttachments: string[]\n}\n\nexport default function Event() {\n  const router = useRouter();\n  const {eventId} = router.query;\n  const [event, setEvent] = useState<Event>();\n\n  useEffect(() => {\n    async function fetchData() {\n      if (!eventId) {\n        redirect('/')\n      }\n      await axios.get(`${process.env.BACKEND_URL}/api/events/${eventId[0]}`)\n        .then((res) => {\n          if (res.status === 200) {\n            setEvent(res.data);\n          } else {\n            redirect('/');\n          }\n        })\n    }\n\n    fetchData();\n  })\n\n  async function handleInterested() {\n    try {\n      if (!event) {\n        return;\n      }\n      const {_id} = event;\n      await axios.patch(`${process.env.BACKEND_URL}/api/events/interested/${_id}`)\n        .then(res => {\n          if (res.status === 200) {\n            console.log(res.data);\n            event.isInterested = !event.isInterested;\n          }\n        })\n    } catch (error) {\n      console.log(error);\n    }\n  }\n\n  return (\n    <>\n      <div className=\"flex flex-col items-center w-full h-screen\">\n        <div className=\"flex flex-row items-center w-3/5 h-1/3 mt-12 justify-between \">\n          <div className=\"flex flex-col w-3/5 h-full \">\n            <div className=\"flex flex-row items-center w-full justify-between\">\n              <div className=\"text-3xl font-bold\">\n                {event?.heading}\n              </div>\n              <button\n                className=\"text-xl font-bold h-4/5 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4\"\n                onClick={handleInterested}\n              >\n                {event?.isInterested ? \"Interested\" : \"Not Interested\"}\n              </button>\n            </div>\n            <div className=\"text-xl font-bold mt-3 mb-2\">\n              Description\n            </div>\n            <div\n              className=\"h-full w-full justify-evenly border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n              {event?.description}\n            </div>\n          </div>\n          <img\n            src={event?.poster}\n            className=\"h-full w-1/3 object-fill\"\n            alt=\"\"\n          />\n        </div>\n        <div className=\"flex flex-row w-3/5 h-3/5 justify-between\">\n          <div className=\"flex flex-col w-3/5 h-full\">\n            <div className=\"flex flex-row items-center justify-between w-full h-3/5 \">\n              <div className=\"flex flex-col w-1/2 h-3/4 text-xl font-bold pl-2 justify-around border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n                <div>\n                  Venue: {event?.eventVenue}\n                </div>\n                <div>\n                  Date: {event?.eventTime.toDateString()}\n                </div>\n                <div>\n                  Time: {event?.eventTime.toTimeString()}\n                </div>\n                <div>\n                  Hosted By: {event?.eventHostedBy}\n                </div>\n              </div>\n              <div className=\"flex flex-col w-1/3 h-3/4 items-center text-xl font-bold border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n                <div className=\"text-2xl mt-4 mb-4\">\n                  Tags\n                </div>\n                {event?.tags.map((tag) => {\n                  return <div key={tag} className=\"mt-4\">{tag}</div>\n                })}\n              </div>\n            </div>\n            <div className=\"flex flex-col w-full h-2/5 border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n              <div className=\"ml-2 text-2xl font-bold\">\n                Attachments\n              </div>\n              {/*attachments */}\n            </div>\n          </div>\n          <div className=\"flex flex-col items-center w-1/3 h-full overflow-y-auto \">\n            <div className=\"text-2xl font-bold mt-3 mb-2\">\n              Interested People\n            </div>\n            {event?.interestedMembersArr.map((member) => {\n              return <StudentCard key={member.student_id} name={member.name} student_id={member.student_id} profile={member.profile} />\n            })}\n          </div>\n        </div>\n      </div>\n    </>\n  )\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/events/[...eventId]/page.tsx b/app/events/[...eventId]/page.tsx
+--- a/app/events/[...eventId]/page.tsx	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/app/events/[...eventId]/page.tsx	(date 1734868653582)
+@@ -34,7 +34,7 @@
+       if (!eventId) {
+         redirect('/')
+       }
+-      await axios.get(`${process.env.BACKEND_URL}/api/events/${eventId[0]}`)
++      await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${eventId[0]}`)
+         .then((res) => {
+           if (res.status === 200) {
+             setEvent(res.data);
+@@ -45,7 +45,7 @@
+     }
+ 
+     fetchData();
+-  })
++  }, [eventId]);
+ 
+   async function handleInterested() {
+     try {
+@@ -53,7 +53,7 @@
+         return;
+       }
+       const {_id} = event;
+-      await axios.patch(`${process.env.BACKEND_URL}/api/events/interested/${_id}`)
++      await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id}`)
+         .then(res => {
+           if (res.status === 200) {
+             console.log(res.data);
+Index: components/events/filterbox.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"use client\"\n\nimport {useSetRecoilState} from \"recoil\";\nimport {eventFilterState} from \"../../store/atoms/eventFilter\";\nimport {ChangeEvent} from \"react\";\n\nexport default function FilterBox() {\n  const setEventFilter = useSetRecoilState(eventFilterState);\n  function handleChange(e: ChangeEvent<HTMLInputElement>, value: string) {\n    if (e.target.checked) {\n      setEventFilter((oldState) => {\n        return {\n          date: oldState.date,\n          tags: [...oldState.tags, value],\n        }\n      })\n    } else {\n      setEventFilter((oldState) => {\n        return {\n          date: oldState.date,\n          tags: oldState.tags.filter((tag) => tag !== value),\n        }\n      })\n    }\n  }\n\n  return (\n    <>\n      <div className=\"flex flex-col w-4/5 h-96 pl-4 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n        <div className=\"text-2xl font-bold text-center mt-4 mb-4\">\n          Filter Options\n        </div>\n        <div className=\"text-lg font-bold flex flex-row w-full mt-4\">\n          <label className=\"inline-flex items-center\">\n            <input\n              type=\"checkbox\"\n              className=\"hidden peer\"\n              onChange={(e)=> handleChange(e, \"Tech\")}\n            />\n            <div\n              className=\"w-6 h-6 rounded-full border-2 border-gray-500 peer-checked:bg-cyan-500 peer-checked:border-cyan-500\"></div>\n          </label>\n          <div className=\"ml-2\">\n            Tech\n          </div>\n        </div>\n        <div className=\"text-lg font-bold flex flex-row w-full mt-4\">\n          <label className=\"inline-flex items-center\">\n            <input\n              type=\"checkbox\"\n              className=\"hidden peer\"\n              onChange={(e)=> handleChange(e, \"Coding\")}\n            />\n            <div\n              className=\"w-6 h-6 rounded-full border-2 border-gray-500 peer-checked:bg-cyan-500 peer-checked:border-cyan-500\"></div>\n          </label>\n          <div className=\"ml-2\">\n            Coding\n          </div>\n        </div>\n        <div className=\"text-lg font-bold flex flex-row w-full mt-4\">\n          <label className=\"inline-flex items-center\">\n            <input\n              type=\"checkbox\"\n              className=\"hidden peer\"\n              onChange={(e)=> handleChange(e, \"Robotics\")}\n            />\n            <div\n              className=\"w-6 h-6 rounded-full border-2 border-gray-500 peer-checked:bg-cyan-500 peer-checked:border-cyan-500\"></div>\n          </label>\n          <div className=\"ml-2\">\n            Robotics\n          </div>\n        </div>\n        <div className=\"text-lg font-bold flex flex-row w-full mt-4\">\n          <label className=\"inline-flex items-center\">\n            <input\n              type=\"checkbox\"\n              className=\"hidden peer\"\n              onChange={(e)=> handleChange(e, \"Music\")}\n            />\n            <div\n              className=\"w-6 h-6 rounded-full border-2 border-gray-500 peer-checked:bg-cyan-500 peer-checked:border-cyan-500\"></div>\n          </label>\n          <div className=\"ml-2\">\n            Music\n          </div>\n        </div>\n        <div className=\"text-lg font-bold flex flex-row w-full mt-4\">\n          <label className=\"inline-flex items-center\">\n            <input\n              type=\"checkbox\"\n              className=\"hidden peer\"\n              onChange={(e)=> handleChange(e, \"dance\")}\n            />\n            <div\n              className=\"w-6 h-6 rounded-full border-2 border-gray-500 peer-checked:bg-cyan-500 peer-checked:border-cyan-500\"></div>\n          </label>\n          <div className=\"ml-2\">\n            Dance\n          </div>\n        </div>\n        <div className=\"text-lg font-bold flex flex-row w-full mt-4\">\n          <label className=\"inline-flex items-center\">\n            <input\n              type=\"checkbox\"\n              className=\"hidden peer\"\n              onChange={(e)=> handleChange(e, \"Art\")}\n            />\n            <div\n              className=\"w-6 h-6 rounded-full border-2 border-gray-500 peer-checked:bg-cyan-500 peer-checked:border-cyan-500\"></div>\n          </label>\n          <div className=\"ml-2\">\n            Art\n          </div>\n        </div>\n        <div className=\"text-lg font-bold flex flex-row w-full mt-4\">\n          <label className=\"inline-flex items-center\">\n            <input\n              type=\"checkbox\"\n              className=\"hidden peer\"\n              onChange={(e)=> handleChange(e, \"Comedy\")}\n            />\n            <div\n              className=\"w-6 h-6 rounded-full border-2 border-gray-500 peer-checked:bg-cyan-500 peer-checked:border-cyan-500\"></div>\n          </label>\n          <div className=\"ml-2\">\n            Comedy\n          </div>\n        </div>\n      </div>\n    </>\n  )\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/components/events/filterbox.tsx b/components/events/filterbox.tsx
+--- a/components/events/filterbox.tsx	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/components/events/filterbox.tsx	(date 1734868653587)
+@@ -3,10 +3,14 @@
+ import {useSetRecoilState} from "recoil";
+ import {eventFilterState} from "../../store/atoms/eventFilter";
+ import {ChangeEvent} from "react";
++import {pageState} from "../../store/atoms/event";
+ 
+ export default function FilterBox() {
++  const setPage = useSetRecoilState(pageState);
+   const setEventFilter = useSetRecoilState(eventFilterState);
++
+   function handleChange(e: ChangeEvent<HTMLInputElement>, value: string) {
++    setPage(1);
+     if (e.target.checked) {
+       setEventFilter((oldState) => {
+         return {
+Index: components/events/tag.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>export default function Tag({tag}: {tag: string}) {\n\n  return (\n    <>\n      <div className=\"ml-6 w-1/6 text-lg h-4/5 content-center font-bold rounded-2xl text-center bg-gradient-to-br from-cyan-600 to-cyan-400 text-white\">\n        {tag}\n      </div>\n    </>\n  )\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/components/events/tag.tsx b/components/events/tag.tsx
+--- a/components/events/tag.tsx	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/components/events/tag.tsx	(date 1734880697671)
+@@ -2,7 +2,7 @@
+ 
+   return (
+     <>
+-      <div className="ml-6 w-1/6 text-lg h-4/5 content-center font-bold rounded-2xl text-center bg-gradient-to-br from-cyan-600 to-cyan-400 text-white">
++      <div className="ml-6 w-1/6 h-3/5 content-center font-bold rounded-2xl text-center bg-gradient-to-br from-cyan-600 to-cyan-400 text-white">
+         {tag}
+       </div>
+     </>
+Index: components/student/profile.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import ClubCard from \"../club/clubCard\";\n\nexport default function Profile() {\n\n  return (\n    <>\n      <div className=\"flex flex-col items-center\">\n        <div className=\"flex flex-row items-center w-2/3 h-80 mt-16 justify-between border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n          <div\n            className=\"flex flex-col items-center w-1/4 h-4/5 ml-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n            <div className=\"flex flex-row items-center justify-evenly w-full h-1/4 text-lg font-bold\">\n              <div>\n                Name:\n              </div>\n              <div>\n                Testing Name\n              </div>\n            </div>\n            <div className=\"flex flex-row items-center justify-evenly w-full h-1/4 text-lg font-bold\">\n              <div>\n                SID:\n              </div>\n              <div>\n                Testing SID\n              </div>\n            </div>\n            <div className=\"flex flex-row items-center justify-evenly w-full h-1/4 text-lg font-bold\">\n              <div>\n                Branch:\n              </div>\n              <div>\n                Testing Branch\n              </div>\n            </div>\n            <div className=\"flex flex-row items-center justify-evenly w-full h-1/4 text-lg font-bold\">\n              <div>\n                Semester:\n              </div>\n              <div>\n                Testing Semester\n              </div>\n            </div>\n          </div>\n          <img  src=\"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfXKzxBrv-nr-V2w6n-Hf14w-Mw-p4tD_f6GPvjOCW4CoikavWniBoh4rNfKid-VyUwH4&usqp=CAU\" className=\"flex flex-col items-center w-1/5 h-4/5 mr-8 border-2 rounded-full border-cyan-300 shadow-md shadow-cyan-300/50\" />\n          </div>\n          <div className=\"w-2/3 text-2xl font-bold mt-12\">\n            Joined Clubs\n          </div>\n          <div className=\"flex flex-row w-2/3 h-96 mt-4 border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n            <div className=\"flex flex-col justify-evenly h-full w-3/4\">\n              <ClubCard />\n              <ClubCard />\n              <ClubCard />\n            </div>\n            <div className=\"flex flex-col items-center h-full w-1/4\">\n              <button className=\"text-lg font-bold h-1/6 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-4/6 rounded-full mt-8\">\n                Show All Joined Clubs\n              </button>\n              <div className=\"text-xl font-bold mt-8\">\n                Number of Clubs joined:\n              </div>\n            </div>\n          </div>\n      </div>\n    </>\n  )\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/components/student/profile.tsx b/components/student/profile.tsx
+--- a/components/student/profile.tsx	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/components/student/profile.tsx	(date 1734869544058)
+@@ -5,7 +5,8 @@
+   return (
+     <>
+       <div className="flex flex-col items-center">
+-        <div className="flex flex-row items-center w-2/3 h-80 mt-16 justify-between border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
++        <div
++          className="flex flex-row items-center w-2/3 h-80 mt-16 justify-between border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
+           <div
+             className="flex flex-col items-center w-1/4 h-4/5 ml-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
+             <div className="flex flex-row items-center justify-evenly w-full h-1/4 text-lg font-bold">
+@@ -41,26 +42,35 @@
+               </div>
+             </div>
+           </div>
+-          <img  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfXKzxBrv-nr-V2w6n-Hf14w-Mw-p4tD_f6GPvjOCW4CoikavWniBoh4rNfKid-VyUwH4&usqp=CAU" className="flex flex-col items-center w-1/5 h-4/5 mr-8 border-2 rounded-full border-cyan-300 shadow-md shadow-cyan-300/50" />
+-          </div>
+-          <div className="w-2/3 text-2xl font-bold mt-12">
+-            Joined Clubs
+-          </div>
+-          <div className="flex flex-row w-2/3 h-96 mt-4 border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
+-            <div className="flex flex-col justify-evenly h-full w-3/4">
+-              <ClubCard />
+-              <ClubCard />
+-              <ClubCard />
+-            </div>
+-            <div className="flex flex-col items-center h-full w-1/4">
+-              <button className="text-lg font-bold h-1/6 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-4/6 rounded-full mt-8">
+-                Show All Joined Clubs
+-              </button>
+-              <div className="text-xl font-bold mt-8">
+-                Number of Clubs joined:
+-              </div>
++          <img
++            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfXKzxBrv-nr-V2w6n-Hf14w-Mw-p4tD_f6GPvjOCW4CoikavWniBoh4rNfKid-VyUwH4&usqp=CAU"
++            className="flex flex-col items-center w-1/5 h-4/5 mr-8 border-2 rounded-full border-cyan-300 shadow-md shadow-cyan-300/50"/>
++        </div>
++        <div className="w-2/3 text-2xl font-bold mt-12">
++          Joined Clubs
++        </div>
++        <div className="flex flex-row w-2/3 h-96 mt-4 border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
++          <div className="flex flex-col h-full w-3/4 overflow-y-auto">
++            <ClubCard/>
++            <ClubCard/>
++            <ClubCard/>
++            <ClubCard/>
++          </div>
++          <div className="flex flex-col items-center h-full w-1/4">
++            <div className="text-xl font-bold mt-8">
++              Number of Clubs joined:
++            </div>
++            <div className="text-3xl font-bold mt-4">
++              4
+             </div>
+           </div>
++        </div>
++        <div className="w-2/3 text-2xl font-bold mt-12">
++          Marks
++        </div>
++        <div className="flex flex-row w-2/3 h-96 mt-4 border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
++
++        </div>
+       </div>
+     </>
+   )
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24__7_08PM__Changes_1.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24__7_08PM__Changes_1.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24__7_08PM__Changes_1.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24__7_08PM__Changes_1.xml	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ /dev/null	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Checkout_at_12_14_24,_7_08 PM_[Changes]1" date="1734183522608" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24,_7_08 PM_[Changes]1/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 12/14/24, 7:08 PM [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24,_7_08 PM_[Changes]1/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24,_7_08 PM_[Changes]1/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24,_7_08 PM_[Changes]1/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24,_7_08 PM_[Changes]1/shelved.patch	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ /dev/null	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
+@@ -1,34 +0,0 @@
+-Index: components/student/clubCard.tsx
+-===================================================================
+-diff --git a/components/student/clubCard.tsx b/components/student/clubCard.tsx
+-new file mode 100644
+---- /dev/null	(date 1734112448612)
+-+++ b/components/student/clubCard.tsx	(date 1734112448612)
+-@@ -0,0 +1,26 @@
+-+import Tag from "@/components/events/tag";
+-+
+-+export default function ClubCard() {
+-+
+-+  return (
+-+    <>
+-+      <div
+-+        className="flex flex-row items-center justify-between w-4/5 h-1/4 ml-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
+-+        <img
+-+          src="https://next-images.123rf.com/index/_next/image/?url=https://assets-cdn.123rf.com/index/static/assets/top-section-bg.jpeg&w=3840&q=75"
+-+          alt=""
+-+          className="h-20 w-20 object-cover rounded-full ml-4"
+-+        />
+-+        <div className="text-2xl font-bold">
+-+          Club Name
+-+        </div>
+-+        <div className="text-2xl font-bold mr-4">
+-+          Club Category
+-+        </div>
+-+        <button className="text-xl font-bold h-1/2 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4">
+-+          Show Club Details
+-+        </button>
+-+      </div>
+-+    </>
+-+  )
+-+}
+-\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"3d45d623-ee8a-421e-8d0d-07f88c3fd10c\" name=\"Changes\" comment=\"fixup! recovered files\" />\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"TypeScript JSX File\" />\n        <option value=\"TypeScript File\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"f40caa737c0b869e3b7b6977b0cbcaceb80c7219\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n    <option name=\"RESET_MODE\" value=\"MIXED\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;VaibhavVerma27&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\">{\n  &quot;selectedUrlAndAccountId&quot;: {\n    &quot;url&quot;: &quot;https://github.com/VaibhavVerma27/Ideathon.git&quot;,\n    &quot;accountId&quot;: &quot;2d85c29d-bd34-4650-83c7-ed5abaf2838e&quot;\n  }\n}</component>\n  <component name=\"ProblemsViewState\">\n    <option name=\"selectedTabId\" value=\"CurrentFile\" />\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 5\n}</component>\n  <component name=\"ProjectId\" id=\"2pwcVN5jNvv3r7ErnbxxbDHxjE8\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\n    &quot;last_opened_file_path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/week-16-1&quot;,\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\n    &quot;ts.external.directory.path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/ideathon/node_modules/typescript/lib&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  }\n}</component>\n  <component name=\"RecentsManager\">\n    <key name=\"MoveFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/components/club\" />\n    </key>\n  </component>\n  <component name=\"SharedIndexes\">\n    <attachedChunks>\n      <set>\n        <option value=\"bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-WS-243.22562.222\" />\n      </set>\n    </attachedChunks>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"3d45d623-ee8a-421e-8d0d-07f88c3fd10c\" name=\"Changes\" comment=\"\" />\n      <created>1733680600234</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1733680600234</updated>\n      <workItem from=\"1733680601320\" duration=\"285000\" />\n      <workItem from=\"1733724675594\" duration=\"611000\" />\n      <workItem from=\"1733822080765\" duration=\"1111000\" />\n      <workItem from=\"1733835011657\" duration=\"6379000\" />\n      <workItem from=\"1733847978381\" duration=\"5516000\" />\n      <workItem from=\"1733894701134\" duration=\"9865000\" />\n      <workItem from=\"1733925499497\" duration=\"1606000\" />\n      <workItem from=\"1733928369051\" duration=\"251000\" />\n      <workItem from=\"1733928630064\" duration=\"4368000\" />\n      <workItem from=\"1733980473805\" duration=\"1457000\" />\n      <workItem from=\"1734070775491\" duration=\"813000\" />\n      <workItem from=\"1734085817459\" duration=\"30000\" />\n      <workItem from=\"1734183280596\" duration=\"5230000\" />\n      <workItem from=\"1734189002399\" duration=\"3292000\" />\n      <workItem from=\"1734192305926\" duration=\"2303000\" />\n      <workItem from=\"1734194762220\" duration=\"86000\" />\n      <workItem from=\"1734199075722\" duration=\"1951000\" />\n      <workItem from=\"1734202864084\" duration=\"690000\" />\n      <workItem from=\"1734243660946\" duration=\"163000\" />\n      <workItem from=\"1734247462466\" duration=\"601000\" />\n      <workItem from=\"1734274484596\" duration=\"221000\" />\n      <workItem from=\"1734285025230\" duration=\"756000\" />\n      <workItem from=\"1734342119399\" duration=\"12152000\" />\n      <workItem from=\"1734415130463\" duration=\"154000\" />\n      <workItem from=\"1734451510425\" duration=\"1022000\" />\n      <workItem from=\"1734515159954\" duration=\"1302000\" />\n      <workItem from=\"1734587553335\" duration=\"2223000\" />\n      <workItem from=\"1734622604490\" duration=\"6450000\" />\n      <workItem from=\"1734672636682\" duration=\"3862000\" />\n      <workItem from=\"1734697995805\" duration=\"4210000\" />\n      <workItem from=\"1734709695437\" duration=\"1288000\" />\n      <workItem from=\"1734719253317\" duration=\"6275000\" />\n      <workItem from=\"1734766424331\" duration=\"15352000\" />\n    </task>\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n    <option name=\"exactExcludedFiles\">\n      <list>\n        <option value=\"$PROJECT_DIR$/next.config.mjs\" />\n        <option value=\"$PROJECT_DIR$/next.config.mjs\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State>\n              <option name=\"FILTERS\">\n                <map>\n                  <entry key=\"branch\">\n                    <value>\n                      <list>\n                        <option value=\"main\" />\n                      </list>\n                    </value>\n                  </entry>\n                </map>\n              </option>\n            </State>\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"fixup! recovered files\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"fixup! recovered files\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/.idea/workspace.xml	(date 1734886164258)
+@@ -4,7 +4,24 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files" />
++    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24,_7_08 PM_[Changes]1/shelved.patch" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24__7_08PM__Changes_1.xml" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/add-event/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/add-event/page.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/api/events/interested/[...eventsId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/interested/[...eventId]/route.ts" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/api/events/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/route.ts" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/events/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/page.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/components/club/clubCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/club/clubCard.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/components/events/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/card.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/components/events/filterbox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/filterbox.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/components/events/tag.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/tag.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/components/student/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/student/profile.tsx" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/store/atoms/event.ts" beforeDir="false" afterPath="$PROJECT_DIR$/store/atoms/event.ts" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/store/atoms/filteredEvents.ts" beforeDir="false" afterPath="$PROJECT_DIR$/store/atoms/filteredEvents.ts" afterDir="false" />
++    </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -118,6 +135,7 @@
+       <workItem from="1734709695437" duration="1288000" />
+       <workItem from="1734719253317" duration="6275000" />
+       <workItem from="1734766424331" duration="15352000" />
++      <workItem from="1734859762039" duration="14219000" />
+     </task>
+     <servers />
+   </component>
+Index: app/add-event/page.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"use client\"\n\nimport {useEffect, useState} from \"react\";\nimport axios from \"axios\";\nimport {redirect} from \"next/navigation\";\nimport {CldUploadButton} from \"next-cloudinary\";\n\nexport default function AddEventPage() {\n  const [eventHostedBy, setEventHostedBy] = useState<string>(\"\");\n  const [tag1, setTag1] = useState<string>(\"\");\n  const [tag2, setTag2] = useState<string>(\"\");\n  const [tag3, setTag3] = useState<string>(\"\");\n  const [heading, setHeading] = useState<string>(\"\");\n  const [description, setDescription] = useState<string>(\"\");\n  const [poster, setPoster] = useState<string>(\"\");\n  const [eventAttachments, seteventAttachments] = useState<string[]>([]);\n  const [clubs, setClubs] = useState<{clubName: string}[]>([]);\n  const [eventVenue, setEventVenue] = useState<string>(\"\");\n  const [date, setDate] = useState<string>('');\n  const [time, setTime] = useState<string>('');\n\n  function handlePosterUpload(result: any) {\n    if (result.event === \"success\") {\n      setPoster(result.info.secure_url);\n    }\n  }\n\n  function handleEventAttachmentsUpload(result: any) {\n    if (result.event === \"success\") {\n      seteventAttachments((prev) => [...prev, result.info.secure_url]);\n    }\n  }\n\n  async function handleAddEvent() {\n    if (!poster || !date || !time || !eventHostedBy || !description || !eventVenue) {\n      return;\n    }\n    const tags = [];\n    if (tag1 != \"\") tags.push(tag1);\n    if (tag2 != \"\") tags.push(tag2);\n    if (tag3 != \"\") tags.push(tag3);\n\n    const eventTime = new Date(`${date}T${time}`);\n\n    const res = await axios.post(`http://localhost:3000/api/events/add-event`, {\n      eventHostedBy,\n      poster,\n      heading,\n      tags,\n      description,\n      eventAttachments,\n      eventVenue,\n      eventTime\n    })\n\n    if (res.status == 200) {\n      redirect(`/events/${res.data._id}`);\n    }\n  }\n\n  useEffect(function () {\n    setClubs([]);\n    async function fetchClubs() {\n      await axios.get(`http://localhost:3000/api/club/head`).then((response) => {\n        if (response.status == 403) {\n          redirect('/');\n        }\n        setClubs(response.data)\n      }).catch((err) => {\n        console.log(err);\n        redirect('/');\n      })\n    }\n\n    fetchClubs();\n    if (clubs.length == 0) redirect('/');\n  }, [])\n  \n  return (\n    <>\n      <div className=\"flex flex-col w-full h-screen items-center  justify-center\">\n        <div className=\"flex flex-col w-2/5 h-4/5 justify-evenly items-center border-4 border-solid rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50 text-lg bg-gradient-to-br from-gray-200/60 to-gray-50/60\">\n          <div className=\"text-3xl font-bold\">\n            Add Event\n          </div>\n          <div className=\"flex flex-row justify-between items-center w-4/5 h-1/4\">\n            <div className=\"flex flex-col items-center w-2/5 h-5/6 bg-gradient-to-br from-cyan-700 to-cyan-500 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n              <label className=\"text-white text-xl font-bold text-center mt-2\">\n                Select Club\n              </label>\n              <select value={eventHostedBy} onChange={(e) => setEventHostedBy(e.target.value)} className=\"mt-4 w-3/4 pl-2\">\n                {clubs.map((club: {clubName: string}) => {\n                  return (\n                  <option value={club.clubName} key={club.clubName}>\n                    {club.clubName}\n                  </option>\n                  )\n                })}\n              </select>\n            </div>\n            <div className=\"flex flex-col items-center w-2/5 h-5/6 bg-gradient-to-br from-cyan-700 to-cyan-500 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n              <label className=\"text-white text-xl font-bold text-center mt-2\">\n                Select Tags\n              </label>\n              <select value={tag1} onChange={(e) => setTag1(e.target.value)} className=\"mt-4 w-3/4 pl-2\">\n                <option>Tag1</option>\n                <option>Tag2</option>\n                <option>Tag3</option>\n              </select>\n              <select value={tag2} onChange={(e) => setTag2(e.target.value)} className=\"mt-4 w-3/4 pl-2\">\n                <option>Tag1</option>\n                <option>Tag2</option>\n                <option>Tag3</option>\n              </select>\n              <select value={tag3} onChange={(e) => setTag3(e.target.value)} className=\"mt-4 w-3/4 pl-2\">\n                <option>Tag1</option>\n                <option>Tag2</option>\n                <option>Tag3</option>\n              </select>\n            </div>\n          </div>\n          <div className=\"flex flex-col w-4/5 h-2/5 bg-gradient-to-br from-cyan-700 to-cyan-500 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n            <div className=\"flex flex-row h-1/6 w-full justify-between   items-center\">\n              <label htmlFor=\"heading\" className=\"ml-4 text-white font-bold\">\n                Heading:\n              </label>\n              <input\n                value={heading}\n                onChange={(e) => setHeading(e.target.value)}\n                type=\"text\"\n                placeholder=\"Heading\"\n                className=\"w-3/4 mr-4 pl-2\"\n                id=\"heading\"\n              />\n            </div>\n            <div className=\"flex flex-row h-2/6 w-full justify-between   pt-2 pb-4\">\n              <label htmlFor=\"description\" className=\"ml-4 text-white font-bold\">\n                Description:\n              </label>\n              <textarea\n                value={description}\n                onChange={(e) => setDescription(e.target.value)}\n                placeholder=\"description\"\n                className=\"w-3/4 mr-4 pl-2 h-full\"\n                id=\"description\"\n              />\n            </div>\n            <div className=\"flex flex-row h-1/6 w-full items-center\">\n              <label htmlFor=\"poster\" className=\"ml-4 text-white font-bold\">\n                Poster:\n              </label>\n              <CldUploadButton\n                uploadPreset={process.env.NEXT_PUBLIC_CLOUDNARY_UPLOAD_PRESET as string}\n                onSuccess={handlePosterUpload}\n                className=\"w-1/4 ml-12 bg-white rounded-full\"\n              >\n                Upload Poster\n              </CldUploadButton>\n            </div>\n            <div className=\"flex flex-row h-1/6 w-full justify-between   items-center\">\n              <label htmlFor=\"venue\" className=\"ml-4 text-white font-bold\">\n                Venue:\n              </label>\n              <input\n                value={eventVenue}\n                onChange={(e) => setEventVenue(e.target.value)}\n                type=\"text\"\n                placeholder=\"Venue\"\n                className=\"w-3/4 mr-4 pl-2\"\n                id=\"venue\"\n              />\n            </div>\n            <div className=\"flex flex-row h-1/6 w-full justify-between  items-center\">\n              <div className=\"flex flex-row h-full w-1/2   items-center\">\n                <label htmlFor=\"date\" className=\"ml-4 text-white font-bold\">\n                  Date:\n                </label>\n                <input\n                  value={date}\n                  onChange={(e) => setDate(e.target.value)}\n                  type=\"date\"\n                  className=\"w-3/4 ml-3 pl-2\"\n                  id=\"date\"\n                />\n              </div>\n              <div className=\"flex flex-row h-full w-1/2  items-center\">\n                <label htmlFor=\"time\" className=\"ml-3 text-white font-bold\">\n                  Time:\n                </label>\n                <input\n                  value={time}\n                  onChange={(e) => setTime(e.target.value)}\n                  type=\"time\"\n                  className=\"w-3/4 ml-4 pl-2\"\n                  id=\"time\"\n                />\n              </div>\n            </div>\n          </div>\n          <div\n            className=\"flex flex-row items-center h-12 bg-gradient-to-br from-cyan-600 to-cyan-400 w-4/5\">\n            <label htmlFor=\"attachments\" className=\"text-white font-bold text-xl ml-4\">\n              Attachments:\n            </label>\n            <CldUploadButton\n              uploadPreset={process.env.NEXT_PUBLIC_CLOUDNARY_UPLOAD_PRESET as string}\n              onSuccess={handleEventAttachmentsUpload}\n              className=\"w-1/3 ml-12 bg-white rounded-full\"\n            >\n              Upload Attachments\n            </CldUploadButton>\n          </div>\n          <button\n            type={\"submit\"}\n            onChange={handleAddEvent}\n            className=\"text-xl font-bold bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-36 rounded-3xl h-12\">\n            Add Event\n          </button>\n        </div>\n      </div>\n    </>\n  )\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/add-event/page.tsx b/app/add-event/page.tsx
+--- a/app/add-event/page.tsx	(revision 01c0abd10a60698715776cc294e8fe0aa1f58030)
++++ b/app/add-event/page.tsx	(date 1734869606660)
+@@ -61,7 +61,7 @@
+   useEffect(function () {
+     setClubs([]);
+     async function fetchClubs() {
+-      await axios.get(`http://localhost:3000/api/club/head`).then((response) => {
++      await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/club/head`).then((response) => {
+         if (response.status == 403) {
+           redirect('/');
+         }
+@@ -75,7 +75,7 @@
+     fetchClubs();
+     if (clubs.length == 0) redirect('/');
+   }, [])
+-  
++
+   return (
+     <>
+       <div className="flex flex-col w-full h-screen items-center  justify-center">

@@ -3,10 +3,14 @@
 import {useSetRecoilState} from "recoil";
 import {eventFilterState} from "../../store/atoms/eventFilter";
 import {ChangeEvent} from "react";
+import {pageState} from "../../store/atoms/event";
 
 export default function FilterBox() {
+  const setPage = useSetRecoilState(pageState);
   const setEventFilter = useSetRecoilState(eventFilterState);
+
   function handleChange(e: ChangeEvent<HTMLInputElement>, value: string) {
+    setPage(1);
     if (e.target.checked) {
       setEventFilter((oldState) => {
         return {

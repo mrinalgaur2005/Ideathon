@@ -3,7 +3,7 @@ import EventCard from "../../components/events/card";
 import FilterBox from "../../components/events/filterbox";
 import { useEffect, useState, useMemo } from "react";
 import { useModel } from "../../hooks/user-model-store";
-import { Loader2 } from "lucide-react";
+import axios from "axios";
 
 export default function EventsPage() {
   const { allEvents, isLoading, setAllEvents, setLoading } = useModel();
@@ -21,8 +21,8 @@ export default function EventsPage() {
     const fetchAllEvents = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:3000/api/events");
-        const events = await response.json();
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events`);
+        const events = await response.data;
         setAllEvents(events);
                 
       } catch (error) {
@@ -40,23 +40,20 @@ export default function EventsPage() {
       <div className="flex flex-col w-4/5 h-full items-center mt-12">
         <div className="flex flex-col w-full h-5/6 items-center overflow-y-auto">
           {isLoading ? (
-            <div>
-              Loading...
-            .</div>
+            <div>Loading...</div>
           ) : (
             selectedEvents.map((event) => (
               <EventCard
-                key={(event._id as any).toString()}
-                _id={event._id as any}
+                key={event.heading}
+                _id={event._id.toString()}
                 poster={event.poster}
                 heading={event.heading}
-                eventHostedBy={event.eventHostedBy as any}
+                eventHostedBy={event.eventHostedBy}
                 description={event.description}
                 tags={event.tags}
                 eventTime={event.eventTime}
                 eventVenue={event.eventVenue}
-                interestedArr={event.interestedMembersArr as any} 
-                userId={"currentUserId"} // Replace with actual userId from context/store
+                isInterested={event.isInterested}
               />
             ))
           )}

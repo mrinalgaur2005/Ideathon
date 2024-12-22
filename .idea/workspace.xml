@@ -4,7 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files" />
+    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24,_7_08 PM_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24__7_08PM__Changes_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/add-event/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/add-event/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/events/interested/[...eventsId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/interested/[...eventId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/events/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/events/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/club/clubCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/club/clubCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/events/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/card.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/events/filterbox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/filterbox.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/events/tag.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/tag.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/student/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/student/profile.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/store/atoms/event.ts" beforeDir="false" afterPath="$PROJECT_DIR$/store/atoms/event.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/store/atoms/filteredEvents.ts" beforeDir="false" afterPath="$PROJECT_DIR$/store/atoms/filteredEvents.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -118,6 +135,7 @@
       <workItem from="1734709695437" duration="1288000" />
       <workItem from="1734719253317" duration="6275000" />
       <workItem from="1734766424331" duration="15352000" />
+      <workItem from="1734859762039" duration="16109000" />
     </task>
     <servers />
   </component>

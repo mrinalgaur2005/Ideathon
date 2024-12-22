@@ -56,6 +56,7 @@ export async function GET(request: Request) {
         }
       ]);
 
+      console.log(events)
       if (!events) {
         return NextResponse.json({error: 'No events found'}, {status: 404});
       }

@@ -8,23 +8,36 @@ import mongoose from "mongoose";
 
 export async function PATCH(
     req:Request,
-    {params}:{params:{eventId:string}}
+    {params}:{params:{eventId:string[]}}
 ) {
     try {
         await dbConnect();
         const session = await getServerSession(authOptions);
         const user: User = session?.user as User;
-        
+
         if (!session || !user) {
             return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });
         }
-        
-        const eventId = params.eventId;
-        if (!eventId) {
-            return NextResponse.json({ error: "Event ID is required." }, { status: 400 });
+
+        const { eventId } = await params;
+
+        if (!eventId.length) {
+            return new Response(
+              JSON.stringify({ success: false, message: 'Event ID is required' }),
+              { status: 400, headers: { 'Content-Type': 'application/json' } }
+            );
         }
 
-        const eventObjectId = new mongoose.Types.ObjectId(eventId);
+        console.log(eventId);
+
+        if (!mongoose.Types.ObjectId.isValid(eventId[0])) {
+            return new Response(
+              JSON.stringify({ success: false, message: 'Invalid event ID' }),
+              { status: 400, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
+        const eventObjectId = new mongoose.Types.ObjectId(eventId[0])
         const userId = new mongoose.Types.ObjectId(user._id);
 
         const event = await EventModel.findById(eventObjectId);

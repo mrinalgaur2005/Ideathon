@@ -1,5 +1,17 @@
 import { create } from "zustand";
-import { Event } from "../model/User";
+import mongoose from "mongoose";
+
+interface Event {
+    _id: mongoose.Types.ObjectId,
+    poster: string,
+    heading: string,
+    eventHostedBy: string,
+    description: string,
+    tags: string[],
+    eventTime: Date,
+    eventVenue: string,
+    isInterested: boolean,
+}
 
 interface ModelStore {
     allEvents: Event[];
