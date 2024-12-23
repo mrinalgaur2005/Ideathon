@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/components/student/marksCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/club/clubCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/club/clubCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/events/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/card.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/student/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/student/profile.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -126,7 +120,7 @@
       <workItem from="1734766424331" duration="15352000" />
       <workItem from="1734859762039" duration="16109000" />
       <workItem from="1734888157235" duration="1752000" />
-      <workItem from="1734936981008" duration="13908000" />
+      <workItem from="1734936981008" duration="20081000" />
     </task>
     <servers />
   </component>
