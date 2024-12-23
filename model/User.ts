@@ -205,6 +205,7 @@ const TeacherSchema: Schema<Teacher> = new Schema({
     //             of: Number,
     //         },
     //     },
+    //
     // },
 });
 
@@ -248,18 +249,30 @@ const EventSchema: Schema<Event> = new Schema({
     tags: [{ type: String }],
 });
 
-export interface Marks extends Document {
-    subjects: Map<string, Record<string, any>[]>;
-}
-
+interface Marks {
+    subjects: {
+      [subjectId: string]: {
+        [studentId: string]: Array<{
+          [examName: string]: number;
+        }>;
+      };
+    };
+  }
+  
   const MarksSchema: Schema<Marks> = new Schema({
     subjects: {
       type: Map,
       of: {
         type: Map,
-        of: [{ type: Schema.Types.Mixed }],
+        of: [
+          {
+            type: Map,
+            of: { type: Number },
+            default: {},
+          },
+        ],
+        default: {},
       },
-      default: {},
     },
   });
   
