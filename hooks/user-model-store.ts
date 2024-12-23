@@ -13,12 +13,31 @@ interface Event {
     isInterested: boolean,
 }
 
+interface SingleEvent {
+    _id: mongoose.Types.ObjectId;
+    poster: string;
+    heading: string;
+    eventHostedBy: string;
+    description: string;
+    tags: string[];
+    eventTime: Date;
+    eventVenue: string;
+    isInterested: boolean;
+    interestedMembersArr: {
+        name: string;
+        student_id: string;
+        profile: string
+    } [];
+    eventAttachments: string[]
+}
+
+
 interface ModelStore {
     allEvents: Event[];
-    singleEvent:Event|null;
+    singleEvent:SingleEvent|null;
     filteredEvents: Event[];
     isLoading: boolean;
-    setSingleEvent:(event:Event)=>void;
+    setSingleEvent:(event:SingleEvent)=>void;
     setAllEvents: (events: Event[]) => void;
     setFilteredEvents: (events: Event[]) => void;
     setLoading: (loading: boolean) => void;

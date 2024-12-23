@@ -20,28 +20,31 @@ export async function GET(
         }
 
         const userId = new mongoose.Types.ObjectId(user._id);
-        if (!params.eventId) {
+
+        const { eventId } = await params;
+
+        if (!eventId.length) {
             return new Response(
-                JSON.stringify({ success: false, message: 'Event ID is required' }),
-                { status: 400, headers: { 'Content-Type': 'application/json' } }
+              JSON.stringify({ success: false, message: 'Event ID is required' }),
+              { status: 400, headers: { 'Content-Type': 'application/json' } }
             );
         }
 
-        console.log(params.eventId[0]);
-        
-        if (!mongoose.Types.ObjectId.isValid(params.eventId[0])) {
+        console.log(eventId);
+
+        if (!mongoose.Types.ObjectId.isValid(eventId[0])) {
             return new Response(
-                JSON.stringify({ success: false, message: 'Invalid event ID' }),
-                { status: 400, headers: { 'Content-Type': 'application/json' } }
+              JSON.stringify({ success: false, message: 'Invalid event ID' }),
+              { status: 400, headers: { 'Content-Type': 'application/json' } }
             );
         }
 
-        const eventId = new mongoose.Types.ObjectId(params.eventId[0])
+        const eventObjectId = new mongoose.Types.ObjectId(eventId[0])
 
         const event = await EventModel.aggregate([
             {
                 $match: {
-                    _id: eventId
+                    _id: eventObjectId
                 }
             },
             {
@@ -105,7 +108,7 @@ export async function GET(
     } catch (error) {
         console.error('Error fetching event:', error);
         return new Response(
-            JSON.stringify({ success: false, message: 'Server error', error: (error as any).message }),
+            JSON.stringify({ success: false, message: 'Server error', error: error }),
             { status: 500, headers: { 'Content-Type': 'application/json' } }
         );
     }

@@ -1,7 +1,8 @@
 "use client"
-import mongoose from "mongoose";
 import axios from "axios";
 import Tag from "./tag";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
 
 interface EventCardProps {
   _id: string,
@@ -16,19 +17,21 @@ interface EventCardProps {
 }
 
 export default function EventCard({_id, poster, heading, eventHostedBy, description, tags, eventTime, eventVenue, isInterested,}: EventCardProps) {
+  const [interested, setInterested] = useState(isInterested);
   async function handleInterested() {
     try {
       const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id}`);
       if (res.status === 200) {
         console.log("Interest status updated");
         // Update local interestedArr state or trigger a re-fetch
-        isInterested = !isInterested;
+        setInterested(!interested);
       }
     } catch (error) {
       console.log("Error updating interest status:", error);
     }
   }
 
+  const router = useRouter();
   return (
     <>
       <div
@@ -37,11 +40,11 @@ export default function EventCard({_id, poster, heading, eventHostedBy, descript
         <img
           src={poster}
           alt=""
-          className="h-full w-1/3 object-cover"
+          className="h-64 w-1/3 object-cover overflow-hidden"
         />
         <div className="flex flex-col ml-4 w-2/3 h-full">
           <div className="flex flex-row justify-between w-full h-1/5 items-center">
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold" onClick={()=> router.push(`/events/${_id}`)}>
               {heading}
             </div>
             <div className="text-2xl font-bold mr-4">
@@ -76,7 +79,7 @@ export default function EventCard({_id, poster, heading, eventHostedBy, descript
               } text-white w-1/3 rounded-3xl mr-4`}
               onClick={handleInterested}
             >
-              {isInterested ? "Interested" : "Not Interested"}
+              {interested ? "Interested" : "Not Interested"}
             </button>
           </div>
         </div>

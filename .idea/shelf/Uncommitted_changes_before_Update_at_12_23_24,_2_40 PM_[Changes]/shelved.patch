@@ -1,0 +1,373 @@
+Index: hooks/user-model-store.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import { create } from \"zustand\";\nimport mongoose from \"mongoose\";\n\ninterface Event {\n    _id: mongoose.Types.ObjectId,\n    poster: string,\n    heading: string,\n    eventHostedBy: string,\n    description: string,\n    tags: string[],\n    eventTime: Date,\n    eventVenue: string,\n    isInterested: boolean,\n}\n\ninterface ModelStore {\n    allEvents: Event[];\n    singleEvent:Event|null;\n    filteredEvents: Event[];\n    isLoading: boolean;\n    setSingleEvent:(event:Event)=>void;\n    setAllEvents: (events: Event[]) => void;\n    setFilteredEvents: (events: Event[]) => void;\n    setLoading: (loading: boolean) => void;\n}\n\nexport const useModel = create<ModelStore>((set) => ({\n    allEvents: [],\n    filteredEvents: [],\n    singleEvent:null,\n    isLoading: false,\n    setSingleEvent:((event)=>set({singleEvent:event})),\n    setAllEvents: (events) => set({ allEvents: events }),\n    setFilteredEvents: (events) => set({ filteredEvents: events }),\n    setLoading: (loading) => set({ isLoading: loading }),\n}));\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/hooks/user-model-store.ts b/hooks/user-model-store.ts
+--- a/hooks/user-model-store.ts	(revision 7eb4bc584056b3ca904e44247cca05cfeec35d7f)
++++ b/hooks/user-model-store.ts	(date 1734938177419)
+@@ -13,12 +13,31 @@
+     isInterested: boolean,
+ }
+ 
++interface SingleEvent {
++    _id: mongoose.Types.ObjectId;
++    poster: string;
++    heading: string;
++    eventHostedBy: string;
++    description: string;
++    tags: string[];
++    eventTime: Date;
++    eventVenue: string;
++    isInterested: boolean;
++    interestedMembersArr: {
++        name: string;
++        student_id: string;
++        profile: string
++    } [];
++    eventAttachments: string[]
++}
++
++
+ interface ModelStore {
+     allEvents: Event[];
+-    singleEvent:Event|null;
++    singleEvent:SingleEvent|null;
+     filteredEvents: Event[];
+     isLoading: boolean;
+-    setSingleEvent:(event:Event)=>void;
++    setSingleEvent:(event:SingleEvent)=>void;
+     setAllEvents: (events: Event[]) => void;
+     setFilteredEvents: (events: Event[]) => void;
+     setLoading: (loading: boolean) => void;
+Index: app/api/events/[...eventId]/route.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import dbConnect from '../../../../lib/connectDb';\nimport { EventModel } from '../../../../model/User';\nimport mongoose from \"mongoose\";\nimport {getServerSession, User} from \"next-auth\";\nimport {authOptions} from \"../../(auth)/auth/[...nextauth]/options\";\nimport {NextResponse} from \"next/server\";\n\nexport async function GET(\n    req: Request,\n    { params }: { params: { eventId: string[] } }\n) {\n    try {\n        await dbConnect();\n\n        const session = await getServerSession(authOptions);\n        const user: User = session?.user as User;\n\n        if (!session || !user) {\n            return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });\n        }\n\n        const userId = new mongoose.Types.ObjectId(user._id);\n        if (!params.eventId) {\n            return new Response(\n                JSON.stringify({ success: false, message: 'Event ID is required' }),\n                { status: 400, headers: { 'Content-Type': 'application/json' } }\n            );\n        }\n\n        console.log(params.eventId[0]);\n        \n        if (!mongoose.Types.ObjectId.isValid(params.eventId[0])) {\n            return new Response(\n                JSON.stringify({ success: false, message: 'Invalid event ID' }),\n                { status: 400, headers: { 'Content-Type': 'application/json' } }\n            );\n        }\n\n        const eventId = new mongoose.Types.ObjectId(params.eventId[0])\n\n        const event = await EventModel.aggregate([\n            {\n                $match: {\n                    _id: eventId\n                }\n            },\n            {\n                $addFields: {\n                    isInterested: {\n                        $cond: {\n                            if: { $in: [userId, \"$interestedMembersArr\"] },\n                            then: true,\n                            else: false,\n                        }\n                    }\n                }\n            },\n            {\n                $lookup: {\n                    from: \"clubs\",\n                    localField: \"eventHostedBy\",\n                    foreignField: \"_id\",\n                    as: \"eventHostedBy\"\n                }\n            },\n            {\n                $unwind: \"$eventHostedBy\"\n            },\n            {\n                $set: {\n                    eventHostedBy: \"$eventHostedBy.clubName\"\n                }\n            },\n            {\n                $lookup: {\n                    from: \"students\",\n                    localField: \"interestedMembersArr\",\n                    foreignField: \"_id\",\n                    as: \"interestedMembersArr\",\n                    pipeline: [\n                        {\n                            $project: {\n                                name: 1,\n                                student_id: 1,\n                                profile: 1\n                            }\n                        }\n                    ]\n                }\n            },\n\n        ])\n        console.log(event);\n        \n        if (!event || event.length === 0) {\n            return new Response(\n                JSON.stringify({ success: false, message: 'Event not found' }),\n                { status: 404, headers: { 'Content-Type': 'application/json' } }\n            );\n        }\n        return new Response(\n            JSON.stringify({ success: true, data: event[0] }),\n            { status: 200, headers: { 'Content-Type': 'application/json' } }\n        );\n    } catch (error) {\n        console.error('Error fetching event:', error);\n        return new Response(\n            JSON.stringify({ success: false, message: 'Server error', error: (error as any).message }),\n            { status: 500, headers: { 'Content-Type': 'application/json' } }\n        );\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/api/events/[...eventId]/route.ts b/app/api/events/[...eventId]/route.ts
+--- a/app/api/events/[...eventId]/route.ts	(revision 7eb4bc584056b3ca904e44247cca05cfeec35d7f)
++++ b/app/api/events/[...eventId]/route.ts	(date 1734938177443)
+@@ -20,28 +20,31 @@
+         }
+ 
+         const userId = new mongoose.Types.ObjectId(user._id);
+-        if (!params.eventId) {
++
++        const { eventId } = await params;
++
++        if (!eventId.length) {
+             return new Response(
+-                JSON.stringify({ success: false, message: 'Event ID is required' }),
+-                { status: 400, headers: { 'Content-Type': 'application/json' } }
++              JSON.stringify({ success: false, message: 'Event ID is required' }),
++              { status: 400, headers: { 'Content-Type': 'application/json' } }
+             );
+         }
+ 
+-        console.log(params.eventId[0]);
+-        
+-        if (!mongoose.Types.ObjectId.isValid(params.eventId[0])) {
++        console.log(eventId);
++
++        if (!mongoose.Types.ObjectId.isValid(eventId[0])) {
+             return new Response(
+-                JSON.stringify({ success: false, message: 'Invalid event ID' }),
+-                { status: 400, headers: { 'Content-Type': 'application/json' } }
++              JSON.stringify({ success: false, message: 'Invalid event ID' }),
++              { status: 400, headers: { 'Content-Type': 'application/json' } }
+             );
+         }
+ 
+-        const eventId = new mongoose.Types.ObjectId(params.eventId[0])
++        const eventObjectId = new mongoose.Types.ObjectId(eventId[0])
+ 
+         const event = await EventModel.aggregate([
+             {
+                 $match: {
+-                    _id: eventId
++                    _id: eventObjectId
+                 }
+             },
+             {
+@@ -105,7 +108,7 @@
+     } catch (error) {
+         console.error('Error fetching event:', error);
+         return new Response(
+-            JSON.stringify({ success: false, message: 'Server error', error: (error as any).message }),
++            JSON.stringify({ success: false, message: 'Server error', error: error }),
+             { status: 500, headers: { 'Content-Type': 'application/json' } }
+         );
+     }
+Index: app/events/[...eventId]/page.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>'use client'\nimport { useEffect } from \"react\";\nimport { useModel } from \"../../../hooks/user-model-store\";\nimport { useParams, useRouter } from \"next/navigation\";\nimport axios from \"axios\";\nimport StudentCard from \"../../../components/student/studentCard\";\nimport mongoose from \"mongoose\";\n\ninterface Event {\n  _id: mongoose.Types.ObjectId;\n  poster: string;\n  heading: string;\n  eventHostedBy: string;\n  description: string;\n  tags: string[];\n  eventTime: Date;\n  eventVenue: string;\n  isInterested: boolean;\n  interestedMembersArr: {\n    name: string;\n    student_id: string;\n    profile: string\n  } [];\n  eventAttachments: string[]\n}\n\nexport default function Event() {\n  const router = useRouter();\n  const params = useParams();\n  const eventId = params.eventId;\n  const { singleEvent, setSingleEvent, setLoading } = useModel();\n\n  useEffect(() => {\n    if (!eventId) return;\n\n    async function fetchData() {\n      setLoading(true);\n      try {\n        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${eventId}`);\n        if (res.status === 200) {\n          setSingleEvent(res.data.data);\n        } else {\n          router.push(\"/\");\n        }\n      } catch (error) {\n        console.error(\"Error fetching event data:\", error);\n        router.push(\"/\");\n      } finally {\n        setLoading(false);\n      }\n    }\n\n    fetchData();\n  }, [eventId, setSingleEvent, setLoading]);\n\n  if (!singleEvent) {\n    return <div>Loading...</div>;\n  }\n  const event = singleEvent;\n\n  async function handleInterested() {\n    if (!event) {\n      return;\n    }\n\n    const { _id, isInterested } = event;\n    try {\n      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id}`);\n      if (res.status === 200) {\n        // Correct state update after toggle\n        setEvent((prevEvent) => ({\n          ...prevEvent!,\n          isInterested: !isInterested,\n        }));\n      }\n    } catch (error) {\n      console.log(error);\n    }\n  }\n\n  if (!event) {\n    return <div>Loading...</div>; // Show loading state while data is being fetched\n  }\n\n  return (\n    <>\n      <div className=\"flex flex-col items-center w-full h-screen\">\n        <div className=\"flex flex-row items-center w-3/5 h-1/3 mt-12 justify-between \">\n          <div className=\"flex flex-col w-3/5 h-full \">\n            <div className=\"flex flex-row items-center w-full justify-between\">\n              <div className=\"text-3xl font-bold\">\n                {event?.heading}\n              </div>\n              <button\n                className=\"text-xl font-bold h-4/5 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4\"\n                onClick={handleInterested}\n              >\n                {event?.isInterested ? \"Interested\" : \"Not Interested\"}\n              </button>\n            </div>\n            <div className=\"text-xl font-bold mt-3 mb-2\">\n              Description\n            </div>\n            <div\n              className=\"h-full w-full justify-evenly border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n              {event?.description}\n            </div>\n          </div>\n          <img\n            src={event?.poster}\n            className=\"h-full w-1/3 object-fill\"\n            alt=\"\"\n          />\n        </div>\n        <div className=\"flex flex-row w-3/5 h-3/5 justify-between\">\n          <div className=\"flex flex-col w-3/5 h-full\">\n            <div className=\"flex flex-row items-center justify-between w-full h-3/5 \">\n              <div className=\"flex flex-col w-1/2 h-3/4 text-xl font-bold pl-2 justify-around border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n                <div>\n                  Venue: {event?.eventVenue}\n                </div>\n                <div>\n                  Date: {event?.eventTime.toDateString()}\n                </div>\n                <div>\n                  Time: {event?.eventTime.toTimeString()}\n                </div>\n                <div>\n                  Hosted By: {event?.eventHostedBy}\n                </div>\n              </div>\n              <div className=\"flex flex-col w-1/3 h-3/4 items-center text-xl font-bold border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n                <div className=\"text-2xl mt-4 mb-4\">\n                  Tags\n                </div>\n                {event?.tags.map((tag) => {\n                  return <div key={tag} className=\"mt-4\">{tag}</div>\n                })}\n              </div>\n            </div>\n            <div className=\"flex flex-col w-full h-2/5 border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\">\n              <div className=\"ml-2 text-2xl font-bold\">\n                Attachments\n              </div>\n              {/*attachments */}\n            </div>\n          </div>\n          <div className=\"flex flex-col items-center w-1/3 h-full overflow-y-auto \">\n            <div className=\"text-2xl font-bold mt-3 mb-2\">\n              Interested People\n            </div>\n            {event?.interestedMembersArr.map((member) => {\n              return <StudentCard key={member.student_id} name={member.name} student_id={member.student_id} profile={member.profile} />\n            })}\n          </div>\n        </div>\n      </div>\n    </>\n  )\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/events/[...eventId]/page.tsx b/app/events/[...eventId]/page.tsx
+--- a/app/events/[...eventId]/page.tsx	(revision 7eb4bc584056b3ca904e44247cca05cfeec35d7f)
++++ b/app/events/[...eventId]/page.tsx	(date 1734938666405)
+@@ -1,33 +1,15 @@
+ 'use client'
+-import { useEffect } from "react";
++import {useEffect, useState} from "react";
+ import { useModel } from "../../../hooks/user-model-store";
+ import { useParams, useRouter } from "next/navigation";
+ import axios from "axios";
+ import StudentCard from "../../../components/student/studentCard";
+-import mongoose from "mongoose";
+-
+-interface Event {
+-  _id: mongoose.Types.ObjectId;
+-  poster: string;
+-  heading: string;
+-  eventHostedBy: string;
+-  description: string;
+-  tags: string[];
+-  eventTime: Date;
+-  eventVenue: string;
+-  isInterested: boolean;
+-  interestedMembersArr: {
+-    name: string;
+-    student_id: string;
+-    profile: string
+-  } [];
+-  eventAttachments: string[]
+-}
+ 
+ export default function Event() {
++  const [interested, setInterested] = useState<boolean>(false);
+   const router = useRouter();
+   const params = useParams();
+-  const eventId = params.eventId;
++  const eventId = params.eventId?.[0];
+   const { singleEvent, setSingleEvent, setLoading } = useModel();
+ 
+   useEffect(() => {
+@@ -38,7 +20,8 @@
+       try {
+         const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${eventId}`);
+         if (res.status === 200) {
+-          setSingleEvent(res.data.data);
++          setSingleEvent(res.data);
++          setInterested(res.data.isInterested);
+         } else {
+           router.push("/");
+         }
+@@ -51,7 +34,7 @@
+     }
+ 
+     fetchData();
+-  }, [eventId, setSingleEvent, setLoading]);
++  }, [eventId, setSingleEvent, setLoading, router]);
+ 
+   if (!singleEvent) {
+     return <div>Loading...</div>;
+@@ -63,15 +46,11 @@
+       return;
+     }
+ 
+-    const { _id, isInterested } = event;
++    const { _id } = event;
+     try {
+-      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id}`);
++      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id.toString()}`);
+       if (res.status === 200) {
+-        // Correct state update after toggle
+-        setEvent((prevEvent) => ({
+-          ...prevEvent!,
+-          isInterested: !isInterested,
+-        }));
++        setInterested((prev) => !prev);
+       }
+     } catch (error) {
+       console.log(error);
+@@ -95,7 +74,7 @@
+                 className="text-xl font-bold h-4/5 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4"
+                 onClick={handleInterested}
+               >
+-                {event?.isInterested ? "Interested" : "Not Interested"}
++                {interested ? "Interested" : "Not Interested"}
+               </button>
+             </div>
+             <div className="text-xl font-bold mt-3 mb-2">
+@@ -145,7 +124,7 @@
+               {/*attachments */}
+             </div>
+           </div>
+-          <div className="flex flex-col items-center w-1/3 h-full overflow-y-auto ">
++          <div className="flex flex-col items-center w-1/3 h-full overflow-y-auto border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
+             <div className="text-2xl font-bold mt-3 mb-2">
+               Interested People
+             </div>
+Index: components/events/card.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"use client\"\nimport mongoose from \"mongoose\";\nimport axios from \"axios\";\nimport Tag from \"./tag\";\n\ninterface EventCardProps {\n  _id: string,\n  poster: string,\n  heading: string,\n  eventHostedBy: string,\n  description: string,\n  tags: string[],\n  eventTime: Date,\n  eventVenue: string,\n  isInterested: boolean,\n}\n\nexport default function EventCard({_id, poster, heading, eventHostedBy, description, tags, eventTime, eventVenue, isInterested,}: EventCardProps) {\n  async function handleInterested() {\n    try {\n      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id}`);\n      if (res.status === 200) {\n        console.log(\"Interest status updated\");\n        // Update local interestedArr state or trigger a re-fetch\n        isInterested = !isInterested;\n      }\n    } catch (error) {\n      console.log(\"Error updating interest status:\", error);\n    }\n  }\n\n  return (\n    <>\n      <div\n        className=\"flex flex-row w-3/5 h-64 mt-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50\"\n      >\n        <img\n          src={poster}\n          alt=\"\"\n          className=\"h-full w-1/3 object-cover\"\n        />\n        <div className=\"flex flex-col ml-4 w-2/3 h-full\">\n          <div className=\"flex flex-row justify-between w-full h-1/5 items-center\">\n            <div className=\"text-2xl font-bold\">\n              {heading}\n            </div>\n            <div className=\"text-2xl font-bold mr-4\">\n              {eventHostedBy}\n            </div>\n          </div>\n          <div className=\"w-full h-2/5 pl-2\">\n            {description}\n          </div>\n          <div className=\"flex flex-row w-full h-1/5 items-center font-bold \">\n            <div className=\"text-lg font-bold\">\n              Tags:\n            </div>\n            {tags.map((tag) =>\n              <Tag tag={tag} key={tag}/>\n            )}\n          </div>\n          <div className=\"flex flex-row justify-between items-center w-full h-1/5\">\n            <div className=\"flex flex-col w-2/3 h-full\">\n              <div className=\" font-bold\">\n                Time:   <span className=\"ml-3\">{new Date(eventTime).toLocaleString()}</span>\n              </div>\n              <div className=\" font-bold\">\n                Venue:   <span className=\"ml-3\">{eventVenue}</span>\n              </div>\n            </div>\n            <button\n              className={`text-lg font-bold h-3/5 ${\n                isInterested\n                  ? \"bg-red-600\"\n                  : \"bg-gradient-to-br from-cyan-600 to-cyan-400\"\n              } text-white w-1/3 rounded-3xl mr-4`}\n              onClick={handleInterested}\n            >\n              {isInterested ? \"Interested\" : \"Not Interested\"}\n            </button>\n          </div>\n        </div>\n      </div>\n    </>\n  );\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/components/events/card.tsx b/components/events/card.tsx
+--- a/components/events/card.tsx	(revision 7eb4bc584056b3ca904e44247cca05cfeec35d7f)
++++ b/components/events/card.tsx	(date 1734945028966)
+@@ -2,6 +2,8 @@
+ import mongoose from "mongoose";
+ import axios from "axios";
+ import Tag from "./tag";
++import {useRouter} from "next/navigation";
++import {useState} from "react";
+ 
+ interface EventCardProps {
+   _id: string,
+@@ -16,6 +18,7 @@
+ }
+ 
+ export default function EventCard({_id, poster, heading, eventHostedBy, description, tags, eventTime, eventVenue, isInterested,}: EventCardProps) {
++
+   async function handleInterested() {
+     try {
+       const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id}`);
+@@ -29,6 +32,7 @@
+     }
+   }
+ 
++  const router = useRouter();
+   return (
+     <>
+       <div
+@@ -37,21 +41,21 @@
+         <img
+           src={poster}
+           alt=""
+-          className="h-full w-1/3 object-cover"
++          className="h-64 w-1/3 object-cover overflow-hidden"
+         />
+         <div className="flex flex-col ml-4 w-2/3 h-full">
+-          <div className="flex flex-row justify-between w-full h-1/5 items-center">
+-            <div className="text-2xl font-bold">
++          <div className="flex flex-row justify-between w-full h-1/6 items-center">
++            <div className="text-2xl font-bold" onClick={()=> router.push(`/events/${_id}`)}>
+               {heading}
+             </div>
+             <div className="text-2xl font-bold mr-4">
+               {eventHostedBy}
+             </div>
+           </div>
+-          <div className="w-full h-2/5 pl-2">
++          <div className="w-full h-2/6 pl-2">
+             {description}
+           </div>
+-          <div className="flex flex-row w-full h-1/5 items-center font-bold ">
++          <div className="flex flex-row w-full h-1/6 items-center font-bold ">
+             <div className="text-lg font-bold">
+               Tags:
+             </div>
+@@ -59,7 +63,7 @@
+               <Tag tag={tag} key={tag}/>
+             )}
+           </div>
+-          <div className="flex flex-row justify-between items-center w-full h-1/5">
++          <div className="flex flex-row justify-between items-center w-full h-2/6">
+             <div className="flex flex-col w-2/3 h-full">
+               <div className=" font-bold">
+                 Time:   <span className="ml-3">{new Date(eventTime).toLocaleString()}</span>
+Index: app/events/page.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"use client\";\nimport EventCard from \"../../components/events/card\";\nimport FilterBox from \"../../components/events/filterbox\";\nimport { useEffect, useState, useMemo } from \"react\";\nimport { useModel } from \"../../hooks/user-model-store\";\nimport axios from \"axios\";\n\nexport default function EventsPage() {\n  const { allEvents, isLoading, setAllEvents, setLoading } = useModel();\n  const [page, setPage] = useState(1);\n\n  const maxPage = Math.ceil(allEvents.length / 10);\n\n  const selectedEvents = useMemo(() => {\n    if (allEvents.length === 0) return [];\n    return allEvents.slice((page - 1) * 10, page * 10);\n  }, [allEvents, page]);\n\n\n  useEffect(() => {\n    const fetchAllEvents = async () => {\n      setLoading(true);\n      try {\n        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events`);\n        const events = await response.data;\n        setAllEvents(events);\n                \n      } catch (error) {\n        console.error(\"Failed to fetch all events:\", error);\n      } finally {\n        setLoading(false);\n      }\n    };\n    fetchAllEvents();\n  }, [setAllEvents, setLoading]);\n  \n  console.log(allEvents);\n  return (\n    <div className=\"flex flex-row h-screen w-full\">\n      <div className=\"flex flex-col w-4/5 h-full items-center mt-12\">\n        <div className=\"flex flex-col w-full h-5/6 items-center overflow-y-auto\">\n          {isLoading ? (\n            <div>Loading...</div>\n          ) : (\n            selectedEvents.map((event) => (\n              <EventCard\n                key={event.heading}\n                _id={event._id.toString()}\n                poster={event.poster}\n                heading={event.heading}\n                eventHostedBy={event.eventHostedBy}\n                description={event.description}\n                tags={event.tags}\n                eventTime={event.eventTime}\n                eventVenue={event.eventVenue}\n                isInterested={event.isInterested}\n              />\n            ))\n          )}\n        </div>\n        <div className=\"flex flex-row items-center justify-around w-1/3 h-20\">\n          <button\n            onClick={() => page > 1 && setPage(page - 1)}\n            className=\"text-xl font-bold h-12 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4\"\n          >\n            Prev\n          </button>\n          <div>{page}</div>\n          <button\n            onClick={() => page < maxPage && setPage(page + 1)}\n            className=\"text-xl font-bold h-12 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4\"\n          >\n            Next\n          </button>\n        </div>\n      </div>\n      <div className=\"flex flex-col w-1/5 items-center mt-8\">\n        <button className=\"text-xl font-bold bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-36 rounded-3xl mb-8 mt-2\">\n          Add Event\n        </button>\n        <FilterBox />\n      </div>\n    </div>\n  );\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/events/page.tsx b/app/events/page.tsx
+--- a/app/events/page.tsx	(revision 7eb4bc584056b3ca904e44247cca05cfeec35d7f)
++++ b/app/events/page.tsx	(date 1734945028932)
+@@ -4,10 +4,12 @@
+ import { useEffect, useState, useMemo } from "react";
+ import { useModel } from "../../hooks/user-model-store";
+ import axios from "axios";
++import {useRouter} from "next/navigation";
+ 
+ export default function EventsPage() {
+   const { allEvents, isLoading, setAllEvents, setLoading } = useModel();
+   const [page, setPage] = useState(1);
++  const router = useRouter();
+ 
+   const maxPage = Math.ceil(allEvents.length / 10);
+ 
+@@ -38,13 +40,13 @@
+   return (
+     <div className="flex flex-row h-screen w-full">
+       <div className="flex flex-col w-4/5 h-full items-center mt-12">
+-        <div className="flex flex-col w-full h-5/6 items-center overflow-y-auto">
++        <div className="flex flex-col w-full h-5/6 items-center overflow-y-auto scroll-mt-8">
+           {isLoading ? (
+             <div>Loading...</div>
+           ) : (
+             selectedEvents.map((event) => (
+               <EventCard
+-                key={event.heading}
++                key={event._id.toString()}
+                 _id={event._id.toString()}
+                 poster={event.poster}
+                 heading={event.heading}
+@@ -75,7 +77,10 @@
+         </div>
+       </div>
+       <div className="flex flex-col w-1/5 items-center mt-8">
+-        <button className="text-xl font-bold bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-36 rounded-3xl mb-8 mt-2">
++        <button
++          className="text-xl font-bold bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-36 rounded-3xl mb-8 mt-2"
++          onClick={() => router.push("/add-event")}
++        >
+           Add Event
+         </button>
+         <FilterBox />
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"3d45d623-ee8a-421e-8d0d-07f88c3fd10c\" name=\"Changes\" comment=\"fixup! recovered files\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24,_7_08 PM_[Changes]1/shelved.patch\" beforeDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24__7_08PM__Changes_1.xml\" beforeDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/app/add-event/page.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/add-event/page.tsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/app/api/events/interested/[...eventsId]/route.ts\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/api/events/interested/[...eventId]/route.ts\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/app/api/events/route.ts\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/api/events/route.ts\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/app/events/[...eventId]/page.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/events/[...eventId]/page.tsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/app/events/page.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/events/page.tsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/components/club/clubCard.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/components/club/clubCard.tsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/components/events/card.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/components/events/card.tsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/components/events/filterbox.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/components/events/filterbox.tsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/components/events/tag.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/components/events/tag.tsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/components/student/profile.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/components/student/profile.tsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/hooks/user-model-store.ts\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/hooks/user-model-store.ts\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/store/atoms/event.ts\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/store/atoms/event.ts\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/store/atoms/filteredEvents.ts\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/store/atoms/filteredEvents.ts\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"TypeScript JSX File\" />\n        <option value=\"TypeScript File\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"f40caa737c0b869e3b7b6977b0cbcaceb80c7219\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n    <option name=\"RESET_MODE\" value=\"MIXED\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;VaibhavVerma27&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\">{\n  &quot;selectedUrlAndAccountId&quot;: {\n    &quot;url&quot;: &quot;https://github.com/VaibhavVerma27/Ideathon.git&quot;,\n    &quot;accountId&quot;: &quot;2d85c29d-bd34-4650-83c7-ed5abaf2838e&quot;\n  }\n}</component>\n  <component name=\"ProblemsViewState\">\n    <option name=\"selectedTabId\" value=\"CurrentFile\" />\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 5\n}</component>\n  <component name=\"ProjectId\" id=\"2pwcVN5jNvv3r7ErnbxxbDHxjE8\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\n    &quot;last_opened_file_path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/week-16-1&quot;,\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\n    &quot;ts.external.directory.path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/ideathon/node_modules/typescript/lib&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  }\n}</component>\n  <component name=\"RecentsManager\">\n    <key name=\"MoveFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/components/club\" />\n    </key>\n  </component>\n  <component name=\"SharedIndexes\">\n    <attachedChunks>\n      <set>\n        <option value=\"bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-WS-243.22562.222\" />\n      </set>\n    </attachedChunks>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"3d45d623-ee8a-421e-8d0d-07f88c3fd10c\" name=\"Changes\" comment=\"\" />\n      <created>1733680600234</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1733680600234</updated>\n      <workItem from=\"1733680601320\" duration=\"285000\" />\n      <workItem from=\"1733724675594\" duration=\"611000\" />\n      <workItem from=\"1733822080765\" duration=\"1111000\" />\n      <workItem from=\"1733835011657\" duration=\"6379000\" />\n      <workItem from=\"1733847978381\" duration=\"5516000\" />\n      <workItem from=\"1733894701134\" duration=\"9865000\" />\n      <workItem from=\"1733925499497\" duration=\"1606000\" />\n      <workItem from=\"1733928369051\" duration=\"251000\" />\n      <workItem from=\"1733928630064\" duration=\"4368000\" />\n      <workItem from=\"1733980473805\" duration=\"1457000\" />\n      <workItem from=\"1734070775491\" duration=\"813000\" />\n      <workItem from=\"1734085817459\" duration=\"30000\" />\n      <workItem from=\"1734183280596\" duration=\"5230000\" />\n      <workItem from=\"1734189002399\" duration=\"3292000\" />\n      <workItem from=\"1734192305926\" duration=\"2303000\" />\n      <workItem from=\"1734194762220\" duration=\"86000\" />\n      <workItem from=\"1734199075722\" duration=\"1951000\" />\n      <workItem from=\"1734202864084\" duration=\"690000\" />\n      <workItem from=\"1734243660946\" duration=\"163000\" />\n      <workItem from=\"1734247462466\" duration=\"601000\" />\n      <workItem from=\"1734274484596\" duration=\"221000\" />\n      <workItem from=\"1734285025230\" duration=\"756000\" />\n      <workItem from=\"1734342119399\" duration=\"12152000\" />\n      <workItem from=\"1734415130463\" duration=\"154000\" />\n      <workItem from=\"1734451510425\" duration=\"1022000\" />\n      <workItem from=\"1734515159954\" duration=\"1302000\" />\n      <workItem from=\"1734587553335\" duration=\"2223000\" />\n      <workItem from=\"1734622604490\" duration=\"6450000\" />\n      <workItem from=\"1734672636682\" duration=\"3862000\" />\n      <workItem from=\"1734697995805\" duration=\"4210000\" />\n      <workItem from=\"1734709695437\" duration=\"1288000\" />\n      <workItem from=\"1734719253317\" duration=\"6275000\" />\n      <workItem from=\"1734766424331\" duration=\"15352000\" />\n      <workItem from=\"1734859762039\" duration=\"16109000\" />\n    </task>\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n    <option name=\"exactExcludedFiles\">\n      <list>\n        <option value=\"$PROJECT_DIR$/next.config.mjs\" />\n        <option value=\"$PROJECT_DIR$/next.config.mjs\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State>\n              <option name=\"FILTERS\">\n                <map>\n                  <entry key=\"branch\">\n                    <value>\n                      <list>\n                        <option value=\"main\" />\n                      </list>\n                    </value>\n                  </entry>\n                </map>\n              </option>\n            </State>\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"fixup! recovered files\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"fixup! recovered files\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 7eb4bc584056b3ca904e44247cca05cfeec35d7f)
++++ b/.idea/workspace.xml	(date 1734945036123)
+@@ -5,22 +5,12 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
+-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24,_7_08 PM_[Changes]1/shelved.patch" beforeDir="false" />
+-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_12_14_24__7_08PM__Changes_1.xml" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/add-event/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/add-event/page.tsx" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/api/events/interested/[...eventsId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/interested/[...eventId]/route.ts" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/api/events/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/route.ts" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/api/events/[...eventId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/[...eventId]/route.ts" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/app/events/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/page.tsx" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/components/club/clubCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/club/clubCard.tsx" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/components/events/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/card.tsx" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/components/events/filterbox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/filterbox.tsx" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/components/events/tag.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/tag.tsx" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/components/student/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/student/profile.tsx" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/store/atoms/event.ts" beforeDir="false" afterPath="$PROJECT_DIR$/store/atoms/event.ts" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/store/atoms/filteredEvents.ts" beforeDir="false" afterPath="$PROJECT_DIR$/store/atoms/filteredEvents.ts" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -136,6 +126,8 @@
+       <workItem from="1734719253317" duration="6275000" />
+       <workItem from="1734766424331" duration="15352000" />
+       <workItem from="1734859762039" duration="16109000" />
++      <workItem from="1734888157235" duration="1752000" />
++      <workItem from="1734936981008" duration="5885000" />
+     </task>
+     <servers />
+   </component>

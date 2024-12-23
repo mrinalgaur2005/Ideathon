@@ -1,33 +1,16 @@
 'use client'
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import { useModel } from "../../../hooks/user-model-store";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import StudentCard from "../../../components/student/studentCard";
-import mongoose from "mongoose";
-
-interface Event {
-  _id: mongoose.Types.ObjectId;
-  poster: string;
-  heading: string;
-  eventHostedBy: string;
-  description: string;
-  tags: string[];
-  eventTime: Date;
-  eventVenue: string;
-  isInterested: boolean;
-  interestedMembersArr: {
-    name: string;
-    student_id: string;
-    profile: string
-  } [];
-  eventAttachments: string[]
-}
+import Tag from "../../../components/events/tag";
 
 export default function Event() {
+  const [interested, setInterested] = useState<boolean>(false);
   const router = useRouter();
   const params = useParams();
-  const eventId = params.eventId;
+  const eventId = params.eventId?.[0];
   const { singleEvent, setSingleEvent, setLoading } = useModel();
 
   useEffect(() => {
@@ -39,6 +22,7 @@ export default function Event() {
         const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${eventId}`);
         if (res.status === 200) {
           setSingleEvent(res.data.data);
+          setInterested(res.data.isInterested);
         } else {
           router.push("/");
         }
@@ -51,27 +35,25 @@ export default function Event() {
     }
 
     fetchData();
-  }, [eventId, setSingleEvent, setLoading]);
+  }, [eventId, setSingleEvent, setLoading, router]);
 
   if (!singleEvent) {
     return <div>Loading...</div>;
   }
   const event = singleEvent;
+  console.log("fe")
+  console.log(event);
 
   async function handleInterested() {
     if (!event) {
       return;
     }
 
-    const { _id, isInterested } = event;
+    const { _id } = event;
     try {
-      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id}`);
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id.toString()}`);
       if (res.status === 200) {
-        // Correct state update after toggle
-        setEvent((prevEvent) => ({
-          ...prevEvent!,
-          isInterested: !isInterested,
-        }));
+        setInterested((prev) => !prev);
       }
     } catch (error) {
       console.log(error);
@@ -95,7 +77,7 @@ export default function Event() {
                 className="text-xl font-bold h-4/5 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4"
                 onClick={handleInterested}
               >
-                {event?.isInterested ? "Interested" : "Not Interested"}
+                {interested ? "Interested" : "Not Interested"}
               </button>
             </div>
             <div className="text-xl font-bold mt-3 mb-2">
@@ -112,21 +94,18 @@ export default function Event() {
             alt=""
           />
         </div>
-        <div className="flex flex-row w-3/5 h-3/5 justify-between">
+        <div className="flex flex-row w-3/5 h-3/5 mt-10 justify-between">
           <div className="flex flex-col w-3/5 h-full">
             <div className="flex flex-row items-center justify-between w-full h-3/5 ">
-              <div className="flex flex-col w-1/2 h-3/4 text-xl font-bold pl-2 justify-around border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
+              <div className="flex flex-col w-1/2 h-3/4 text-lg font-bold pl-2 justify-around border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
                 <div>
-                  Venue: {event?.eventVenue}
+                  Venue: <span className="ml-2">{event?.eventVenue}</span>
                 </div>
                 <div>
-                  Date: {event?.eventTime.toDateString()}
+                  Date: <span className="ml-2">{new Date(event?.eventTime).toLocaleString()}</span>
                 </div>
                 <div>
-                  Time: {event?.eventTime.toTimeString()}
-                </div>
-                <div>
-                  Hosted By: {event?.eventHostedBy}
+                Hosted By: <span className="ml-2">{event?.eventHostedBy}</span>
                 </div>
               </div>
               <div className="flex flex-col w-1/3 h-3/4 items-center text-xl font-bold border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
@@ -134,7 +113,7 @@ export default function Event() {
                   Tags
                 </div>
                 {event?.tags.map((tag) => {
-                  return <div key={tag} className="mt-4">{tag}</div>
+                  <Tag tag={tag} key={tag}/>
                 })}
               </div>
             </div>
@@ -145,7 +124,7 @@ export default function Event() {
               {/*attachments */}
             </div>
           </div>
-          <div className="flex flex-col items-center w-1/3 h-full overflow-y-auto ">
+          <div className="flex flex-col items-center w-1/3 h-full overflow-y-auto border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
             <div className="text-2xl font-bold mt-3 mb-2">
               Interested People
             </div>

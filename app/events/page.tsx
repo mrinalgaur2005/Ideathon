@@ -3,10 +3,14 @@ import EventCard from "../../components/events/card";
 import FilterBox from "../../components/events/filterbox";
 import { useEffect, useState, useMemo } from "react";
 import { useModel } from "../../hooks/user-model-store";
+import axios from "axios";
+import {useRouter} from "next/navigation";
 
 export default function EventsPage() {
   const { allEvents, isLoading, setAllEvents, setLoading } = useModel();
   const [page, setPage] = useState(1);
+  const router = useRouter();
+
   const [filterCriteria, setFilterCriteria] = useState<string[]>([]);
   const maxPage = Math.ceil(allEvents.length / 10);
 
@@ -27,14 +31,15 @@ export default function EventsPage() {
   }, [filteredEvents, page]);
 
   // console.log(`filter are ${filterCriteria}`);
-  
+
   useEffect(() => {
     const fetchAllEvents = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://localhost:3000/api/events");
-        const events = await response.json();
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events`);
+        const events = await response.data;
         setAllEvents(events);
+                
       } catch (error) {
         console.error("Failed to fetch all events:", error);
       } finally {
@@ -53,11 +58,11 @@ export default function EventsPage() {
           ) : (
             selectedEvents.map((event) => (
               <EventCard
-                key={event._id as any}
-                _id={event._id as any}
+                key={event._id.toString()}
+                _id={event._id.toString()}
                 poster={event.poster}
                 heading={event.heading}
-                eventHostedBy={event.eventHostedBy as any}
+                eventHostedBy={event.eventHostedBy}
                 description={event.description}
                 tags={event.tags}
                 eventTime={event.eventTime}
@@ -84,7 +89,10 @@ export default function EventsPage() {
         </div>
       </div>
       <div className="flex flex-col w-1/5 items-center mt-8">
-        <button className="text-xl font-bold bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-36 rounded-3xl mb-8 mt-2">
+        <button
+          className="text-xl font-bold bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-36 rounded-3xl mb-8 mt-2"
+          onClick={() => router.push("/add-event")}
+        >
           Add Event
         </button>
         <FilterBox
