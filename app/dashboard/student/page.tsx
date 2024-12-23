@@ -4,7 +4,7 @@ import MarksCard from "../../../components/student/marksCard";
 import axios from "axios";
 
 const student = () => {
-  axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`)
+  // axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/profile`)
 
 
   return (
@@ -48,7 +48,7 @@ const student = () => {
             </div>
           </div>
           <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfXKzxBrv-nr-V2w6n-Hf14w-Mw-p4tD_f6GPvjOCW4CoikavWniBoh4rNfKid-VyUwH4&usqp=CAU"
+            src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg"
             className="flex flex-col items-center w-1/5 h-4/5 mr-8 border-2 rounded-full border-cyan-300 shadow-md shadow-cyan-300/50"/>
         </div>
         <div className="w-2/3 text-2xl font-bold mt-12">

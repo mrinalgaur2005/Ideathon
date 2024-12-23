@@ -9,12 +9,12 @@ export default function MarksCard() {
           Subject Code
         </div>
         <div className="flex flex-row items-center h-full w-full overflow-x-auto mt-2">
-          <Marks />
-          <Marks />
-          <Marks />
-          <Marks />
-          <Marks />
-          <Marks />
+          <Marks type="quiz" marks="8" />
+          <Marks type="midsem" marks="20"/>
+          <Marks type="endsem" marks="50"/>
+          <Marks type="quiz2" marks="8"/>
+          <Marks type="lab quiz" marks="5"/>
+          <Marks type="quiz3" marks="8"/>
         </div>
       </div>
     </>
