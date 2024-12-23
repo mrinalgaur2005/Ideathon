@@ -205,6 +205,7 @@ const TeacherSchema: Schema<Teacher> = new Schema({
     //             of: Number,
     //         },
     //     },
+    //
     // },
 });
 
