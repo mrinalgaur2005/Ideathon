@@ -35,12 +35,12 @@ export default function EventCard({_id, poster, heading, eventHostedBy, descript
   return (
     <>
       <div
-        className="flex flex-row w-3/5 h-64 mt-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50"
+        className="flex flex-row w-3/5 h-64 mt-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50 flex-shrink-0"
       >
         <img
           src={poster}
           alt=""
-          className="h-64 w-1/3 object-cover overflow-hidden"
+          className="h-full w-1/3 object-cover overflow-hidden rounded-l-xl"
         />
         <div className="flex flex-col ml-4 w-2/3 h-full">
           <div className="flex flex-row justify-between w-full h-1/5 items-center">

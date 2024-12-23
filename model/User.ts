@@ -211,6 +211,7 @@ const TeacherSchema: Schema<Teacher> = new Schema({
 
 export interface Club extends Document {
     clubName: string;
+    clubLogo?: string;
     clubIdSecs: mongoose.Schema.Types.ObjectId[];
     clubMembers: mongoose.Schema.Types.ObjectId[];
     clubEvents: mongoose.Schema.Types.ObjectId[];
@@ -218,6 +219,7 @@ export interface Club extends Document {
 
 const ClubSchema: Schema<Club> = new Schema({
     clubName: { type: String, required: true, unique: true },
+    clubLogo: { type: String },
     clubIdSecs: [{ type: Schema.Types.ObjectId, ref: "Student" }],
     clubMembers: [{ type: Schema.Types.ObjectId, ref: "Student" }],
     clubEvents: [{ type: Schema.Types.ObjectId, ref: "Event" }],
@@ -250,31 +252,31 @@ const EventSchema: Schema<Event> = new Schema({
 });
 
 interface Marks {
-    subjects: {
-      [subjectId: string]: {
-        [studentId: string]: Array<{
-          [examName: string]: number;
-        }>;
-      };
-    };
-  }
-  
-  const MarksSchema: Schema<Marks> = new Schema({
-    subjects: {
-      type: Map,
-      of: {
+subjects: {
+  [subjectId: string]: {
+    [studentId: string]: Array<{
+      [examName: string]: number;
+    }>;
+  };
+};
+}
+
+const MarksSchema: Schema<Marks> = new Schema({
+subjects: {
+  type: Map,
+  of: {
+    type: Map,
+    of: [
+      {
         type: Map,
-        of: [
-          {
-            type: Map,
-            of: { type: Number },
-            default: {},
-          },
-        ],
+        of: { type: Number },
         default: {},
       },
-    },
-  });
+    ],
+    default: {},
+  },
+},
+});
   
 
   

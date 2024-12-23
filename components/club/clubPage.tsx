@@ -46,14 +46,13 @@ export default function ClubPage() {
             <div className="text-3xl font-bold">
               Members
             </div>
-            <StudentCard />
-            <StudentCard />
-            <StudentCard />
-            <StudentCard />
-            <StudentCard />
-            <StudentCard />
-            <StudentCard />
-            <StudentCard />
+            <StudentCard student_id={"23242"} name={"name"} profile={""}/>
+            <StudentCard student_id={"23242"} name={"name"} profile={""}/>
+            <StudentCard student_id={"23242"} name={"name"} profile={""}/>
+            <StudentCard student_id={"23242"} name={"name"} profile={""}/>
+            <StudentCard student_id={"23242"} name={"name"} profile={""}/>
+            <StudentCard student_id={"23242"} name={"name"} profile={""}/>
+            <StudentCard student_id={"23242"} name={"name"} profile={""}/>
           </div>
         </div>
       </div>

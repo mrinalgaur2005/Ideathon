@@ -20,7 +20,7 @@ export default function FilterBox({ onFilterChange }: { onFilterChange: (filters
   };
 
   return (
-    <div className="flex flex-col w-4/5 h-96 pl-4 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
+    <div className="flex flex-col flex-shrink-0 w-4/5 h-96 pl-4 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
       <div className="text-2xl font-bold text-center mt-4 mb-4">Filter Options</div>
       {filterOptions.map((filter) => (
         <div key={filter} className="text-lg font-bold flex flex-row w-full mt-4">
