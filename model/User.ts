@@ -248,6 +248,24 @@ const EventSchema: Schema<Event> = new Schema({
     tags: [{ type: String }],
 });
 
+export interface Marks extends Document {
+    subjects: Map<string, Record<string, any>[]>;
+}
+
+  const MarksSchema: Schema<Marks> = new Schema({
+    subjects: {
+      type: Map,
+      of: {
+        type: Map,
+        of: [{ type: Schema.Types.Mixed }],
+      },
+      default: {},
+    },
+  });
+  
+
+  
+
 const UserModel: Model<User> =
     mongoose.models.User || mongoose.model<User>("User", UserSchema);
 
@@ -258,10 +276,13 @@ const TeacherModel: Model<Teacher> =
     mongoose.models.Teacher || mongoose.model<Teacher>("Teacher", TeacherSchema);
 
 const ClubModel: Model<Club> =
-    mongoose.models.Club || mongoose.model<Club>("Club", ClubSchema);
+    mongoose.models.Club|| mongoose.model<Club>("Club", ClubSchema);
 
 const EventModel: Model<Event> =
     mongoose.models.Event || mongoose.model<Event>("Event", EventSchema);
+
+const MarksModel : Model<Marks> =
+  mongoose.models.Marks||  mongoose.model<Marks>("Marks",MarksSchema);
 
 export {
     UserModel,
@@ -269,4 +290,5 @@ export {
     TeacherModel,
     ClubModel,
     EventModel,
+    MarksModel
 };
