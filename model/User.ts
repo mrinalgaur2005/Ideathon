@@ -279,6 +279,9 @@ subjects: {
 });
   
 
+export interface Subject extends Document {
+
+}
   
 
 const UserModel: Model<User> =

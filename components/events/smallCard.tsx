@@ -1,47 +1,64 @@
-// import Tag from "./tag";
+import {useState} from "react";
+import {useRouter} from "next/navigation";
+import axios from "axios";
 
-export default function SmallEventCard() {
+interface Props {
+  heading: string,
+  isInterested: boolean,
+  eventTime: Date,
+  eventVenue: string,
+  _id: string
+}
+export default function SmallEventCard({heading, isInterested, eventTime, eventVenue, _id}: Props) {
+  const [interested, setInterested] = useState<boolean>(isInterested)
 
+  async function handleInterested() {
+    try {
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id}`);
+      if (res.status === 200) {
+        console.log("Interest status updated");
+        // Update local interestedArr state or trigger a re-fetch
+        setInterested(!interested);
+      }
+    } catch (error) {
+      console.log("Error updating interest status:", error);
+    }
+  }
+
+  const router = useRouter();
   return (
     <>
-      <div className="flex flex-row w-4/5 h-1/2 mt-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50 flex-shrink-0">
-        <img
-          src="https://next-images.123rf.com/index/_next/image/?url=https://assets-cdn.123rf.com/index/static/assets/top-section-bg.jpeg&w=3840&q=75"
-          alt=""
-          className="h-full w-1/3 object-cover"
-        />
-        <div className="flex flex-col ml-4 w-2/3 h-full">
-          <div className="flex flex-row justify-between w-full h-1/5 items-center">
-            <div className="text-3xl font-bold">
-              Heading
+      <div className="flex flex-col w-4/5 h-1/3 mt-8 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50 flex-shrink-0 ml-6">
+        <div className="flex flex-row justify-between w-full h-1/2 items-center">
+          <div className="ml-4 text-xl font-bold">
+            {heading}
+          </div>
+          <button
+            className={`text-lg font-bold h-3/5 ${
+              interested
+                ? "bg-red-600"
+                : "bg-gradient-to-br from-cyan-600 to-cyan-400"
+            } text-white w-1/4 rounded-3xl mr-4`}
+            onClick={handleInterested}
+          >
+            {interested ? "Interested" : "Not Interested"}
+          </button>
+        </div>
+        <div className="flex flex-row text-lg justify-between w-full h-1/2 items-center">
+          <div className="ml-4">
+            <div className="">
+              Date: <span className="ml-2">{new Date(eventTime).toLocaleString()}</span>
             </div>
-            <div className="text-3xl font-bold mr-4">
-              Club
+            <div className="">
+              Venue: <span className="ml-2">{eventVenue}</span>
             </div>
           </div>
-          <div className="w-full h-2/5 pl-2">
-            The sun dipped below the horizon, painting the sky with hues of orange and pink. A gentle breeze carried the scent of blooming flowers, while leaves rustled softly in the tree.
-          </div>
-          <div className="flex flex-row w-full h-1/5 items-center font-bold ">
-            <div className="text-xl font-bold">
-              Tags:
-            </div>
-            {/*<Tag />*/}
-            {/*<Tag />*/}
-            {/*<Tag />*/}
-          </div>
-          <div className="flex flex-row justify-between items-center w-full h-1/5">
-            <div className="text-xl font-bold">
-              Time:
-            </div>
-            <div className="text-xl font-bold">
-              Venue:
-            </div>
-            <button
-              className="text-xl font-bold h-4/5 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4">
-              Interested
-            </button>
-          </div>
+          <button
+            className={`text-lg font-bold h-3/5 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4`}
+            onClick={() => router.push(`/events/${_id}`)}
+          >
+            Show Details
+          </button>
         </div>
       </div>
     </>
