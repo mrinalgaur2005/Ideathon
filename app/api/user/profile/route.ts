@@ -3,7 +3,7 @@ import {getServerSession, User} from "next-auth";
 import {authOptions} from "../../(auth)/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
 import mongoose from "mongoose";
-import {MarksModel, StudentModel} from "../../../../model/User";
+import  {StudentModel} from "../../../../model/User";
 
 export async function GET(req: Request) {
   try {
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
               $project: {
                 _id: 1,
                 clubName: 1,
-                clubLogo: 1,
+                clubLogo: 1
               }
             }
           ]
@@ -47,7 +47,7 @@ export async function GET(req: Request) {
           localField: "enrolledSubjectId",
           foreignField: "subjectId",
           as: "subjectMarks",
-          let: {student_id: "$student_id"},
+          let: { student_id: "$student_id" },
           pipeline: [
             {
               $project: {
@@ -61,10 +61,16 @@ export async function GET(req: Request) {
                       marks: {
                         $arrayElemAt: [
                           {
-                            $filter: {
-                              input: "$$marksEntry.studentMarks",
-                              as: "studentMark",
-                              cond: { $eq: ["$$studentMark.student_id", "$$student_id"] }
+                            $map: {
+                              input: {
+                                $filter: {
+                                  input: "$$marksEntry.studentMarks",
+                                  as: "studentMark",
+                                  cond: { $eq: ["$$studentMark.student_id", "$$student_id"] }
+                                }
+                              },
+                              as: "filteredMark",
+                              in: "$$filteredMark.marks"
                             }
                           },
                           0
@@ -72,14 +78,6 @@ export async function GET(req: Request) {
                       }
                     }
                   }
-                }
-              }
-            },
-            {
-              $addFields: {
-                allMarks: {
-                  examType: "$allMarks.examType",
-                  marks: "$allMarks.marks.marks"
                 }
               }
             }
@@ -97,7 +95,9 @@ export async function GET(req: Request) {
           clubsPartOf: 1
         }
       }
-    ])
+    ]);
+    
+    
 
     if (!profile || profile.length == 0) {
       return new Response(
