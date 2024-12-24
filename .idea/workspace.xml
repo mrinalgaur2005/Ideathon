@@ -5,9 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
+      <change afterPath="$PROJECT_DIR$/app/api/clubs/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/clubs/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/club/clubPageCard.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/user/profile/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/profile/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/add-event/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/add-event/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/club/[...clubId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/clubs/[...clubId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/club/head/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/clubs/head/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/events/add-event/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/add-event/route.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,7 +131,8 @@
       <workItem from="1734888157235" duration="1752000" />
       <workItem from="1734936981008" duration="20081000" />
       <workItem from="1735026512179" duration="9324000" />
-      <workItem from="1735048088338" duration="4688000" />
+      <workItem from="1735048088338" duration="5248000" />
+      <workItem from="1735060156138" duration="877000" />
     </task>
     <servers />
   </component>

@@ -34,7 +34,7 @@ export async function GET(
 
     if (!mongoose.Types.ObjectId.isValid(clubId[0])) {
       return new Response(
-        JSON.stringify({ success: false, message: 'Invalid club ID' }),
+        JSON.stringify({ success: false, message: 'Invalid clubs ID' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }

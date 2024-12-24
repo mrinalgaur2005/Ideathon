@@ -54,6 +54,12 @@ interface SingleClub {
     }[];
 }
 
+interface Club {
+    _id: mongoose.Types.ObjectId;
+    clubName: string;
+    clubLogo: string;
+}
+
 interface Profile {
     name: string;
     student_id: string;
@@ -76,6 +82,7 @@ interface Profile {
 
 interface ModelStore {
     singleClub: SingleClub|null;
+    allClubs: Club[];
     profile: Profile|null;
     allEvents: Event[];
     singleEvent:SingleEvent|null;
@@ -92,6 +99,7 @@ export const useModel = create<ModelStore>((set) => ({
     filteredEvents: [],
     singleEvent:null,
     singleClub:null,
+    allClubs: [],
     profile: null,
     isLoading: false,
     setSingleEvent:((event)=>set({singleEvent:event})),

@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 
         if (!club) {
             return NextResponse.json(
-                { error: 'Club not found with the provided club name' },
+                { error: 'Club not found with the provided clubs name' },
                 { status: 404 }
             );
         }
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
         }
         if (!student.clubsHeadOf.includes((club._id)as mongoose.Schema.Types.ObjectId)) {
             return NextResponse.json(
-                { error: 'Student must be the head of the club to create an event.' },
+                { error: 'Student must be the head of the clubs to create an event.' },
                 { status: 403 }
             );
         }

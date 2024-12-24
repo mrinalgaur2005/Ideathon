@@ -42,7 +42,7 @@ export default function AddEventPage() {
 
     const eventTime = new Date(`${date}T${time}`);
 
-    const res = await axios.post(`http://localhost:3000/api/events/add-event`, {
+    const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/add-event`, {
       eventHostedBy,
       poster,
       heading,
@@ -59,7 +59,7 @@ export default function AddEventPage() {
   }
 
   async function fetchClubs() {
-    await axios.get(`http://localhost:3000/api/club/head`)
+    await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}}/api/clubs/head`)
       .then((response) => {
         if (response.status == 403) {
           redirect('/');
