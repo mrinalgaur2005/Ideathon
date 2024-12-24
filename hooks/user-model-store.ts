@@ -47,15 +47,36 @@ interface SingleClub {
     }[];
     clubEvents: {
         _id: mongoose.Types.ObjectId;
-        heading: string,
-        isInterested: boolean,
-        eventTime: Date,
+        heading: string;
+        isInterested: boolean;
+        eventTime: Date;
         eventVenue: string
     }[];
 }
 
+interface Profile {
+    name: string;
+    student_id: string;
+    semester: number;
+    branch: string;
+    profile: string;
+    subjectMarks: {
+        subjectId: string;
+        allMarks: {
+            examType: string;
+            marks: number;
+        }[];
+    }[],
+    clubsPartOf: {
+        _id: mongoose.Types.ObjectId;
+        clubName: string;
+        clubLogo: string;
+    }[]
+}
+
 interface ModelStore {
     singleClub: SingleClub|null;
+    profile: Profile|null;
     allEvents: Event[];
     singleEvent:SingleEvent|null;
     filteredEvents: Event[];
@@ -71,6 +92,7 @@ export const useModel = create<ModelStore>((set) => ({
     filteredEvents: [],
     singleEvent:null,
     singleClub:null,
+    profile: null,
     isLoading: false,
     setSingleEvent:((event)=>set({singleEvent:event})),
     setAllEvents: (events) => set({ allEvents: events }),

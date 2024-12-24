@@ -33,6 +33,7 @@ export async function GET(req: Request) {
           pipeline: [
             {
               $project: {
+                _id: 1,
                 clubName: 1,
                 clubLogo: 1,
               }
@@ -42,29 +43,59 @@ export async function GET(req: Request) {
       },
       {
         $lookup: {
-          from: "marks", // Collection where Marks data is stored
+          from: "subjects",
+          localField: "enrolledSubjectId",
+          foreignField: "subjectId",
+          as: "subjectMarks",
+          let: {student_id: "$student_id"},
           pipeline: [
             {
               $project: {
-                subjects: {
-                  $objectToArray: "$subjects", // Convert 'subjects' Map to an array of key-value pairs
-                },
-              },
+                subjectId: 1,
+                allMarks: {
+                  $map: {
+                    input: "$allMarks",
+                    as: "marksEntry",
+                    in: {
+                      examType: "$$marksEntry.examType",
+                      marks: {
+                        $arrayElemAt: [
+                          {
+                            $filter: {
+                              input: "$$marksEntry.studentMarks",
+                              as: "studentMark",
+                              cond: { $eq: ["$$studentMark.student_id", "$$student_id"] }
+                            }
+                          },
+                          0
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
             },
-          ],
-          as: "marksData",
-        },
+            {
+              $addFields: {
+                allMarks: {
+                  examType: "$allMarks.examType",
+                  marks: "$allMarks.marks.marks"
+                }
+              }
+            }
+          ]
+        }
       },
       {
-        $unwind: "$marksData", // Unwind the marks data
-      },
-      {
-        $unwind: "$marksData.subjects", // Unwind the subjects array
-      },
-      {
-        $match: {
-          "marksData.subjects.k": { $in: "$enrolledSubjectId" }, // Match subjectId with enrolledSubjectId
-        },
+        $project: {
+          name: 1,
+          student_id: 1,
+          semester: 1,
+          branch: 1,
+          profile: 1,
+          subjectMarks: 1,
+          clubsPartOf: 1
+        }
       }
     ])
 
