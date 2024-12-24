@@ -280,8 +280,20 @@ subjects: {
   
 
 export interface Subject extends Document {
-
+    subjectId: string;
+    allMarks: {
+        examType: string;
+        studentMarks: {
+            student_id: string;
+            marks: number;
+        }[];
+    }[];
 }
+
+const SubjectSchema: Schema<Subject> = new Schema({
+    subjectId: {type: String, required: true},
+
+})
   
 
 const UserModel: Model<User> =
