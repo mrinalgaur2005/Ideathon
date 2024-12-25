@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/api/clubs/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/clubs/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/club/clubPageCard.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/add-event/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/add-event/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/club/[...clubId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/clubs/[...clubId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/club/head/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/clubs/head/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/events/add-event/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/add-event/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/events/[...eventId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/[...eventId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/events/interested/[...eventId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/interested/[...eventId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/events/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/events/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/card.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +131,10 @@
       <workItem from="1734936981008" duration="20081000" />
       <workItem from="1735026512179" duration="9324000" />
       <workItem from="1735048088338" duration="5248000" />
-      <workItem from="1735060156138" duration="877000" />
+      <workItem from="1735060156138" duration="2618000" />
+      <workItem from="1735064720771" duration="656000" />
+      <workItem from="1735106418820" duration="148000" />
+      <workItem from="1735141420059" duration="11050000" />
     </task>
     <servers />
   </component>

@@ -1,5 +1,5 @@
 import dbConnect from '../../../../lib/connectDb';
-import { EventModel } from '../../../../model/User';
+import {EventModel, Student, StudentModel} from '../../../../model/User';
 import mongoose from "mongoose";
 import {getServerSession, User} from "next-auth";
 import {authOptions} from "../../(auth)/auth/[...nextauth]/options";
@@ -41,6 +41,15 @@ export async function GET(
 
         const eventObjectId = new mongoose.Types.ObjectId(eventId[0])
 
+        const student: Student|null = await StudentModel.findOne({user_id: userId});
+
+        if (!student) {
+            return new Response(
+              JSON.stringify({ success: false, message: 'student not found' }),
+              { status: 400, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+
         const event = await EventModel.aggregate([
             {
                 $match: {
@@ -51,7 +60,7 @@ export async function GET(
                 $addFields: {
                     isInterested: {
                         $cond: {
-                            if: { $in: [userId, "$interestedMembersArr"] },
+                            if: { $in: [student._id, "$interestedMembersArr"] },
                             then: true,
                             else: false,
                         }

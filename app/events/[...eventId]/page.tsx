@@ -1,13 +1,21 @@
 'use client'
 import {useEffect, useState} from "react";
 import { useModel } from "../../../hooks/user-model-store";
-import { useParams, useRouter } from "next/navigation";
+import {redirect, useParams, useRouter} from "next/navigation";
 import axios from "axios";
 import StudentCard from "../../../components/student/studentCard";
-import Tag from "../../../components/events/tag";
+import mongoose from "mongoose";
+
+interface InterestedMembers {
+  _id: mongoose.Types.ObjectId;
+  name: string;
+  profile: string;
+  student_id: string;
+}
 
 export default function Event() {
   const [interested, setInterested] = useState<boolean>(false);
+  const [interestedMembers, setInterestedMembers] = useState<InterestedMembers[]>([]);
   const router = useRouter();
   const params = useParams();
   const eventId = params.eventId?.[0];
@@ -22,7 +30,8 @@ export default function Event() {
         const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${eventId}`);
         if (res.status === 200) {
           setSingleEvent(res.data.data);
-          setInterested(res.data.isInterested);
+          setInterested(res.data.data.isInterested);
+          setInterestedMembers(res.data.data.interestedMembersArr);
         } else {
           router.push("/");
         }
@@ -53,6 +62,12 @@ export default function Event() {
     try {
       const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id.toString()}`);
       if (res.status === 200) {
+        if (!interested) {
+          setInterestedMembers((prev) => [...prev, res.data.studentInfo]);
+        } else {
+          setInterestedMembers((prev) => prev.filter((item) => item._id.toString() !== res.data.studentInfo._id.toString()));
+        }
+
         setInterested((prev) => !prev);
       }
     } catch (error) {
@@ -74,7 +89,11 @@ export default function Event() {
                 {event?.heading}
               </div>
               <button
-                className="text-xl font-bold h-4/5 bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-1/4 rounded-3xl mr-4"
+                className={`text-lg font-bold ${
+                  !interested
+                    ? "bg-red-600"
+                    : "bg-gradient-to-br from-cyan-600 to-cyan-400"
+                } text-white w-1/3 rounded-3xl mr-4`}
                 onClick={handleInterested}
               >
                 {interested ? "Interested" : "Not Interested"}
@@ -108,12 +127,12 @@ export default function Event() {
                 Hosted By: <span className="ml-2">{event?.eventHostedBy}</span>
                 </div>
               </div>
-              <div className="flex flex-col w-1/3 h-3/4 items-center text-xl font-bold border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
-                <div className="text-2xl mt-4 mb-4">
+              <div className="flex flex-col w-1/3 h-3/4 items-center text-lg font-bold border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
+                <div className="text-xl mt-3 mb-2">
                   Tags
                 </div>
                 {event?.tags.map((tag) => {
-                  <Tag tag={tag} key={tag}/>
+                  return <div key={tag} className="mt-2">{tag}</div>
                 })}
               </div>
             </div>
@@ -128,7 +147,7 @@ export default function Event() {
             <div className="text-2xl font-bold mt-3 mb-2">
               Interested People
             </div>
-            {event?.interestedMembersArr.map((member) => {
+            {interestedMembers.map((member) => {
               return <StudentCard key={member.student_id} name={member.name} student_id={member.student_id} profile={member.profile} />
             })}
           </div>

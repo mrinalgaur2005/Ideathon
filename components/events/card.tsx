@@ -73,7 +73,7 @@ export default function EventCard({_id, poster, heading, eventHostedBy, descript
             </div>
             <button
               className={`text-lg font-bold h-3/5 ${
-                interested
+                !interested
                   ? "bg-red-600"
                   : "bg-gradient-to-br from-cyan-600 to-cyan-400"
               } text-white w-1/3 rounded-3xl mr-4`}
