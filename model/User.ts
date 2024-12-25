@@ -276,6 +276,26 @@ const SubjectSchema: Schema<Subject> = new Schema({
   ],
 });
 
+export interface Attendance extends Document {
+    subjectId: string;
+    totalClasses: number;
+    dateStudentMap: {
+        date: Date;
+        studentPresent: mongoose.Schema.Types.ObjectId[];
+    }[];
+    code: number;
+}
+
+const AttendanceSchema: Schema<Attendance> = new Schema({
+    subjectId: { type: String, required: true },
+    totalClasses: { type: Number, required: true },
+    dateStudentMap: [{
+        date: { type: Date, required: true },
+        studentPresent: [{ type: Schema.Types.ObjectId, ref: "Student" }],
+    }],
+    code: { type: Number},
+})
+
 const UserModel: Model<User> =
     mongoose.models.User || mongoose.model<User>("User", UserSchema);
 
@@ -294,6 +314,8 @@ const EventModel: Model<Event> =
 const SubjectModel : Model<Subject>=
     mongoose.models.Subject || mongoose.model<Subject>("Subject",SubjectSchema);
 
+const AttendanceModel: Model<Attendance> =
+    mongoose.models.Attendance || mongoose.model<Attendance>("Attendance", AttendanceSchema);
 
 export {
     UserModel,
@@ -301,5 +323,6 @@ export {
     TeacherModel,
     ClubModel,
     EventModel,
-    SubjectModel
+    SubjectModel,
+    AttendanceModel
 };
