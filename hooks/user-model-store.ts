@@ -62,6 +62,7 @@ interface Club {
 }
 
 interface Profile {
+    _id:mongoose.Types.ObjectId;
     name: string;
     student_id: string;
     semester: number;
@@ -87,25 +88,27 @@ interface ModelStore {
     profile: Profile|null;
     allEvents: Event[];
     singleEvent:SingleEvent|null;
-    filteredEvents: Event[];
     isLoading: boolean;
+    setProfile:(profile:Profile) => void;
+    setSingleClub:(club:SingleClub) => void;
+    setAllClub:(clubs:Club[])=>void;
     setSingleEvent:(event:SingleEvent)=>void;
     setAllEvents: (events: Event[]) => void;
-    setFilteredEvents: (events: Event[]) => void;
     setLoading: (loading: boolean) => void;
 }
 
 export const useModel = create<ModelStore>((set) => ({
     allEvents: [],
-    filteredEvents: [],
     singleEvent:null,
     singleClub:null,
     allClubs: [],
     profile: null,
     isLoading: false,
+    setProfile :((profile)=>set({profile:profile})),
+    setSingleClub:((club)=> set({singleClub:club})),
+    setAllClub:((clubs)=> set({allClubs:clubs})),
     setSingleEvent:((event)=>set({singleEvent:event})),
     setAllEvents: (events) => set({ allEvents: events }),
-    setFilteredEvents: (events) => set({ filteredEvents: events }),
     setLoading: (loading) => set({ isLoading: loading }),
 }));
 

@@ -250,51 +250,51 @@ const EventSchema: Schema<Event> = new Schema({
     description: { type: String, required: true },
     tags: [{ type: String }],
 });
-
-interface Marks {
-subjects: {
-  [subjectId: string]: {
-    [studentId: string]: Array<{
-      [examName: string]: number;
-    }>;
-  };
-};
-}
-
-const MarksSchema: Schema<Marks> = new Schema({
-subjects: {
-  type: Map,
-  of: {
-    type: Map,
-    of: [
-      {
-        type: Map,
-        of: { type: Number },
-        default: {},
-      },
-    ],
-    default: {},
-  },
-},
-});
-  
-
 export interface Subject extends Document {
-    subjectId: string;
-    allMarks: {
-        examType: string;
-        studentMarks: {
-            student_id: string;
-            marks: number;
-        }[];
+  subjectId: string;
+  allMarks: {
+    examType: string;
+    studentMarks: {
+      student_id: string;
+      marks: number;
     }[];
+  }[];
 }
 
 const SubjectSchema: Schema<Subject> = new Schema({
-    subjectId: {type: String, required: true},
+  subjectId: { type: String, required: true },
+  allMarks: [
+    {
+      examType: { type: String, required: true },
+      studentMarks: [
+        {
+          student_id: { type: String, required: true },
+          marks: { type: Number, required: true },
+        },
+      ],
+    },
+  ],
+});
 
+export interface Attendance extends Document {
+    subjectId: string;
+    totalClasses: number;
+    dateStudentMap: {
+        date: Date;
+        studentPresent: mongoose.Schema.Types.ObjectId[];
+    }[];
+    code: number;
+}
+
+const AttendanceSchema: Schema<Attendance> = new Schema({
+    subjectId: { type: String, required: true },
+    totalClasses: { type: Number, required: true },
+    dateStudentMap: [{
+        date: { type: Date, required: true },
+        studentPresent: [{ type: Schema.Types.ObjectId, ref: "Student" }],
+    }],
+    code: { type: Number},
 })
-  
 
 const UserModel: Model<User> =
     mongoose.models.User || mongoose.model<User>("User", UserSchema);
@@ -311,8 +311,11 @@ const ClubModel: Model<Club> =
 const EventModel: Model<Event> =
     mongoose.models.Event || mongoose.model<Event>("Event", EventSchema);
 
-const MarksModel : Model<Marks> =
-  mongoose.models.Marks||  mongoose.model<Marks>("Marks",MarksSchema);
+const SubjectModel : Model<Subject>=
+    mongoose.models.Subject || mongoose.model<Subject>("Subject",SubjectSchema);
+
+const AttendanceModel: Model<Attendance> =
+    mongoose.models.Attendance || mongoose.model<Attendance>("Attendance", AttendanceSchema);
 
 export {
     UserModel,
@@ -320,5 +323,6 @@ export {
     TeacherModel,
     ClubModel,
     EventModel,
-    MarksModel
+    SubjectModel,
+    AttendanceModel
 };
