@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "../components/ui/toaster";
 import AuthProvider from '../context/AuthProvider';
 import StoreProvider from "../context/StoreProvider";
+import SignOutButton from "../components/signOutButton";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,6 +33,7 @@ export default function RootLayout({
          <AuthProvider>
            <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
             {children}
+            <SignOutButton />
             <Toaster />
            </body>
         </AuthProvider>

@@ -39,7 +39,7 @@ export  async function GET() {
 
     
     if (clubsHeadOf.length===0) {
-      return NextResponse.json({error: 'User is not head of any club.'}, {status: 403});
+      return NextResponse.json({error: 'User is not head of any clubs.'}, {status: 403});
     }
 
     return NextResponse.json(clubsHeadOf, {status: 200});

@@ -3,7 +3,7 @@ import {getServerSession, User} from "next-auth";
 import {authOptions} from "../../(auth)/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
 import mongoose from "mongoose";
-import {MarksModel, StudentModel} from "../../../../model/User";
+import  {StudentModel} from "../../../../model/User";
 
 export async function GET(req: Request) {
   try {
@@ -33,8 +33,9 @@ export async function GET(req: Request) {
           pipeline: [
             {
               $project: {
+                _id: 1,
                 clubName: 1,
-                clubLogo: 1,
+                clubLogo: 1
               }
             }
           ]
@@ -42,31 +43,61 @@ export async function GET(req: Request) {
       },
       {
         $lookup: {
-          from: "marks", // Collection where Marks data is stored
+          from: "subjects",
+          localField: "enrolledSubjectId",
+          foreignField: "subjectId",
+          as: "subjectMarks",
+          let: { student_id: "$student_id" },
           pipeline: [
             {
               $project: {
-                subjects: {
-                  $objectToArray: "$subjects", // Convert 'subjects' Map to an array of key-value pairs
-                },
-              },
-            },
-          ],
-          as: "marksData",
-        },
+                subjectId: 1,
+                allMarks: {
+                  $map: {
+                    input: "$allMarks",
+                    as: "marksEntry",
+                    in: {
+                      examType: "$$marksEntry.examType",
+                      marks: {
+                        $arrayElemAt: [
+                          {
+                            $map: {
+                              input: {
+                                $filter: {
+                                  input: "$$marksEntry.studentMarks",
+                                  as: "studentMark",
+                                  cond: { $eq: ["$$studentMark.student_id", "$$student_id"] }
+                                }
+                              },
+                              as: "filteredMark",
+                              in: "$$filteredMark.marks"
+                            }
+                          },
+                          0
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
       },
       {
-        $unwind: "$marksData", // Unwind the marks data
-      },
-      {
-        $unwind: "$marksData.subjects", // Unwind the subjects array
-      },
-      {
-        $match: {
-          "marksData.subjects.k": { $in: "$enrolledSubjectId" }, // Match subjectId with enrolledSubjectId
-        },
+        $project: {
+          name: 1,
+          student_id: 1,
+          semester: 1,
+          branch: 1,
+          profile: 1,
+          subjectMarks: 1,
+          clubsPartOf: 1
+        }
       }
-    ])
+    ]);
+    
+    
 
     if (!profile || profile.length == 0) {
       return new Response(

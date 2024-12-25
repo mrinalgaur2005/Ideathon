@@ -250,36 +250,31 @@ const EventSchema: Schema<Event> = new Schema({
     description: { type: String, required: true },
     tags: [{ type: String }],
 });
-
-interface Marks {
-subjects: {
-  [subjectId: string]: {
-    [studentId: string]: Array<{
-      [examName: string]: number;
-    }>;
-  };
-};
+export interface Subject extends Document {
+  subjectId: string;
+  allMarks: {
+    examType: string;
+    studentMarks: {
+      student_id: string;
+      marks: number;
+    }[];
+  }[];
 }
 
-const MarksSchema: Schema<Marks> = new Schema({
-subjects: {
-  type: Map,
-  of: {
-    type: Map,
-    of: [
-      {
-        type: Map,
-        of: { type: Number },
-        default: {},
-      },
-    ],
-    default: {},
-  },
-},
+const SubjectSchema: Schema<Subject> = new Schema({
+  subjectId: { type: String, required: true },
+  allMarks: [
+    {
+      examType: { type: String, required: true },
+      studentMarks: [
+        {
+          student_id: { type: String, required: true },
+          marks: { type: Number, required: true },
+        },
+      ],
+    },
+  ],
 });
-  
-
-  
 
 const UserModel: Model<User> =
     mongoose.models.User || mongoose.model<User>("User", UserSchema);
@@ -296,8 +291,9 @@ const ClubModel: Model<Club> =
 const EventModel: Model<Event> =
     mongoose.models.Event || mongoose.model<Event>("Event", EventSchema);
 
-const MarksModel : Model<Marks> =
-  mongoose.models.Marks||  mongoose.model<Marks>("Marks",MarksSchema);
+const SubjectModel : Model<Subject>=
+    mongoose.models.Subject || mongoose.model<Subject>("Subject",SubjectSchema);
+
 
 export {
     UserModel,
@@ -305,5 +301,5 @@ export {
     TeacherModel,
     ClubModel,
     EventModel,
-    MarksModel
+    SubjectModel
 };

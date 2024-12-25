@@ -6,7 +6,7 @@ import { join } from "path";
 import csvParser from "csv-parser";
 import { authOptions } from "../../(auth)/auth/[...nextauth]/options";
 import dbConnect from "../../../../lib/connectDb";
-import { MarksModel } from "../../../../model/User";
+import { SubjectModel } from "../../../../model/User";
 
 interface CSVRow {
   student_id: string;
@@ -79,56 +79,65 @@ export async function PATCH(
       });
     });
 
-    const updates = new Map<string, Map<string, { [key: string]: number }>>(); // Track updates
+    const updates = new Map<string, { [examType: string]: { studentMarks: { student_id: string, marks: number }[] } }>();
 
     await new Promise<void>((resolve, reject) => {
       createReadStream(filePath!)
         .pipe(csvParser())
         .on("data", (row: CSVRow) => {
-          const studentId = row.student_id;
+          const trimmedRow = Object.keys(row).reduce((acc, key) => {
+            acc[key.trim()] = row[key].trim();
+            return acc;
+          }, {} as CSVRow);
+    
+          const studentId = trimmedRow.student_id;
           if (!studentId) return;
-
-          const marksUpdate: { [key: string]: number } = {};
-
-          for (const [key, value] of Object.entries(row)) {
+          console.log(trimmedRow);
+          for (const [key, value] of Object.entries(trimmedRow)) {
             if (key === "student_id") continue;
-
+    
             const marks = parseFloat(value);
             if (!isNaN(marks) && marks >= 0) {
-              marksUpdate[key] = marks;
+              const examType = key;
+              
+              if (!updates.has(subjectId)) {
+                updates.set(subjectId, {});
+              }
+              const subjectUpdates = updates.get(subjectId)!;
+    
+              if (!subjectUpdates[examType]) {
+                subjectUpdates[examType] = { studentMarks: [] };
+              }
+    
+              subjectUpdates[examType].studentMarks.push({
+                student_id: studentId,
+                marks: marks,
+              });
             }
-          }
-
-          if (!updates.has(subjectId)) {
-            updates.set(subjectId, new Map());
-          }
-
-          const subjectMap = updates.get(subjectId)!;
-          if (!subjectMap.has(studentId)) {
-            subjectMap.set(studentId, marksUpdate);
-          } else {
-            Object.assign(subjectMap.get(studentId)!, marksUpdate);
           }
         })
         .on("end", resolve)
         .on("error", reject);
     });
+    console.log(updates);
+    
+    const formattedSubjectUpdates = Array.from(updates.entries()).map(
+      ([subject, examData]) => ({
+        subjectId: subject,
+        allMarks: Object.entries(examData).map(([examType, data]) => ({
+          examType,
+          studentMarks: data.studentMarks,
+        })),
+      })
+    );
 
-    for (const [subject, students] of updates.entries()) {
-      const allStudentMarks: { [key: string]: any } = {};
-
-      for (const [studentId, marks] of students.entries()) {
-        allStudentMarks[studentId] = Object.entries(marks).map(([examName, value]) => ({
-          [examName]: value,
-        }));
-      }
-
-      await MarksModel.updateOne(
-        { [`subjects.${subject}`]: { $exists: true } },
+    for (const subjectUpdate of formattedSubjectUpdates) {
+      await SubjectModel.updateOne(
+        { subjectId: subjectUpdate.subjectId },
         {
-          $set: {
-            [`subjects.${subject}`]: allStudentMarks,
-          },
+          $addToSet: {
+            allMarks: { $each: subjectUpdate.allMarks }
+          }
         },
         { upsert: true }
       );
