@@ -5,13 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
+      <change afterPath="$PROJECT_DIR$/app/admin/add-club/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/admin/add-club/route.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/events/[...eventId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/[...eventId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/events/interested/[...eventId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/interested/[...eventId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/events/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/events/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/card.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/clubs/[...clubId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/clubs/[...clubId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/events/add-event/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/add-event/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +135,9 @@
       <workItem from="1735060156138" duration="2618000" />
       <workItem from="1735064720771" duration="656000" />
       <workItem from="1735106418820" duration="148000" />
-      <workItem from="1735141420059" duration="11050000" />
+      <workItem from="1735141420059" duration="11523000" />
+      <workItem from="1735194562583" duration="6771000" />
+      <workItem from="1735224189800" duration="6488000" />
     </task>
     <servers />
   </component>

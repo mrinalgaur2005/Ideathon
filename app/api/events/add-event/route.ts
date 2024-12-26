@@ -8,18 +8,18 @@ import { authOptions } from '../../(auth)/auth/[...nextauth]/options';
 import { User } from 'next-auth';
 
 export async function POST(req: Request) {
-    await dbConnect();
-    
-    const session = await getServerSession(authOptions);
-    const user: User = session?.user as User;
-    
-    if (!session || !user) {
-        return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });
-    }
-    
-    const userId = new mongoose.Types.ObjectId(user._id);
-    
     try {
+        await dbConnect();
+
+        const session = await getServerSession(authOptions);
+        const user: User = session?.user as User;
+
+        if (!session || !user) {
+            return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });
+        }
+
+        const userId = new mongoose.Types.ObjectId(user._id);
+
         const {
             poster,
             eventHostedBy,

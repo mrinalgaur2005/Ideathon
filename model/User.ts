@@ -10,6 +10,7 @@ export interface User extends Document {
     isVerified: boolean;
     isStudent:boolean
     isTeacher: boolean;
+    isAdmin: boolean;
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -48,6 +49,10 @@ const UserSchema: Schema<User> = new Schema({
         type: Boolean,
         default: false, // Default to false, only true if admin updates the field
     },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    }
 });
 
 UserSchema.post("save", async function (this: User) {
@@ -212,16 +217,16 @@ const TeacherSchema: Schema<Teacher> = new Schema({
 export interface Club extends Document {
     clubName: string;
     clubLogo?: string;
-    clubIdSecs: mongoose.Schema.Types.ObjectId[];
-    clubMembers: mongoose.Schema.Types.ObjectId[];
+    clubIdSecs: string[];
+    clubMembers: string[];
     clubEvents: mongoose.Schema.Types.ObjectId[];
 }
 
 const ClubSchema: Schema<Club> = new Schema({
     clubName: { type: String, required: true, unique: true },
     clubLogo: { type: String },
-    clubIdSecs: [{ type: Schema.Types.ObjectId, ref: "Student" }],
-    clubMembers: [{ type: Schema.Types.ObjectId, ref: "Student" }],
+    clubIdSecs: [{ type: String, ref: "Student" }],
+    clubMembers: [{ type: String, ref: "Student" }],
     clubEvents: [{ type: Schema.Types.ObjectId, ref: "Event" }],
 });
 export interface Event extends Document {
