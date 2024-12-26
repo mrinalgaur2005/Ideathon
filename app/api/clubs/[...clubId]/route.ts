@@ -51,7 +51,7 @@ export async function GET(
         $lookup: {
           from: "students",
           localField: "clubIdSecs",
-          foreignField: "_id",
+          foreignField: "student_id",
           as: "clubIdSecs",
           pipeline: [
             {
@@ -68,7 +68,7 @@ export async function GET(
         $lookup: {
           from: "students",
           localField: "clubMembers",
-          foreignField: "_id",
+          foreignField: "student_id",
           as: "clubMembers",
           pipeline: [
             {

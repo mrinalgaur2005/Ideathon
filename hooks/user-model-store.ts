@@ -24,6 +24,7 @@ interface SingleEvent {
     eventVenue: string;
     isInterested: boolean;
     interestedMembersArr: {
+        _id: mongoose.Types.ObjectId;
         name: string;
         student_id: string;
         profile: string

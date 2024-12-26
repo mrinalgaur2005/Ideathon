@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 import { useModel } from "../../hooks/user-model-store";
 import { useEffect } from "react";
 import axios from "axios";
-import ClubPageCard from "../../components/club/clubPageCard";
 
 export default function ClubsPage() {
   const { allClubs, setAllClub, setLoading } = useModel();
@@ -28,7 +27,7 @@ export default function ClubsPage() {
     }
 
     fetchData();
-  }, [setAllClub, setLoading]);
+  }, [router, setAllClub, setLoading]);
 
   if (!allClubs) {
     return <div className="flex items-center justify-center min-h-screen text-2xl text-[#C5C6C7]">Loading...</div>;

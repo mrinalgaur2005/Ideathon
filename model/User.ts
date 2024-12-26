@@ -10,6 +10,7 @@ export interface User extends Document {
     isVerified: boolean;
     isStudent:boolean
     isTeacher: boolean;
+    isAdmin: boolean;
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -48,6 +49,10 @@ const UserSchema: Schema<User> = new Schema({
         type: Boolean,
         default: false, // Default to false, only true if admin updates the field
     },
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    }
 });
 
 UserSchema.post("save", async function (this: User) {
@@ -212,16 +217,16 @@ const TeacherSchema: Schema<Teacher> = new Schema({
 export interface Club extends Document {
     clubName: string;
     clubLogo?: string;
-    clubIdSecs: mongoose.Schema.Types.ObjectId[];
-    clubMembers: mongoose.Schema.Types.ObjectId[];
+    clubIdSecs: string[];
+    clubMembers: string[];
     clubEvents: mongoose.Schema.Types.ObjectId[];
 }
 
 const ClubSchema: Schema<Club> = new Schema({
     clubName: { type: String, required: true, unique: true },
     clubLogo: { type: String },
-    clubIdSecs: [{ type: Schema.Types.ObjectId, ref: "Student" }],
-    clubMembers: [{ type: Schema.Types.ObjectId, ref: "Student" }],
+    clubIdSecs: [{ type: String, ref: "Student" }],
+    clubMembers: [{ type: String, ref: "Student" }],
     clubEvents: [{ type: Schema.Types.ObjectId, ref: "Event" }],
 });
 export interface Event extends Document {
@@ -276,6 +281,26 @@ const SubjectSchema: Schema<Subject> = new Schema({
   ],
 });
 
+export interface Attendance extends Document {
+    subjectId: string;
+    totalClasses: number;
+    dateStudentMap: {
+        date: Date;
+        studentPresent: mongoose.Schema.Types.ObjectId[];
+    }[];
+    code: number;
+}
+
+const AttendanceSchema: Schema<Attendance> = new Schema({
+    subjectId: { type: String, required: true },
+    totalClasses: { type: Number, required: true },
+    dateStudentMap: [{
+        date: { type: Date, required: true },
+        studentPresent: [{ type: Schema.Types.ObjectId, ref: "Student" }],
+    }],
+    code: { type: Number},
+})
+
 const UserModel: Model<User> =
     mongoose.models.User || mongoose.model<User>("User", UserSchema);
 
@@ -294,6 +319,8 @@ const EventModel: Model<Event> =
 const SubjectModel : Model<Subject>=
     mongoose.models.Subject || mongoose.model<Subject>("Subject",SubjectSchema);
 
+const AttendanceModel: Model<Attendance> =
+    mongoose.models.Attendance || mongoose.model<Attendance>("Attendance", AttendanceSchema);
 
 export {
     UserModel,
@@ -301,5 +328,6 @@ export {
     TeacherModel,
     ClubModel,
     EventModel,
-    SubjectModel
+    SubjectModel,
+    AttendanceModel
 };

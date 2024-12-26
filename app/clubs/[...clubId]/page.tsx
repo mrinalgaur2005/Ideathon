@@ -33,7 +33,7 @@ export default function Club() {
     }
 
     fetchData();
-  }, [setSingleClub, setLoading]);
+  }, [setSingleClub, setLoading, clubId, router]);
 
   if (!singleClub) {
     return <div>Loading...</div>;
@@ -88,12 +88,12 @@ export default function Club() {
               {singleClub.clubEvents.map((event) => {
                 return (
                   <SmallEventCard
-                    key={event._id}
+                    key={event._id.toString()}
                     heading={event.heading}
                     isInterested={event.isInterested}
                     eventTime={event.eventTime}
                     eventVenue={event.eventVenue}
-                    _id={event._id}
+                    _id={event._id.toString()}
                   />
                 );
               })}
