@@ -61,6 +61,14 @@ interface Club {
     clubLogo: string;
 }
 
+interface EditClub {
+    clubName: string;
+    clubLogo: string;
+    clubIdSecs: string[];
+    clubMembers: string[];
+    clubEvents: mongoose.Types.ObjectId[];
+}
+
 interface Profile {
     _id:mongoose.Types.ObjectId;
     name: string;
@@ -83,6 +91,7 @@ interface Profile {
 }
 
 interface ModelStore {
+    editClub: EditClub|null;
     singleClub: SingleClub|null;
     allClubs: Club[];
     profile: Profile|null;
@@ -92,6 +101,7 @@ interface ModelStore {
     setProfile:(profile:Profile) => void;
     setSingleClub:(club:SingleClub) => void;
     setAllClub:(clubs:Club[])=>void;
+    setEditClub:(club:EditClub) => void;
     setSingleEvent:(event:SingleEvent)=>void;
     setAllEvents: (events: Event[]) => void;
     setLoading: (loading: boolean) => void;
@@ -102,11 +112,13 @@ export const useModel = create<ModelStore>((set) => ({
     singleEvent:null,
     singleClub:null,
     allClubs: [],
+    editClub:null,
     profile: null,
     isLoading: false,
     setProfile :((profile)=>set({profile:profile})),
     setSingleClub:((club)=> set({singleClub:club})),
     setAllClub:((clubs)=> set({allClubs:clubs})),
+    setEditClub:((club)=> set({editClub:club})),
     setSingleEvent:((event)=>set({singleEvent:event})),
     setAllEvents: (events) => set({ allEvents: events }),
     setLoading: (loading) => set({ isLoading: loading }),

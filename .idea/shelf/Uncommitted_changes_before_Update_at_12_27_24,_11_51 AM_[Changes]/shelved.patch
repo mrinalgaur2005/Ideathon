@@ -1,0 +1,128 @@
+Index: app/api/admin/add-club/route.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import {NextRequest, NextResponse} from \"next/server\";\nimport dbConnect from \"../../../../lib/connectDb\";\nimport {getServerSession, User} from \"next-auth\";\nimport {authOptions} from \"../../(auth)/auth/[...nextauth]/options\";\nimport mongoose from \"mongoose\";\nimport {ClubModel} from \"../../../../model/User\";\n\nexport async function POST(req: NextRequest) {\n  try {\n    await dbConnect();\n\n    const session = await getServerSession(authOptions);\n    const user: User = session?.user as User;\n\n    if (!session || !user) {\n      return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });\n    }\n\n    const {clubName, clubLogo, clubIdSecs, clubMembers} = await req.json();\n\n    if (!clubName) {\n      return NextResponse.json(\n        { error: 'ClubName is required' },\n        { status: 403 }\n      );\n    }\n\n    const club = await ClubModel.create({\n      clubName,\n      clubLogo,\n      clubIdSecs,\n      clubMembers,\n      clubEvents: []\n    })\n\n    if (!club) {\n      return NextResponse.json(\n        { error: 'Failed to create club' },\n        { status: 500 }\n      );\n    }\n\n    return NextResponse.json(club, {status: 200});\n\n  } catch (error) {\n    console.error(error);\n    return NextResponse.json(\n      { error: 'Internal Server Error' },\n      { status: 500 }\n    );\n  }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/api/admin/add-club/route.ts b/app/api/admin/add-club/route.ts
+--- a/app/api/admin/add-club/route.ts	(revision 819f3eab511f0670d3b946d5d425b10c53399ced)
++++ b/app/api/admin/add-club/route.ts	(date 1735242410594)
+@@ -16,6 +16,13 @@
+       return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });
+     }
+ 
++    // if (!user.isAdmin) {
++    //   return NextResponse.json(
++    //     { error: 'User is not admin' },
++    //     { status: 401 }
++    //   );
++    // }
++
+     const {clubName, clubLogo, clubIdSecs, clubMembers} = await req.json();
+ 
+     if (!clubName) {
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"3d45d623-ee8a-421e-8d0d-07f88c3fd10c\" name=\"Changes\" comment=\"fixup! recovered files\">\n      <change afterPath=\"$PROJECT_DIR$/app/admin/add-club/page.tsx\" afterDir=\"false\" />\n      <change afterPath=\"$PROJECT_DIR$/app/api/admin/add-club/route.ts\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/app/api/clubs/[...clubId]/route.ts\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/api/clubs/[...clubId]/route.ts\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/app/api/events/add-event/route.ts\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/api/events/add-event/route.ts\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/app/clubs/page.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/app/clubs/page.tsx\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/model/User.ts\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/model/User.ts\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"TypeScript JSX File\" />\n        <option value=\"TypeScript File\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\n      <map>\n        <entry key=\"$PROJECT_DIR$\" value=\"css-testing\" />\n      </map>\n    </option>\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n    <option name=\"RESET_MODE\" value=\"MIXED\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\">{\n  &quot;lastFilter&quot;: {\n    &quot;state&quot;: &quot;OPEN&quot;,\n    &quot;assignee&quot;: &quot;VaibhavVerma27&quot;\n  }\n}</component>\n  <component name=\"GithubPullRequestsUISettings\">{\n  &quot;selectedUrlAndAccountId&quot;: {\n    &quot;url&quot;: &quot;https://github.com/VaibhavVerma27/Ideathon.git&quot;,\n    &quot;accountId&quot;: &quot;2d85c29d-bd34-4650-83c7-ed5abaf2838e&quot;\n  }\n}</component>\n  <component name=\"ProblemsViewState\">\n    <option name=\"selectedTabId\" value=\"CurrentFile\" />\n  </component>\n  <component name=\"ProjectColorInfo\">{\n  &quot;associatedIndex&quot;: 5\n}</component>\n  <component name=\"ProjectId\" id=\"2pwcVN5jNvv3r7ErnbxxbDHxjE8\" />\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\n    &quot;git-widget-placeholder&quot;: &quot;main&quot;,\n    &quot;last_opened_file_path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/week-16-1&quot;,\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\n    &quot;ts.external.directory.path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/ideathon/node_modules/typescript/lib&quot;,\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\n  }\n}</component>\n  <component name=\"RecentsManager\">\n    <key name=\"MoveFile.RECENT_KEYS\">\n      <recent name=\"$PROJECT_DIR$/components/club\" />\n    </key>\n  </component>\n  <component name=\"SharedIndexes\">\n    <attachedChunks>\n      <set>\n        <option value=\"bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-WS-243.22562.222\" />\n      </set>\n    </attachedChunks>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"3d45d623-ee8a-421e-8d0d-07f88c3fd10c\" name=\"Changes\" comment=\"\" />\n      <created>1733680600234</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1733680600234</updated>\n      <workItem from=\"1733680601320\" duration=\"285000\" />\n      <workItem from=\"1733724675594\" duration=\"611000\" />\n      <workItem from=\"1733822080765\" duration=\"1111000\" />\n      <workItem from=\"1733835011657\" duration=\"6379000\" />\n      <workItem from=\"1733847978381\" duration=\"5516000\" />\n      <workItem from=\"1733894701134\" duration=\"9865000\" />\n      <workItem from=\"1733925499497\" duration=\"1606000\" />\n      <workItem from=\"1733928369051\" duration=\"251000\" />\n      <workItem from=\"1733928630064\" duration=\"4368000\" />\n      <workItem from=\"1733980473805\" duration=\"1457000\" />\n      <workItem from=\"1734070775491\" duration=\"813000\" />\n      <workItem from=\"1734085817459\" duration=\"30000\" />\n      <workItem from=\"1734183280596\" duration=\"5230000\" />\n      <workItem from=\"1734189002399\" duration=\"3292000\" />\n      <workItem from=\"1734192305926\" duration=\"2303000\" />\n      <workItem from=\"1734194762220\" duration=\"86000\" />\n      <workItem from=\"1734199075722\" duration=\"1951000\" />\n      <workItem from=\"1734202864084\" duration=\"690000\" />\n      <workItem from=\"1734243660946\" duration=\"163000\" />\n      <workItem from=\"1734247462466\" duration=\"601000\" />\n      <workItem from=\"1734274484596\" duration=\"221000\" />\n      <workItem from=\"1734285025230\" duration=\"756000\" />\n      <workItem from=\"1734342119399\" duration=\"12152000\" />\n      <workItem from=\"1734415130463\" duration=\"154000\" />\n      <workItem from=\"1734451510425\" duration=\"1022000\" />\n      <workItem from=\"1734515159954\" duration=\"1302000\" />\n      <workItem from=\"1734587553335\" duration=\"2223000\" />\n      <workItem from=\"1734622604490\" duration=\"6450000\" />\n      <workItem from=\"1734672636682\" duration=\"3862000\" />\n      <workItem from=\"1734697995805\" duration=\"4210000\" />\n      <workItem from=\"1734709695437\" duration=\"1288000\" />\n      <workItem from=\"1734719253317\" duration=\"6275000\" />\n      <workItem from=\"1734766424331\" duration=\"15352000\" />\n      <workItem from=\"1734859762039\" duration=\"16109000\" />\n      <workItem from=\"1734888157235\" duration=\"1752000\" />\n      <workItem from=\"1734936981008\" duration=\"20081000\" />\n      <workItem from=\"1735026512179\" duration=\"9324000\" />\n      <workItem from=\"1735048088338\" duration=\"5248000\" />\n      <workItem from=\"1735060156138\" duration=\"2618000\" />\n      <workItem from=\"1735064720771\" duration=\"656000\" />\n      <workItem from=\"1735106418820\" duration=\"148000\" />\n      <workItem from=\"1735141420059\" duration=\"11523000\" />\n      <workItem from=\"1735194562583\" duration=\"6771000\" />\n      <workItem from=\"1735224189800\" duration=\"6488000\" />\n    </task>\n    <servers />\n  </component>\n  <component name=\"TypeScriptGeneratedFilesManager\">\n    <option name=\"version\" value=\"3\" />\n    <option name=\"exactExcludedFiles\">\n      <list>\n        <option value=\"$PROJECT_DIR$/next.config.mjs\" />\n        <option value=\"$PROJECT_DIR$/next.config.mjs\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State>\n              <option name=\"FILTERS\">\n                <map>\n                  <entry key=\"branch\">\n                    <value>\n                      <list>\n                        <option value=\"main\" />\n                      </list>\n                    </value>\n                  </entry>\n                </map>\n              </option>\n            </State>\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"fixup! recovered files\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"fixup! recovered files\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 819f3eab511f0670d3b946d5d425b10c53399ced)
++++ b/.idea/workspace.xml	(date 1735280492123)
+@@ -5,14 +5,9 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
+-      <change afterPath="$PROJECT_DIR$/app/admin/add-club/page.tsx" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/app/api/admin/add-club/route.ts" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/app/api/admin/edit-club/[...clubId]/route.ts" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/api/clubs/[...clubId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/clubs/[...clubId]/route.ts" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/api/events/add-event/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/add-event/route.ts" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/app/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/page.tsx" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/app/api/admin/add-club/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/add-club/route.ts" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -137,7 +132,8 @@
+       <workItem from="1735106418820" duration="148000" />
+       <workItem from="1735141420059" duration="11523000" />
+       <workItem from="1735194562583" duration="6771000" />
+-      <workItem from="1735224189800" duration="6488000" />
++      <workItem from="1735224189800" duration="10335000" />
++      <workItem from="1735280126356" duration="365000" />
+     </task>
+     <servers />
+   </component>
+Index: app/api/admin/edit-club/[...clubId]/route.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/api/admin/edit-club/[...clubId]/route.ts b/app/api/admin/edit-club/[...clubId]/route.ts
+new file mode 100644
+--- /dev/null	(date 1735280492019)
++++ b/app/api/admin/edit-club/[...clubId]/route.ts	(date 1735280492019)
+@@ -0,0 +1,56 @@
++import {NextRequest, NextResponse} from "next/server";
++import dbConnect from "../../../../../lib/connectDb";
++import {getServerSession, User} from "next-auth";
++import {authOptions} from "../../../(auth)/auth/[...nextauth]/options";
++import mongoose from "mongoose";
++import {ClubModel} from "../../../../../model/User";
++
++export async function PATCH(req: NextRequest,     { params }: { params: { clubId: string[] } }) {
++  try {
++    await dbConnect();
++
++    const session = await getServerSession(authOptions);
++    const user: User = session?.user as User;
++
++    if (!session || !user) {
++      return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });
++    }
++
++    // if (!user.isAdmin) {
++    //   return NextResponse.json(
++    //     { error: 'User is not admin' },
++    //     { status: 401 }
++    //   );
++    // }
++
++    const { clubId } = await params;
++
++    if (!clubId.length) {
++      return NextResponse.json(
++        {error: 'Club ID is required'},
++        {status: 403}
++      )
++    }
++
++    console.log(clubId);
++
++    if (!mongoose.Types.ObjectId.isValid(clubId[0])) {
++      return NextResponse.json(
++        {error: 'Club ID is invalid'},
++        {status: 403}
++      )
++    }
++
++    const clubObjectId = new mongoose.Types.ObjectId(clubId[0])
++
++    const updatedClub = await ClubModel.updateOne({_id: clubObjectId}, );
++
++
++  } catch (error) {
++    console.error(error);
++    return NextResponse.json(
++      { error: 'Internal Server Error' },
++      { status: 500 }
++    );
++  }
++}
+\ No newline at end of file

@@ -33,7 +33,7 @@ export default function AddClubPage() {
 
   async function handleAddClub() {
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/add-club`, {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/clubs/add-club`, {
         clubName,
         clubLogo,
         clubIdSecs,
@@ -46,7 +46,7 @@ export default function AddClubPage() {
         router.push(`/clubs/${res.data._id.toString()}`);
       }
     } catch (error) {
-      console.log("Error adding club:", error);
+      console.log("Error adding clubs:", error);
     }
   }
 

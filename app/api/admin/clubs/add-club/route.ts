@@ -1,9 +1,9 @@
 import {NextRequest, NextResponse} from "next/server";
-import dbConnect from "../../../../lib/connectDb";
+import dbConnect from "../../../../../lib/connectDb";
 import {getServerSession, User} from "next-auth";
-import {authOptions} from "../../(auth)/auth/[...nextauth]/options";
+import {authOptions} from "../../../(auth)/auth/[...nextauth]/options";
 import mongoose from "mongoose";
-import {ClubModel} from "../../../../model/User";
+import {ClubModel} from "../../../../../model/User";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,6 +14,13 @@ export async function POST(req: NextRequest) {
 
     if (!session || !user) {
       return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });
+    }
+
+    if (!user.isAdmin) {
+      return NextResponse.json(
+        { error: 'User is not admin' },
+        { status: 401 }
+      );
     }
 
     const {clubName, clubLogo, clubIdSecs, clubMembers} = await req.json();
@@ -35,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     if (!club) {
       return NextResponse.json(
-        { error: 'Failed to create club' },
+        { error: 'Failed to create clubs' },
         { status: 500 }
       );
     }
