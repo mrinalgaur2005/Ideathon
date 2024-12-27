@@ -353,8 +353,9 @@ Info: {
     events: [EventSchemaAI],
     marks: [MarkSchemaAI],  
     general: [GeneralSchemaAI], 
-},
-});
+}},
+{ collection: 'aiChatBot' }
+);
 
 const aiChatBotModel: Model<AiChatBot> =
     mongoose.models.aiChatBot || mongoose.model<AiChatBot>("aiChatBot", AiChatBotSchema);

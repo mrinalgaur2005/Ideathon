@@ -7,6 +7,7 @@ import csvParser from "csv-parser";
 import { authOptions } from "../../(auth)/auth/[...nextauth]/options";
 import dbConnect from "../../../../lib/connectDb";
 import { SubjectModel } from "../../../../model/User";
+import { getAiMarks } from "../../../../lib/aiMarks";
 
 interface CSVRow {
   student_id: string;
@@ -92,7 +93,6 @@ export async function PATCH(
     
           const studentId = trimmedRow.student_id;
           if (!studentId) return;
-          console.log(trimmedRow);
           for (const [key, value] of Object.entries(trimmedRow)) {
             if (key === "student_id") continue;
     
@@ -119,7 +119,9 @@ export async function PATCH(
         .on("end", resolve)
         .on("error", reject);
     });
+    
     console.log(updates);
+
     
     const formattedSubjectUpdates = Array.from(updates.entries()).map(
       ([subject, examData]) => ({
@@ -130,18 +132,58 @@ export async function PATCH(
         })),
       })
     );
-
+    
+    
     for (const subjectUpdate of formattedSubjectUpdates) {
-      await SubjectModel.updateOne(
-        { subjectId: subjectUpdate.subjectId },
-        {
-          $addToSet: {
-            allMarks: { $each: subjectUpdate.allMarks }
+      for (const examData of subjectUpdate.allMarks) {
+        for (const studentMark of examData.studentMarks) {
+          const { examType, studentMarks } = examData;
+          const { student_id, marks } = studentMark;
+    
+          const subject = await SubjectModel.findOne({ subjectId: subjectUpdate.subjectId });
+          if (!subject) {
+            console.log(`Subject with ID ${subjectUpdate.subjectId} not found.`);
+            
+            await SubjectModel.updateOne(
+              { subjectId: subjectUpdate.subjectId },
+              {
+                $set: { allMarks: subjectUpdate.allMarks }
+              },
+              { upsert: true }
+            );
+            continue;
           }
-        },
-        { upsert: true }
-      );
+          if (!subject.allMarks) {
+            subject.allMarks = [];
+            await subject.save(); 
+          }
+          await SubjectModel.updateOne(
+            {
+              subjectId: subjectUpdate.subjectId,
+              "allMarks.examType": examType,
+              "allMarks.studentMarks.student_id": student_id,
+            },
+            {
+              $set: {
+                "allMarks.$[exam].studentMarks.$[student].marks": marks,
+              },
+            },
+            {
+              arrayFilters: [
+                { "exam.examType": examType },
+                { "student.student_id": student_id },
+              ],
+              upsert: true,
+            }
+          );
+          const trimmedRow = { student_id, marks: marks.toString(), subject: subjectUpdate.subjectId,examType:examType }; 
+          console.log(trimmedRow);
+          
+          await getAiMarks(subjectUpdate.subjectId, trimmedRow);
+        }
+      }
     }
+
 
     return NextResponse.json({
       message: "Marks updated successfully.",
