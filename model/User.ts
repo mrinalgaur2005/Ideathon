@@ -246,19 +246,22 @@ export interface Subject extends Document {
 }
 
 const SubjectSchema: Schema<Subject> = new Schema({
-  subjectId: { type: String, required: true },
-  allMarks: [
-    {
-      examType: { type: String, required: true },
-      studentMarks: [
+    subjectId: { type: String, required: true },
+    allMarks: {
+      type: [
         {
-          student_id: { type: String, required: true },
-          marks: { type: Number, required: true },
+          examType: { type: String, required: true },
+          studentMarks: [
+            {
+              student_id: { type: String, required: true },
+              marks: { type: Number, required: true },
+            },
+          ],
         },
       ],
+      default: [],
     },
-  ],
-});
+  });
 
 
 
