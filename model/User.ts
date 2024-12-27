@@ -75,10 +75,11 @@ UserSchema.post("save", async function (this: User) {
                 enrolledSubjectId: [],
                 teacherSubjectMap: {},
                 attendanceSubjectMap: {},
-                marksStudentMap: {},
                 clubsPartOf: [],
                 interestedEvents: [],
                 clubsHeadOf: [],
+                profile: "",
+                friends: []
             });
 
             await newStudent.save();
@@ -106,17 +107,6 @@ UserSchema.post("save", async function (this: User) {
 });
 
 
-export interface MarksEntry {
-    midsem?: number;
-    endsem?: number;
-    quiz1?: number;
-    quiz2?: number;
-    quiz3?: number;
-    quiz4?: number;
-    labquiz1?: number;
-    labquiz2?: number;
-}
-
 export interface Student extends Document {
     user_id: mongoose.Schema.Types.ObjectId;
     name: string;
@@ -128,23 +118,13 @@ export interface Student extends Document {
     enrolledSubjectId: string[];
     teacherSubjectMap: Record<string, mongoose.Schema.Types.ObjectId>;
     attendanceSubjectMap: Record<number, string>;
-    marksStudentMap: Record<string, MarksEntry>;
     clubsPartOf: mongoose.Schema.Types.ObjectId[];
     interestedEvents: mongoose.Schema.Types.ObjectId[];
     clubsHeadOf: mongoose.Schema.Types.ObjectId[];
     profile?: string;
+    friends: mongoose.Schema.Types.ObjectId[];
 }
 
-const MarksEntrySchema = new Schema({
-    midsem: { type: Number, required: true },
-    endsem: { type: Number, required: true },
-    quiz1: { type: Number, required: true },
-    quiz2: { type: Number,required:false },
-    quiz3: { type: Number ,required:false },
-    quiz4: { type: Number ,required:false },
-    labquiz1: { type: Number, required: true },
-    labquiz2: { type: Number ,required:false },
-});
 
 const StudentSchema: Schema<Student> = new Schema({
     user_id: {
@@ -167,17 +147,14 @@ const StudentSchema: Schema<Student> = new Schema({
         type: Map,
         of: String,
     },
-    marksStudentMap: {
-        type: Map,
-        of: MarksEntrySchema,
-    },
     clubsPartOf: [{ type: Schema.Types.ObjectId, ref: "Club" }],
     interestedEvents: [{ type: Schema.Types.ObjectId, ref: "Event" }],
     clubsHeadOf: [{ type: Schema.Types.ObjectId, ref: "Club" }],
     profile: {
         type: String,
         required: false,
-    }
+    },
+    friends: [{ type: Schema.Types.ObjectId, ref: "Student" }],
 });
 
 
@@ -186,7 +163,6 @@ export interface Teacher extends Document {
     teacher_id: string;
     admin_verification: boolean;
     subjectTeaching: string[];
-    // StudentsMarksMap: Record<string, MarksStudentMap>;
 }
 
 const TeacherSchema: Schema<Teacher> = new Schema({
@@ -255,6 +231,9 @@ const EventSchema: Schema<Event> = new Schema({
     description: { type: String, required: true },
     tags: [{ type: String }],
 });
+
+
+
 export interface Subject extends Document {
   subjectId: string;
   allMarks: {
@@ -281,6 +260,8 @@ const SubjectSchema: Schema<Subject> = new Schema({
   ],
 });
 
+
+
 export interface Attendance extends Document {
     subjectId: string;
     totalClasses: number;
@@ -299,6 +280,32 @@ const AttendanceSchema: Schema<Attendance> = new Schema({
         studentPresent: [{ type: Schema.Types.ObjectId, ref: "Student" }],
     }],
     code: { type: Number},
+})
+
+
+
+export interface Request extends Document {
+    user_id: mongoose.Schema.Types.ObjectId;
+    for_teacher: boolean;
+    for_admin: boolean;
+}
+
+const RequestSchema: Schema<Request> = new Schema({
+    user_id: {type: Schema.Types.ObjectId, ref: "User" },
+    for_teacher: {type: "boolean", default: false},
+    for_admin: {type: "boolean", default: false},
+})
+
+
+
+export interface FriendRequest extends Document {
+    from: mongoose.Schema.Types.ObjectId;
+    to: mongoose.Schema.Types.ObjectId;
+}
+
+const FriendRequestSchema: Schema<FriendRequest> = new Schema({
+    from: {type: Schema.Types.ObjectId, ref: "Student" },
+    to: {type: Schema.Types.ObjectId, ref: "Student" },
 })
 
 const UserModel: Model<User> =
@@ -322,6 +329,12 @@ const SubjectModel : Model<Subject>=
 const AttendanceModel: Model<Attendance> =
     mongoose.models.Attendance || mongoose.model<Attendance>("Attendance", AttendanceSchema);
 
+const RequestModel: Model<Request> =
+    mongoose.models.Request || mongoose.model<Request>("Request", RequestSchema);
+
+const FriendRequestModel: Model<FriendRequest> =
+    mongoose.models.FriendRequest || mongoose.model<FriendRequest>("FriendRequest", FriendRequestSchema);
+
 export {
     UserModel,
     StudentModel,
@@ -329,5 +342,7 @@ export {
     ClubModel,
     EventModel,
     SubjectModel,
-    AttendanceModel
+    AttendanceModel,
+    RequestModel,
+    FriendRequestModel,
 };

@@ -1,0 +1,1 @@
+//reject friend request
