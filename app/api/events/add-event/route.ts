@@ -75,6 +75,9 @@ export async function POST(req: Request) {
         const savedEvent = await newEvent.save();
         
         club.clubEvents.push(newEvent._id as mongoose.Schema.Types.ObjectId)
+        console.log("Adding")
+        await saveAIEvents(heading,description);
+        console.log("Added")
 
         return NextResponse.json(savedEvent, { status: 200 });
     } catch (error) {
