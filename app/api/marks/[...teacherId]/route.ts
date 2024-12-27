@@ -44,7 +44,7 @@ export async function PATCH(
     const formData = await req.formData();
     const file = formData.get("file") as File;
 
-    const subjectId = formData.get("subjectId")?.toString(); 
+    const subjectId = formData.get("subjectId")?.toString();
 
     if (!subjectId) {
       return NextResponse.json(
@@ -119,10 +119,9 @@ export async function PATCH(
         .on("end", resolve)
         .on("error", reject);
     });
-    
+
     console.log(updates);
 
-    
     const formattedSubjectUpdates = Array.from(updates.entries()).map(
       ([subject, examData]) => ({
         subjectId: subject,
@@ -132,58 +131,57 @@ export async function PATCH(
         })),
       })
     );
-    
-    
+
     for (const subjectUpdate of formattedSubjectUpdates) {
+      const subject = await SubjectModel.findOne({ subjectId: subjectUpdate.subjectId });
+
+      if (!subject) {
+        const newSubject = new SubjectModel({
+          subjectId: subjectUpdate.subjectId,
+          allMarks: subjectUpdate.allMarks,
+        });
+        await newSubject.save();
+      } else {
+        if (!Array.isArray(subject.allMarks)) {
+          subject.allMarks = [];
+        }
+
+        for (const examData of subjectUpdate.allMarks) {
+          const { examType, studentMarks } = examData;
+
+          const examTypeData = subject.allMarks.find((exam) => exam.examType === examType);
+
+          if (examTypeData) {
+            for (const studentMark of studentMarks) {
+              const { student_id, marks } = studentMark;
+              const existingStudentMark = examTypeData.studentMarks.find(
+                (student) => student.student_id === student_id
+              );
+
+              if (existingStudentMark) {
+                existingStudentMark.marks = marks;
+              } else {
+                examTypeData.studentMarks.push({ student_id, marks });
+              }
+            }
+          } else {
+            subject.allMarks.push({
+              examType,
+              studentMarks,
+            });
+          }
+        }
+
+        await subject.save();
+      }
+
       for (const examData of subjectUpdate.allMarks) {
         for (const studentMark of examData.studentMarks) {
-          const { examType, studentMarks } = examData;
-          const { student_id, marks } = studentMark;
-    
-          const subject = await SubjectModel.findOne({ subjectId: subjectUpdate.subjectId });
-          if (!subject) {
-            console.log(`Subject with ID ${subjectUpdate.subjectId} not found.`);
-            
-            await SubjectModel.updateOne(
-              { subjectId: subjectUpdate.subjectId },
-              {
-                $set: { allMarks: subjectUpdate.allMarks }
-              },
-              { upsert: true }
-            );
-            continue;
-          }
-          if (!subject.allMarks) {
-            subject.allMarks = [];
-            await subject.save(); 
-          }
-          await SubjectModel.updateOne(
-            {
-              subjectId: subjectUpdate.subjectId,
-              "allMarks.examType": examType,
-              "allMarks.studentMarks.student_id": student_id,
-            },
-            {
-              $set: {
-                "allMarks.$[exam].studentMarks.$[student].marks": marks,
-              },
-            },
-            {
-              arrayFilters: [
-                { "exam.examType": examType },
-                { "student.student_id": student_id },
-              ],
-              upsert: true,
-            }
-          );
-          const trimmedRow = { student_id, marks: marks.toString(), subject: subjectUpdate.subjectId,examType:examType }; 
-          console.log(trimmedRow);
-          
+          const trimmedRow = { student_id: studentMark.student_id, marks: studentMark.marks.toString(), subject: subjectUpdate.subjectId, examType: examData.examType };
           await getAiMarks(subjectUpdate.subjectId, trimmedRow);
         }
       }
     }
-
 
     return NextResponse.json({
       message: "Marks updated successfully.",
