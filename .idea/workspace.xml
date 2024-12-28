@@ -5,12 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/user/add-friends/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/user/friend-requests/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/user/requests-sent/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/user/friends/accept-friend/[...studentId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/accept-friend/[...studentId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/user/friends/add-friend/[...studentId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/add-friends/[...studentId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/user/friends/add-friend/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/add-friends/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/user/friends/add-friends/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/add-friends/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/user/friends/current-requests/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/current-requests/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/user/friends/request-sent/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/requests-sent/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/add-friends/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/add-friends/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/friends/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friends/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,7 +148,11 @@
       <workItem from="1735280126356" duration="8507000" />
       <workItem from="1735312870855" duration="4460000" />
       <workItem from="1735327415197" duration="5118000" />
-      <workItem from="1735368401501" duration="8078000" />
+      <workItem from="1735368401501" duration="8272000" />
+      <workItem from="1735394000412" duration="72000" />
+      <workItem from="1735395983128" duration="5172000" />
+      <workItem from="1735411913079" duration="275000" />
+      <workItem from="1735412199180" duration="497000" />
     </task>
     <servers />
   </component>

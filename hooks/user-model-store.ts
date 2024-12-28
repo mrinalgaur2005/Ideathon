@@ -107,7 +107,31 @@ interface AddFriends {
     profile: string;
 }
 
+interface RequestsSent {
+    _id: mongoose.Types.ObjectId;
+    from: mongoose.Types.ObjectId;
+    to: {
+        _id: mongoose.Types.ObjectId;
+        name: string;
+        student_id: string;
+        profile: string;
+    }
+}
+
+interface CurrentRequests {
+    _id: mongoose.Types.ObjectId;
+    to: mongoose.Types.ObjectId;
+    from: {
+        _id: mongoose.Types.ObjectId;
+        name: string;
+        student_id: string;
+        profile: string;
+    }
+}
+
 interface ModelStore {
+    currentRequests: CurrentRequests[]|[];
+    requestsSent: RequestsSent[]|[];
     addFriends: AddFriends[]|[];
     friends: Friends|null;
     editClub: EditClub|null;
@@ -117,6 +141,8 @@ interface ModelStore {
     allEvents: Event[];
     singleEvent:SingleEvent|null;
     isLoading: boolean;
+    setCurrentRequests: (currentRequests: CurrentRequests[]) => void;
+    setRequestsSent: (requestsSent: RequestsSent[]) => void;
     setAddFriends: (addFriends: AddFriends[]) => void;
     setFriends: (friends: Friends) => void;
     setProfile:(profile:Profile) => void;
@@ -129,6 +155,8 @@ interface ModelStore {
 }
 
 export const useModel = create<ModelStore>((set) => ({
+    currentRequests: [],
+    requestsSent: [],
     addFriends: [],
     friends: null,
     allEvents: [],
@@ -138,6 +166,8 @@ export const useModel = create<ModelStore>((set) => ({
     editClub:null,
     profile: null,
     isLoading: false,
+    setCurrentRequests: ((currentRequests) => set({currentRequests: currentRequests})),
+    setRequestsSent: ((requestsSent) => set({requestsSent: requestsSent})),
     setAddFriends: ((addFriends) => set({addFriends: addFriends})),
     setFriends: ((friends) => set({friends: friends})),
     setProfile :((profile)=>set({profile:profile})),

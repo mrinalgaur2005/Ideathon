@@ -174,20 +174,6 @@ const TeacherSchema: Schema<Teacher> = new Schema({
     teacher_id: { type: String, required: true, unique: true },
     admin_verification: { type: Boolean, default: false },
     subjectTeaching: [{ type: String }],
-    // StudentsMarksMap: {
-    //     type: Map,
-    //     of: {
-    //         midsem: {
-    //             type: Map,
-    //             of: Number,
-    //         },
-    //         endsem: {
-    //             type: Map,
-    //             of: Number,
-    //         },
-    //     },
-    //
-    // },
 });
 
 export interface Club extends Document {
@@ -312,52 +298,52 @@ const FriendRequestSchema: Schema<FriendRequest> = new Schema({
 })
 
 interface Eventai {
-title: string;
-description: string;
+    title: string;
+    description: string;
 }
 
 interface Markai {
-subject: string;
-marks: string;
+    subject: string;
+    marks: string;
 }
 
 interface Generalai {
-title: string;
-description: string;
+    title: string;
+    description: string;
 }
 
 interface Info {
-events?: Eventai[];
-marks?: Markai[];
-general?: Generalai[];
+    events?: Eventai[];
+    marks?: Markai[];
+    general?: Generalai[];
 }
 
 export interface AiChatBot extends Document {
-Info: Info;
+    Info: Info;
 }
 
 const EventSchemaAI = new Schema<Eventai>({
-title: { type: String, required: true },
-description: { type: String, required: true },
+    title: { type: String, required: true },
+    description: { type: String, required: true },
 });
 
 const MarkSchemaAI = new Schema<Markai>({
-subject: { type: String, required: true },
-marks: { type: String, required: true },
+    subject: { type: String, required: true },
+    marks: { type: String, required: true },
 });
 
 const GeneralSchemaAI = new Schema<Generalai>({
-title: { type: String, required: true },
-description: { type: String, required: true },
+    title: { type: String, required: true },
+    description: { type: String, required: true },
 });
 
 const AiChatBotSchema: Schema<AiChatBot> = new Schema({
-Info: {
-    events: [EventSchemaAI],
-    marks: [MarkSchemaAI],  
-    general: [GeneralSchemaAI], 
-}},
-{ collection: 'aiChatBot' }
+    Info: {
+        events: [EventSchemaAI],
+        marks: [MarkSchemaAI],
+        general: [GeneralSchemaAI],
+    }},
+    { collection: 'aiChatBot' }
 );
 
 const aiChatBotModel: Model<AiChatBot> =

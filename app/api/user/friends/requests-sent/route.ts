@@ -49,6 +49,9 @@ export async function GET() {
             }
           ]
         }
+      },
+      {
+        $unwind: "$to"
       }
     ])
 
