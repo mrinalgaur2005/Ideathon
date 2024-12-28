@@ -30,7 +30,7 @@ export async function GET() {
     const students = await StudentModel.aggregate([
       {
         $match: {
-          _id: { $nin: student.friends}
+          _id: { $nin: [...student.friends, student._id]}
         }
       },
       {
@@ -49,7 +49,7 @@ export async function GET() {
       )
     }
 
-    return NextResponse.json(students, { status: 200 })
+    return NextResponse.json({students, id: student._id}, { status: 200 })
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: 'An error occurred while fetching students.' }, { status: 500 });

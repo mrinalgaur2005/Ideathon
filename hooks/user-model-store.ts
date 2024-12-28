@@ -100,7 +100,15 @@ interface Friends {
     } [];
 }
 
+interface AddFriends {
+    _id: mongoose.Types.ObjectId;
+    name: string;
+    student_id: string;
+    profile: string;
+}
+
 interface ModelStore {
+    addFriends: AddFriends[]|[];
     friends: Friends|null;
     editClub: EditClub|null;
     singleClub: SingleClub|null;
@@ -109,6 +117,7 @@ interface ModelStore {
     allEvents: Event[];
     singleEvent:SingleEvent|null;
     isLoading: boolean;
+    setAddFriends: (addFriends: AddFriends[]) => void;
     setFriends: (friends: Friends) => void;
     setProfile:(profile:Profile) => void;
     setSingleClub:(club:SingleClub) => void;
@@ -120,6 +129,7 @@ interface ModelStore {
 }
 
 export const useModel = create<ModelStore>((set) => ({
+    addFriends: [],
     friends: null,
     allEvents: [],
     singleEvent:null,
@@ -128,6 +138,7 @@ export const useModel = create<ModelStore>((set) => ({
     editClub:null,
     profile: null,
     isLoading: false,
+    setAddFriends: ((addFriends) => set({addFriends: addFriends})),
     setFriends: ((friends) => set({friends: friends})),
     setProfile :((profile)=>set({profile:profile})),
     setSingleClub:((club)=> set({singleClub:club})),

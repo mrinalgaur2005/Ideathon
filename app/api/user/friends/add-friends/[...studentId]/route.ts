@@ -36,6 +36,12 @@ export async function POST(req: Request, { params } : { params : { studentId: st
     const from = new mongoose.Types.ObjectId(studentId[0]);
     const to = new mongoose.Types.ObjectId(studentId[1]);
 
+    const alreadyFriendRequest = await FriendRequestModel.findOne({from, to})
+
+    if (alreadyFriendRequest) {
+      return NextResponse.json({error: "Other student has already sent you friend request"}, {status: 403});
+    }
+
     const friendRequest = await FriendRequestModel.create({
       from,
       to

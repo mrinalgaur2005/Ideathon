@@ -55,6 +55,7 @@ export async function PATCH(req: Request, { params } : { params : { studentId: s
         {status: 500}
       )
     }
+
     sentTo.friends = [...sentTo.friends, sentFrom._id as mongoose.Schema.Types.ObjectId];
     sentFrom.friends = [...sentFrom.friends, sentTo._id as mongoose.Schema.Types.ObjectId];
 
