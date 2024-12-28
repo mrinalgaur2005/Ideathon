@@ -90,7 +90,18 @@ interface Profile {
     }[]
 }
 
+interface Friends {
+    _id: mongoose.Types.ObjectId;
+    friends: {
+        _id: mongoose.Types.ObjectId;
+        name: string;
+        student_id: string;
+        profile: string;
+    } [];
+}
+
 interface ModelStore {
+    friends: Friends|null;
     editClub: EditClub|null;
     singleClub: SingleClub|null;
     allClubs: Club[];
@@ -98,6 +109,7 @@ interface ModelStore {
     allEvents: Event[];
     singleEvent:SingleEvent|null;
     isLoading: boolean;
+    setFriends: (friends: Friends) => void;
     setProfile:(profile:Profile) => void;
     setSingleClub:(club:SingleClub) => void;
     setAllClub:(clubs:Club[])=>void;
@@ -108,6 +120,7 @@ interface ModelStore {
 }
 
 export const useModel = create<ModelStore>((set) => ({
+    friends: null,
     allEvents: [],
     singleEvent:null,
     singleClub:null,
@@ -115,6 +128,7 @@ export const useModel = create<ModelStore>((set) => ({
     editClub:null,
     profile: null,
     isLoading: false,
+    setFriends: ((friends) => set({friends: friends})),
     setProfile :((profile)=>set({profile:profile})),
     setSingleClub:((club)=> set({singleClub:club})),
     setAllClub:((clubs)=> set({allClubs:clubs})),

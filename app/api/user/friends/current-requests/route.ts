@@ -1,11 +1,11 @@
-//get all friends
+//get all current requests
 
-import dbConnect from "../../../../lib/connectDb";
+import dbConnect from "../../../../../lib/connectDb";
 import {getServerSession, User} from "next-auth";
-import {authOptions} from "../../(auth)/auth/[...nextauth]/options";
+import {authOptions} from "../../../(auth)/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
 import mongoose from "mongoose";
-import {StudentModel} from "../../../../model/User";
+import {FriendRequestModel, StudentModel} from "../../../../../model/User";
 
 export async function GET() {
   try {
@@ -20,18 +20,27 @@ export async function GET() {
 
     const userId = new mongoose.Types.ObjectId(user._id);
 
-    const student = await StudentModel.aggregate([
+    const student = await StudentModel.findOne({user_id: userId});
+
+    if (!student) {
+      return NextResponse.json(
+        { error: 'Unauthorized. User does not exist.' },
+        {status: 401}
+      )
+    }
+
+    const requests = await FriendRequestModel.aggregate([
       {
         $match: {
-          user_id: userId,
+          to: student._id,
         }
       },
       {
         $lookup: {
           from: "students",
-          localField: "friends",
+          localField: "from",
           foreignField: "_id",
-          as: "friends",
+          as: "from",
           pipeline: [
             {
               $project: {
@@ -42,21 +51,16 @@ export async function GET() {
             }
           ]
         }
-      },
-      {
-        $project: {
-          friends: 1
-        }
       }
     ])
 
-    if (!student || student.length === 0) {
+    if (!requests || requests.length === 0) {
       return NextResponse.json({ error: 'Not Found' }, {status: 404});
     }
 
-    return NextResponse.json(student[0], {status: 200});
+    return NextResponse.json(requests, {status: 200});
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'An error occurred while fetching friends.' }, { status: 500 });
+    return NextResponse.json({ error: 'An error occurred while fetching current request.' }, { status: 500 });
   }
 }

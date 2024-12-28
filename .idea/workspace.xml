@@ -5,8 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
+      <change afterPath="$PROJECT_DIR$/app/api/user/friends/current-requests/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/user/friends/remove-friend/[...studentId]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/user/friends/request-sent/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/user/friends/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/user/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_20_24,_8_01 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_20_24__8_01PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/admin/clubs/[...clubId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/clubs/[...clubId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/user/friends/accept-friend/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/accept-friend/[...studentId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/user/friends/add-friend/[...studentId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/add-friend/[...studentId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/user/friends/add-friend/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/add-friend/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/user/friends/reject-friend/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/reject-friend/[...studentId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/user/friends/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,11 +83,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/api/user/friends/remove-friend/[...studentId]" />
+      <recent name="$PROJECT_DIR$/app/api/user/friends/reject-friend/[...studentId]" />
+      <recent name="$PROJECT_DIR$/app/api/user/friends/accept-friend/[...studentId]" />
       <recent name="$PROJECT_DIR$/app/api/admin/clubs/[...clubId]" />
       <recent name="$PROJECT_DIR$/app/api/admin/clubs/edit-club/[...clubId]" />
-      <recent name="$PROJECT_DIR$/app/api/admin/clubs/add-club" />
-      <recent name="$PROJECT_DIR$/app/admin/clubs/add-club" />
-      <recent name="$PROJECT_DIR$/components/club" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -136,7 +149,10 @@
       <workItem from="1735141420059" duration="11523000" />
       <workItem from="1735194562583" duration="6771000" />
       <workItem from="1735224189800" duration="10335000" />
-      <workItem from="1735280126356" duration="7982000" />
+      <workItem from="1735280126356" duration="8507000" />
+      <workItem from="1735312870855" duration="4460000" />
+      <workItem from="1735327415197" duration="5118000" />
+      <workItem from="1735368401501" duration="3931000" />
     </task>
     <servers />
   </component>

@@ -57,9 +57,10 @@ export async function GET(req: Request, { params }: { params: { clubId: string[]
       {status: 200}
     )
   } catch (error) {
-    return new Response(
-      JSON.stringify({ success: false, message: 'Server error', error: error }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    console.log(error);
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
     );
   }
 }
