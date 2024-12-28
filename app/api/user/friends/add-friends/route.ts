@@ -3,7 +3,7 @@ import {getServerSession, User} from "next-auth";
 import {authOptions} from "../../../(auth)/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
 import mongoose from "mongoose";
-import {StudentModel} from "../../../../../model/User";
+import {FriendRequestModel, StudentModel} from "../../../../../model/User";
 
 export async function GET() {
   try {
@@ -27,10 +27,51 @@ export async function GET() {
       )
     }
 
+    const requestsSentorRecieved = await FriendRequestModel.aggregate([
+      {
+        $match: {
+          $or: [
+            { from: student._id },
+            { to: student._id }
+          ]
+        }
+      },
+      {
+        $project: {
+          ids: {
+            $setUnion: [
+              ["$from"],
+              ["$to"]
+            ]
+          }
+        }
+      },
+      {
+        $unwind: "$ids"
+      },
+      {
+        $group: {
+          _id: null,
+          uniqueIds: { $addToSet: "$ids" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          uniqueIds: 1
+        }
+      }
+    ])
+
+    let ids = [];
+    if (requestsSentorRecieved.length) {
+      ids = requestsSentorRecieved[0].uniqueIds;
+    }
+
     const students = await StudentModel.aggregate([
       {
         $match: {
-          _id: { $nin: [...student.friends, student._id]}
+          _id: { $nin: [...student.friends, student._id, ...ids]}
         }
       },
       {
@@ -42,7 +83,7 @@ export async function GET() {
       }
     ])
 
-    if (!students || students.length === 0) {
+    if (!students) {
       return NextResponse.json(
         { error: 'Students not found.' },
         {status: 404}
