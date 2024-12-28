@@ -6,6 +6,7 @@ import dbConnect from '../../../../lib/connectDb';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../(auth)/auth/[...nextauth]/options';
 import { User } from 'next-auth';
+import { saveAIEvents} from '../../../../lib/aiEvents';
 
 export async function POST(req: Request) {
     try {
@@ -70,9 +71,13 @@ export async function POST(req: Request) {
             description,
             tags,
         });
+
         const savedEvent = await newEvent.save();
         
         club.clubEvents.push(newEvent._id as mongoose.Schema.Types.ObjectId)
+        console.log("Adding")
+        await saveAIEvents(heading,description);
+        console.log("Added")
 
         return NextResponse.json(savedEvent, { status: 200 });
     } catch (error) {

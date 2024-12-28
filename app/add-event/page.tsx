@@ -58,8 +58,10 @@ export default function AddEventPage() {
     }
   }
 
+  
+
   async function fetchClubs() {
-    await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}}/api/clubs/head`)
+    await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/clubs/head`)
       .then((response) => {
         if (response.status == 403) {
           redirect('/');

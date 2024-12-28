@@ -246,19 +246,22 @@ export interface Subject extends Document {
 }
 
 const SubjectSchema: Schema<Subject> = new Schema({
-  subjectId: { type: String, required: true },
-  allMarks: [
-    {
-      examType: { type: String, required: true },
-      studentMarks: [
+    subjectId: { type: String, required: true },
+    allMarks: {
+      type: [
         {
-          student_id: { type: String, required: true },
-          marks: { type: Number, required: true },
+          examType: { type: String, required: true },
+          studentMarks: [
+            {
+              student_id: { type: String, required: true },
+              marks: { type: Number, required: true },
+            },
+          ],
         },
       ],
+      default: [],
     },
-  ],
-});
+  });
 
 
 
@@ -308,6 +311,58 @@ const FriendRequestSchema: Schema<FriendRequest> = new Schema({
     to: {type: Schema.Types.ObjectId, ref: "Student" },
 })
 
+interface Eventai {
+title: string;
+description: string;
+}
+
+interface Markai {
+subject: string;
+marks: string;
+}
+
+interface Generalai {
+title: string;
+description: string;
+}
+
+interface Info {
+events?: Eventai[];
+marks?: Markai[];
+general?: Generalai[];
+}
+
+export interface AiChatBot extends Document {
+Info: Info;
+}
+
+const EventSchemaAI = new Schema<Eventai>({
+title: { type: String, required: true },
+description: { type: String, required: true },
+});
+
+const MarkSchemaAI = new Schema<Markai>({
+subject: { type: String, required: true },
+marks: { type: String, required: true },
+});
+
+const GeneralSchemaAI = new Schema<Generalai>({
+title: { type: String, required: true },
+description: { type: String, required: true },
+});
+
+const AiChatBotSchema: Schema<AiChatBot> = new Schema({
+Info: {
+    events: [EventSchemaAI],
+    marks: [MarkSchemaAI],  
+    general: [GeneralSchemaAI], 
+}},
+{ collection: 'aiChatBot' }
+);
+
+const aiChatBotModel: Model<AiChatBot> =
+    mongoose.models.aiChatBot || mongoose.model<AiChatBot>("aiChatBot", AiChatBotSchema);
+
 const UserModel: Model<User> =
     mongoose.models.User || mongoose.model<User>("User", UserSchema);
 
@@ -345,4 +400,5 @@ export {
     AttendanceModel,
     RequestModel,
     FriendRequestModel,
+    aiChatBotModel
 };

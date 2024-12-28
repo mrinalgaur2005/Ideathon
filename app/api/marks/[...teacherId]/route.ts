@@ -7,6 +7,7 @@ import csvParser from "csv-parser";
 import { authOptions } from "../../(auth)/auth/[...nextauth]/options";
 import dbConnect from "../../../../lib/connectDb";
 import { SubjectModel } from "../../../../model/User";
+import { getAiMarks } from "../../../../lib/aiMarks";
 
 interface CSVRow {
   student_id: string;
@@ -43,7 +44,7 @@ export async function PATCH(
     const formData = await req.formData();
     const file = formData.get("file") as File;
 
-    const subjectId = formData.get("subjectId")?.toString(); 
+    const subjectId = formData.get("subjectId")?.toString();
 
     if (!subjectId) {
       return NextResponse.json(
@@ -92,7 +93,6 @@ export async function PATCH(
     
           const studentId = trimmedRow.student_id;
           if (!studentId) return;
-          console.log(trimmedRow);
           for (const [key, value] of Object.entries(trimmedRow)) {
             if (key === "student_id") continue;
     
@@ -119,8 +119,9 @@ export async function PATCH(
         .on("end", resolve)
         .on("error", reject);
     });
+
     console.log(updates);
-    
+
     const formattedSubjectUpdates = Array.from(updates.entries()).map(
       ([subject, examData]) => ({
         subjectId: subject,
@@ -132,15 +133,54 @@ export async function PATCH(
     );
 
     for (const subjectUpdate of formattedSubjectUpdates) {
-      await SubjectModel.updateOne(
-        { subjectId: subjectUpdate.subjectId },
-        {
-          $addToSet: {
-            allMarks: { $each: subjectUpdate.allMarks }
+      const subject = await SubjectModel.findOne({ subjectId: subjectUpdate.subjectId });
+
+      if (!subject) {
+        const newSubject = new SubjectModel({
+          subjectId: subjectUpdate.subjectId,
+          allMarks: subjectUpdate.allMarks,
+        });
+        await newSubject.save();
+      } else {
+        if (!Array.isArray(subject.allMarks)) {
+          subject.allMarks = [];
+        }
+
+        for (const examData of subjectUpdate.allMarks) {
+          const { examType, studentMarks } = examData;
+
+          const examTypeData = subject.allMarks.find((exam) => exam.examType === examType);
+
+          if (examTypeData) {
+            for (const studentMark of studentMarks) {
+              const { student_id, marks } = studentMark;
+              const existingStudentMark = examTypeData.studentMarks.find(
+                (student) => student.student_id === student_id
+              );
+
+              if (existingStudentMark) {
+                existingStudentMark.marks = marks;
+              } else {
+                examTypeData.studentMarks.push({ student_id, marks });
+              }
+            }
+          } else {
+            subject.allMarks.push({
+              examType,
+              studentMarks,
+            });
           }
-        },
-        { upsert: true }
-      );
+        }
+
+        await subject.save();
+      }
+
+      for (const examData of subjectUpdate.allMarks) {
+        for (const studentMark of examData.studentMarks) {
+          const trimmedRow = { student_id: studentMark.student_id, marks: studentMark.marks.toString(), subject: subjectUpdate.subjectId, examType: examData.examType };
+          await getAiMarks(subjectUpdate.subjectId, trimmedRow);
+        }
+      }
     }
 
     return NextResponse.json({
