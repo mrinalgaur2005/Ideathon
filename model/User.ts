@@ -11,6 +11,8 @@ export interface User extends Document {
     isStudent:boolean
     isTeacher: boolean;
     isAdmin: boolean;
+    reqTeacher: boolean;
+    reqAdmin: boolean;
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -50,6 +52,14 @@ const UserSchema: Schema<User> = new Schema({
         default: false, // Default to false, only true if admin updates the field
     },
     isAdmin: {
+        type: Boolean,
+        default: false,
+    },
+    reqTeacher: {
+        type: Boolean,
+        default: false,
+    },
+    reqAdmin: {
         type: Boolean,
         default: false,
     }
@@ -102,6 +112,48 @@ UserSchema.post("save", async function (this: User) {
             await newTeacher.save();
         } catch (error) {
             console.error("Error creating teacher:", error);
+        }
+    }
+
+    if (this.reqTeacher) {
+        try {
+            const alreadyRequested = await RequestModel.findOne({user_id: this._id})
+
+            if (alreadyRequested) {
+                console.log("already requested for teacher")
+                return;
+            }
+
+            const request = new RequestModel({
+                user_id: this._id,
+                for_teacher: true,
+                for_admin: false,
+            })
+
+            await request.save();
+        } catch (error) {
+            console.error("Error making request for teacher:", error);
+        }
+    }
+
+    if (this.reqAdmin) {
+        try {
+            const alreadyRequested = await RequestModel.findOne({user_id: this._id})
+
+            if (alreadyRequested) {
+                console.log("already requested for admin")
+                return;
+            }
+
+            const request = new RequestModel({
+                user_id: this._id,
+                for_teacher: false,
+                for_admin: true,
+            })
+
+            await request.save();
+        } catch (error) {
+            console.error("Error making request for admin:", error);
         }
     }
 });

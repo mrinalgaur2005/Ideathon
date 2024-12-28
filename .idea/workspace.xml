@@ -5,15 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/user/friend-requests/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/user/requests-sent/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/admin/user/make-admin/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/admin/user/admin/accept/[...userId]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/admin/user/admin/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/admin/user/teacher/accept/[...userId]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/admin/user/teacher/reject/[...userId]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/admin/user/teacher/route.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/user/friends/add-friends/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/add-friends/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/user/friends/current-requests/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/current-requests/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/user/friends/request-sent/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/requests-sent/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/user/add-friends/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/add-friends/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/user/friends/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friends/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/user/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
     </list>
@@ -25,8 +23,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript File" />
         <option value="TypeScript JSX File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -62,28 +60,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/week-16-1&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/ideathon/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/vaibhav-verma/WebstormProjects/ideathon/app/api/admin/user",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "/home/vaibhav-verma/WebstormProjects/ideathon/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/api/admin/user" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/api/admin/user" />
       <recent name="$PROJECT_DIR$/app/api/user/friends/remove-friend/[...studentId]" />
       <recent name="$PROJECT_DIR$/app/api/user/friends/reject-friend/[...studentId]" />
       <recent name="$PROJECT_DIR$/app/api/user/friends/accept-friend/[...studentId]" />
       <recent name="$PROJECT_DIR$/app/api/admin/clubs/[...clubId]" />
-      <recent name="$PROJECT_DIR$/app/api/admin/clubs/edit-club/[...clubId]" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -152,7 +153,7 @@
       <workItem from="1735394000412" duration="72000" />
       <workItem from="1735395983128" duration="5172000" />
       <workItem from="1735411913079" duration="275000" />
-      <workItem from="1735412199180" duration="497000" />
+      <workItem from="1735412199180" duration="4440000" />
     </task>
     <servers />
   </component>

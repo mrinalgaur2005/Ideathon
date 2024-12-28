@@ -129,7 +129,17 @@ interface CurrentRequests {
     }
 }
 
+interface Requests {
+    _id: mongoose.Types.ObjectId;
+    user: {
+        _id: mongoose.Types.ObjectId;
+        email: string;
+        username: string;
+    }
+}
+
 interface ModelStore {
+    requests: Requests[]|[];
     currentRequests: CurrentRequests[]|[];
     requestsSent: RequestsSent[]|[];
     addFriends: AddFriends[]|[];
@@ -141,6 +151,7 @@ interface ModelStore {
     allEvents: Event[];
     singleEvent:SingleEvent|null;
     isLoading: boolean;
+    setRequests: (requests: Requests[]) => void;
     setCurrentRequests: (currentRequests: CurrentRequests[]) => void;
     setRequestsSent: (requestsSent: RequestsSent[]) => void;
     setAddFriends: (addFriends: AddFriends[]) => void;
@@ -155,6 +166,7 @@ interface ModelStore {
 }
 
 export const useModel = create<ModelStore>((set) => ({
+    requests: [],
     currentRequests: [],
     requestsSent: [],
     addFriends: [],
@@ -166,6 +178,7 @@ export const useModel = create<ModelStore>((set) => ({
     editClub:null,
     profile: null,
     isLoading: false,
+    setRequests: ((requests) => set({ requests: requests })),
     setCurrentRequests: ((currentRequests) => set({currentRequests: currentRequests})),
     setRequestsSent: ((requestsSent) => set({requestsSent: requestsSent})),
     setAddFriends: ((addFriends) => set({addFriends: addFriends})),
