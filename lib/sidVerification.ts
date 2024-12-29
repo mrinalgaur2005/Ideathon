@@ -8,7 +8,7 @@ import fetch from 'node-fetch';
  * @returns {object} An object containing name, department, and identity number.
  */
 export const extractDetails = (text: string): { name: string | null; department: string | null; identityNo: string | null } => {
-  const nameMatch = text.match(/(Name|Namc):\s*([A-Za-z\s'-]+)(?=\n|$)/); // Adjusted regex
+  const nameMatch = text.match(/(Name|Namc):?\s*([A-Za-z]+(?:[ '-][A-Za-z]+)*)(?=\s*[-'\n$])/); 
   const identityMatch = text.match(/Identity No\.:\s*(\d+)/);
   const departmentMatch = text.match(/Department:\s*(.+)/);
 
@@ -17,6 +17,7 @@ export const extractDetails = (text: string): { name: string | null; department:
   const department = departmentMatch ? departmentMatch[1].trim() : null;
 
   console.log(`Name: ${name}`);
+  console.log(nameMatch)
   console.log(`Identity No.: ${identityNo}`);
 
   return { name, department, identityNo };
