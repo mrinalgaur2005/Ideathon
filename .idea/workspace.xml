@@ -5,20 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/admin/user/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/admin/user/make-teacher/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_22_24,_5_27 PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_22_24__5_27PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(auth)/sign-up/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/sign-up/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/clubs/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/user/make-admin/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/user/make-admin/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/(auth)/sign-up/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/(auth)/sign-up/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/admin/user/admin/accept/[...userId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/user/admin/accept/[...userId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/admin/user/admin/reject/[...userId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/user/admin/reject/[...userId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/(auth)/auth/[...nextauth]/options.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/(auth)/auth/[...nextauth]/options.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/api/admin/user/teacher/accept/[...userId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/user/teacher/accept/[...userId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/admin/user/teacher/reject/[...userId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/user/teacher/reject/[...userId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/schemas/signUpSchema.ts" beforeDir="false" afterPath="$PROJECT_DIR$/schemas/signUpSchema.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/next-auth.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/next-auth.d.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -161,7 +152,9 @@
       <workItem from="1735412199180" duration="4549000" />
       <workItem from="1735456473928" duration="2596000" />
       <workItem from="1735473072434" duration="168000" />
-      <workItem from="1735476153656" duration="2666000" />
+      <workItem from="1735476153656" duration="3525000" />
+      <workItem from="1735481667323" duration="351000" />
+      <workItem from="1735490418912" duration="2609000" />
     </task>
     <servers />
   </component>

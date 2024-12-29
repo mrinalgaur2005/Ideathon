@@ -105,23 +105,6 @@ UserSchema.post("save", async function (this: User) {
         }
     }
 
-    if (this.isTeacher) {
-        try {
-            const teacherId = `T-${uuidv4()}`;
-            const newTeacher = new TeacherModel({
-                user_id: this._id,
-                teacher_id: teacherId,
-                admin_verification: false,
-                subjectTeaching: [],
-                // StudentsMarksMap: {},
-            });
-
-            await newTeacher.save();
-        } catch (error) {
-            console.error("Error creating teacher:", error);
-        }
-    }
-
     if (this.reqTeacher) {
         try {
             const alreadyRequested = await RequestModel.findOne({user_id: this._id})
@@ -224,8 +207,10 @@ const StudentSchema: Schema<Student> = new Schema({
 export interface Teacher extends Document {
     user_id: mongoose.Schema.Types.ObjectId;
     teacher_id: string;
-    admin_verification: boolean;
-    subjectTeaching: string[];
+    subjectTeaching: {
+        subject_code: string;
+        subject_name: string;
+    }[];
 }
 
 const TeacherSchema: Schema<Teacher> = new Schema({
@@ -235,7 +220,6 @@ const TeacherSchema: Schema<Teacher> = new Schema({
         required: true,
     },
     teacher_id: { type: String, required: true, unique: true },
-    admin_verification: { type: Boolean, default: false },
     subjectTeaching: [{ type: String }],
 });
 

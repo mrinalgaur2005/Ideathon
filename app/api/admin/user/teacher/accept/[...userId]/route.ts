@@ -3,7 +3,8 @@ import {getServerSession, User} from "next-auth";
 import {authOptions} from "../../../../../(auth)/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
 import mongoose from "mongoose";
-import {RequestModel, UserModel} from "../../../../../../../model/User";
+import {RequestModel, TeacherModel, UserModel} from "../../../../../../../model/User";
+import {v4 as uuidv4} from "uuid";
 
 export async function PATCH(req: Request, { params }: { params: { userId: string[] } }) {
   try {
@@ -41,6 +42,20 @@ export async function PATCH(req: Request, { params }: { params: { userId: string
 
     const userObjectId = new mongoose.Types.ObjectId(userId[0]);
 
+    const teacherId = `T-${uuidv4()}`;
+    const teacher = await TeacherModel.create({
+      user_id: userObjectId,
+      teacher_id: teacherId,
+      subjectTeaching: []
+    })
+
+    if (!teacher) {
+      return NextResponse.json(
+        {error: 'Failed to create teacher'},
+        {status: 500}
+      )
+    }
+
     const deleteRequest = await RequestModel.deleteOne({user_id: userObjectId});
 
     if (!deleteRequest) {
@@ -50,7 +65,7 @@ export async function PATCH(req: Request, { params }: { params: { userId: string
       )
     }
 
-    const userTeacher: User|null = await UserModel.findByIdAndUpdate(userObjectId, {reqTeacher: false, isTeacher: true});
+    const userTeacher = await UserModel.findByIdAndUpdate(userObjectId, {reqTeacher: false, isTeacher: true});
 
     if (!userTeacher) {
       return NextResponse.json(

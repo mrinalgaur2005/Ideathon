@@ -14,7 +14,7 @@ declare module 'next-auth' {
 
   interface Session {
     user: {
-      _id
+      _id?: string;
       isVerified: boolean;
       isTeacher: boolean; 
       username: string;
