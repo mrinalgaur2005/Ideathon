@@ -1,23 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import extractTextFromImageLinks, { extractDetails } from "../../../../lib/sidVerification";
-import { StudentModel } from "../../../../model/User";
+import  extractTextFromImageLinks, { extractDetails } from "../../../../lib/sidVerification";
+import { StudentModel, UserModel } from "../../../../model/User";
 import dbConnect from "../../../../lib/connectDb";
-import mongoose from "mongoose";
+
 
 const extractNameFromEmail = (email: string | undefined): string | null => {
   if (!email || typeof email !== 'string') {
     return null;
   }
-  
+
   const match = email.match(/^([a-zA-Z]+)\.bt\d+([a-z]+)@pec\.edu\.in$/);
   return match ? match[1] : null;
 };
 
 export async function POST(request: NextRequest) {
+  console.log("inside api");
+
   await dbConnect();
 
   try {
-    const { username, image } = await request.json(); 
+    const { username, image } = await request.json();
 
     if (!username || !image) {
       return NextResponse.json(
@@ -26,9 +28,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const user = await UserModel.findOne({ username: username });
     const student = await StudentModel.findOne({ name: username });
 
     if (!student) {
+      console.log("student here");
+      return NextResponse.json(
+        { success: false, message: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    if (user) {
+      user.sid_verification = true;
+      await user.save();
+    } else {
+      console.log("user here");
       return NextResponse.json(
         { success: false, message: 'User not found' },
         { status: 404 }
@@ -43,12 +58,18 @@ export async function POST(request: NextRequest) {
       if (results[image]) {
         const { name, department, identityNo } = extractDetails(results[image]);
 
-        console.log(student.email);
+        console.log(department);
+        console.log(name);
+
         const emailName = extractNameFromEmail(student.email as string);
+
+        console.log(`emailName ${emailName}`);
+        console.log(name?.toLowerCase().trim().replace(/\s+/g, ''));
         
-        if (emailName && emailName.toLowerCase() === name?.toLowerCase()) {
-          student.name = name as string;
-          student.sid_verification=true;
+
+        if (emailName && emailName.toLowerCase() === name?.toLowerCase().trim().replace(/\s+/g, '')) {
+          student.name = name;
+          student.sid_verification = true;
           student.branch = department as string;
           student.student_id = identityNo as string;
           await student.save();
@@ -56,9 +77,11 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({
             success: true,
             message: 'SID verification completed',
-            data: { name, department, identityNo },
+            data: { name: name, department, identityNo },
           });
         } else {
+          console.log('else ');
+
           return NextResponse.json(
             { success: false, message: 'Name mismatch between email and extracted text' },
             { status: 400 }

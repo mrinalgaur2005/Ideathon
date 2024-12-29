@@ -1,9 +1,9 @@
 'use client';
 
-import { CldUploadButton } from 'next-cloudinary';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
+import { CldUploadButton } from 'next-cloudinary';
 
 const SIDVerificationPage = () => {
   const { username } = useParams();
@@ -13,21 +13,22 @@ const SIDVerificationPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleImageUpload = (result: any) => {
-    setImage(result.info.secure_url);
+    if (result.event === 'success') {
+      setImage(result.info.secure_url);
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     if (!username || !image) {
       setMessage('User ID or Image is missing.');
       return;
     }
 
     setIsLoading(true);
-
+    console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
+    
     try {
-      const response = await axios.post(`/api/verify-sid/${username}`, {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/verify-sid/`, {
         username,
         image,
       });
@@ -42,41 +43,60 @@ const SIDVerificationPage = () => {
       console.error('Error verifying user:', error);
       setMessage('Error verifying user.');
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-        <h1 className="text-4xl font-extrabold text-center mb-6">SID Verification</h1>
+    <>
+      <div className="flex flex-col w-full h-screen items-center justify-center">
+        <div className="flex flex-col w-2/5 h-4/5 justify-evenly items-center border-4 border-solid rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50 text-lg bg-gradient-to-br from-gray-200/60 to-gray-50/60">
+          <div className="text-3xl font-bold">SID Verification</div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="mb-4">
-            <label className="block text-lg font-medium mb-2">Upload Image:</label>
-            <CldUploadButton
-              uploadPreset="your_cloudinary_upload_preset"
-              onUpload={handleImageUpload}
-              options={{ cropping: true, resourceType: "image" }}
-            />
+          <div className="flex flex-col w-full h-3/5">
+            <div className="flex flex-row justify-between items-center w-full h-1/4">
+              <label htmlFor="image" className="ml-4 text-white font-bold">
+                Upload Image:
+              </label>
+              <CldUploadButton
+                uploadPreset={process.env.NEXT_PUBLIC_CLOUDNARY_UPLOAD_PRESET as string}
+                onSuccess={handleImageUpload}
+                className="w-1/3 ml-12 bg-white rounded-full"
+              >
+                Upload Image
+              </CldUploadButton>
+            </div>
+            <div className="flex flex-col h-1/2 w-full">
+              <div className="flex flex-row justify-between items-center w-full h-1/6">
+                <label htmlFor="username" className="ml-4 text-white font-bold">
+                  Username:
+                </label>
+                <input
+                  type="text"
+                  value={username || ''}
+                  disabled
+                  className="w-3/4 mr-4 pl-2"
+                />
+              </div>
+              <div className="flex flex-row justify-between items-center w-full h-1/6">
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg disabled:bg-gray-400"
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Submitting...' : 'Submit'}
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div className="flex justify-center">
-            <button 
-              type="submit" 
-              className="w-full px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg disabled:bg-gray-400"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Submitting...' : 'Submit'}
-            </button>
-          </div>
-        </form>
-
-        {message && (
-          <p className="mt-4 text-center text-red-600">{message}</p>
-        )}
+          {message && (
+            <p className="mt-4 text-center text-red-600">{message}</p>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

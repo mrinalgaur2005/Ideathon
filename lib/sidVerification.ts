@@ -8,16 +8,21 @@ import fetch from 'node-fetch';
  * @returns {object} An object containing name, department, and identity number.
  */
 export const extractDetails = (text: string): { name: string | null; department: string | null; identityNo: string | null } => {
-  const nameMatch = text.match(/Name:\s*(.+)/);
+  const nameMatch = text.match(/(Name|Namc):\s*([A-Za-z\s'-]+)(?=\n|$)/); // Adjusted regex
   const identityMatch = text.match(/Identity No\.:\s*(\d+)/);
   const departmentMatch = text.match(/Department:\s*(.+)/);
 
-  const name = nameMatch ? nameMatch[1].trim() : null;
+  const name = nameMatch ? nameMatch[2].trim().replace(/\s+[A-Za-z]$/, '') : null;  // Removing trailing single letters like 'O'
   const identityNo = identityMatch ? identityMatch[1].trim() : null;
   const department = departmentMatch ? departmentMatch[1].trim() : null;
 
+  console.log(`Name: ${name}`);
+  console.log(`Identity No.: ${identityNo}`);
+
   return { name, department, identityNo };
 };
+
+
 
 /**
  * Extracts text from an array of image URLs.
@@ -45,12 +50,12 @@ const extractTextFromImageLinks = async (imageLinks: string[]): Promise<Record<s
 
       // Map the extracted text to the image link
       extractedText[link] = text;
+      console.log(extractedText);
+      
     } catch (error) {
       console.error(`Error processing ${link}:`, error);
     }
-  }));
-  console.log(extractedText);
-  
+  }));  
   return extractedText;
 };
 
