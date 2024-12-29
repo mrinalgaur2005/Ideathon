@@ -45,7 +45,7 @@ export default function ClubsPage() {
             <h2 className="text-2xl font-bold text-[#C5C6C7]">{club.clubName}</h2>
             <button
               className="text-lg font-bold px-6 py-2 rounded-3xl bg-gradient-to-br from-[#45A29E] to-[#66FCF1] text-[#0B0C10] hover:from-[#66FCF1] hover:to-[#45A29E] transition-colors duration-300"
-              onClick={() => router.push(`admin/clubs/edit-club/${club._id.toString()}`)}
+              onClick={() => router.replace(`admin/clubs/edit-club/${club._id.toString()}`)}
             >
               Edit Club
             </button>

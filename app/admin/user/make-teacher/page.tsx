@@ -4,7 +4,7 @@ import {useRouter} from "next/navigation";
 import {useEffect} from "react";
 import axios from "axios";
 
-export default function MakeAdminPage() {
+export default function MakeTeacherPage() {
   const { requests, setRequests, setLoading } = useModel()
   const router = useRouter();
 
@@ -12,14 +12,14 @@ export default function MakeAdminPage() {
     async function fetchData() {
       setLoading(true);
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/user/admin`);
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/user/teacher`);
         if (res.status === 200) {
           setRequests(res.data);
         } else {
           router.push("/");
         }
       } catch (error) {
-        console.error("Error fetching current admin requests:", error);
+        console.error("Error fetching current teacher requests:", error);
         router.push("/");
       } finally {
         setLoading(false);
@@ -36,7 +36,7 @@ export default function MakeAdminPage() {
   async function rejectRequest (userId: string) {
     setLoading(true);
     try {
-      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/user/admin/reject/${userId}`)
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/user/teacher/reject/${userId}`)
 
       if (res.status === 200) {
         setRequests(requests.filter((request)=> request.user._id.toString() !== userId));
@@ -51,7 +51,7 @@ export default function MakeAdminPage() {
   async function acceptRequest (userId: string) {
     setLoading(true);
     try {
-      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/user/admin/accept/${userId}`)
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/user/teacher/accept/${userId}`)
 
       if (res.status === 200) {
         setRequests(requests.filter((request)=> request.user._id.toString() !== userId));

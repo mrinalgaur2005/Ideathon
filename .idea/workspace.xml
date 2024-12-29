@@ -5,15 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/admin/user/make-admin/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/admin/user/admin/accept/[...userId]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/admin/user/admin/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/admin/user/teacher/accept/[...userId]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/admin/user/teacher/reject/[...userId]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/admin/user/teacher/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/admin/user/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/admin/user/make-teacher/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_22_24,_5_27 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_22_24__5_27PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(auth)/sign-up/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(auth)/sign-up/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/clubs/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/user/make-admin/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/user/make-admin/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/(auth)/sign-up/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/(auth)/sign-up/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/admin/user/admin/accept/[...userId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/user/admin/accept/[...userId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/admin/user/admin/reject/[...userId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/user/admin/reject/[...userId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/admin/user/teacher/accept/[...userId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/user/teacher/accept/[...userId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/admin/user/teacher/reject/[...userId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/user/teacher/reject/[...userId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schemas/signUpSchema.ts" beforeDir="false" afterPath="$PROJECT_DIR$/schemas/signUpSchema.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,21 +65,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/vaibhav-verma/WebstormProjects/ideathon/app/api/admin/user",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "/home/vaibhav-verma/WebstormProjects/ideathon/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/ideathon/app/api/admin/user&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/ideathon/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/app/api/admin/user" />
@@ -153,7 +158,10 @@
       <workItem from="1735394000412" duration="72000" />
       <workItem from="1735395983128" duration="5172000" />
       <workItem from="1735411913079" duration="275000" />
-      <workItem from="1735412199180" duration="4440000" />
+      <workItem from="1735412199180" duration="4549000" />
+      <workItem from="1735456473928" duration="2596000" />
+      <workItem from="1735473072434" duration="168000" />
+      <workItem from="1735476153656" duration="2666000" />
     </task>
     <servers />
   </component>
@@ -161,7 +169,6 @@
     <option name="version" value="3" />
     <option name="exactExcludedFiles">
       <list>
-        <option value="$PROJECT_DIR$/next.config.mjs" />
         <option value="$PROJECT_DIR$/next.config.mjs" />
       </list>
     </option>
