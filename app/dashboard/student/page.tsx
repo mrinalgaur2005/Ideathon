@@ -5,7 +5,6 @@ import MarksCard from "../../../components/student/marksCard";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { useModel } from '../../../hooks/user-model-store';
-import { subjectMarks } from '../../../types/SubjectMakrs';
 
 const Student = () => {
   const { profile, setProfile, setLoading } = useModel();

@@ -17,6 +17,7 @@ declare module 'next-auth' {
       isTeacher: boolean; 
       username: string;
       isAdmin: boolean;
+      isStudent:boolean;
     } & DefaultSession['user'];
   }
 }
