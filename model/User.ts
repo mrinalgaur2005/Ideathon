@@ -1,3 +1,4 @@
+import { strict } from "assert";
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { v4 as uuidv4 } from 'uuid'
 
@@ -77,6 +78,7 @@ UserSchema.post("save", async function (this: User) {
             const studentId = `S-${uuidv4()}`;
             const newStudent = new StudentModel({
                 user_id: this._id,
+                email:this.email,
                 name: this.username,
                 student_id: studentId,
                 semester: 1,
@@ -161,7 +163,8 @@ UserSchema.post("save", async function (this: User) {
 
 export interface Student extends Document {
     user_id: mongoose.Schema.Types.ObjectId;
-    name: string;
+    email?:string;
+    name?:string;
     student_id?: string;
     semester: number;
     phoneNumber?: number;
@@ -183,6 +186,9 @@ const StudentSchema: Schema<Student> = new Schema({
         type: Schema.Types.ObjectId,
         ref: "User",
         required: true,
+    },
+    email:{
+        type:String,required:false
     },
     name: { type: String, required: true },
     student_id: { type: String, unique: true },
