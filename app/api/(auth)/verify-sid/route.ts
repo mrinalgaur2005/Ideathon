@@ -81,6 +81,8 @@ export async function POST(request: NextRequest) {
           });
         } else {
           console.log('else ');
+          user.sid_verification = false;
+          await user.save();
 
           return NextResponse.json(
             { success: false, message: 'Name mismatch between email and extracted text' },
