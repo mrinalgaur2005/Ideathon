@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
+    console.log(username);
     const user = await UserModel.findOne({ username: username });
     const student = await StudentModel.findOne({ name: username });
 
