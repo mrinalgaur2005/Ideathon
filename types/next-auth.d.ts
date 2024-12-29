@@ -8,6 +8,8 @@ declare module 'next-auth' {
     isTeacher: boolean; 
     username: string;
     isAdmin: boolean;
+    isStudent:boolean;
+    sid_verification:boolean;
   }
 
   interface Session {
@@ -18,6 +20,7 @@ declare module 'next-auth' {
       username: string;
       isAdmin: boolean;
       isStudent:boolean;
+      sid_verification:boolean;
     } & DefaultSession['user'];
   }
 }
@@ -29,5 +32,7 @@ declare module 'next-auth/jwt' {
     isTeacher: boolean; 
     username: string;
     isAdmin: boolean;
+    isStudent:boolean;
+    sid_verification:boolean;
   }
 }

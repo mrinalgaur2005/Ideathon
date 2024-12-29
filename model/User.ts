@@ -14,6 +14,7 @@ export interface User extends Document {
     isAdmin: boolean;
     reqTeacher: boolean;
     reqAdmin: boolean;
+    sid_verification:boolean;
 }
 
 const UserSchema: Schema<User> = new Schema({
@@ -63,6 +64,10 @@ const UserSchema: Schema<User> = new Schema({
     reqAdmin: {
         type: Boolean,
         default: false,
+    },
+    sid_verification:{
+        type:Boolean,
+        default:false,
     }
 });
 
@@ -83,7 +88,7 @@ UserSchema.post("save", async function (this: User) {
                 student_id: studentId,
                 semester: 1,
                 branch: "Unknown",
-                sid_verification: false,
+                sid_verification: this.sid_verification,
                 enrolledSubjectId: [],
                 teacherSubjectMap: {},
                 attendanceSubjectMap: {},
