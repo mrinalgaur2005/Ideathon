@@ -1,5 +1,5 @@
 "use client"
-import {useModel} from "../../../../hooks/user-model-store";
+import {useModel} from "../../../../../hooks/user-model-store";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import axios from "axios";
