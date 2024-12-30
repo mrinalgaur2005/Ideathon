@@ -269,7 +269,7 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
-    return NextResponse.json({ success: true, response: answer });
+    return NextResponse.json(answer, {status: 200});
   } catch (error) {
     console.error('Error in POST route:', error);
     return NextResponse.json(

@@ -26,7 +26,7 @@ export default function SignOutButton() {
       style={{
         position: 'fixed',
         bottom: '20px',
-        right: '20px',
+        left: '20px',
         zIndex: 1000,
       }}
     >

@@ -5,21 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/admin/user/subjects/students/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/loading/dotLoader.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_22_24,_10_19 PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_22_24__10_19PM__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_23_24,_2_40 PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_23_24__2_40PM__Changes_.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/chatBot/chatBot.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_23_24,_5_46 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_23_24,_7_24 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_23_24__5_46PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_23_24__7_24PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/student/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/student/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/user/add-friends/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/add-friends/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/user/friend-requests/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friend-requests/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/user/friends/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friends/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/user/requests-sent/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/requests-sent/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/subjects/students/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/subjects/students/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/aichatbot/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/aichatbot/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/test/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/signOutButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/signOutButton.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,11 +83,11 @@
       <recent name="$PROJECT_DIR$/app/api/admin/user" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/admin" />
       <recent name="$PROJECT_DIR$/app/events" />
       <recent name="$PROJECT_DIR$/app/admin/user/subjects/teachers" />
       <recent name="$PROJECT_DIR$/app/api/admin/user" />
       <recent name="$PROJECT_DIR$/app/api/user/friends/remove-friend/[...studentId]" />
-      <recent name="$PROJECT_DIR$/app/api/user/friends/reject-friend/[...studentId]" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -165,7 +162,8 @@
       <workItem from="1735476153656" duration="3525000" />
       <workItem from="1735481667323" duration="351000" />
       <workItem from="1735490418912" duration="13947000" />
-      <workItem from="1735551425427" duration="350000" />
+      <workItem from="1735551425427" duration="1037000" />
+      <workItem from="1735573605003" duration="7651000" />
     </task>
     <servers />
   </component>
