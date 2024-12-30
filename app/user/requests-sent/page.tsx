@@ -3,6 +3,7 @@ import {useEffect} from "react";
 import {useModel} from "../../../hooks/user-model-store";
 import {useRouter} from "next/navigation";
 import axios from "axios";
+import DotsLoader from "../../../components/loading/dotLoader";
 
 export default function RequestsSentPage() {
   const { requestsSent, setRequestsSent, setLoading } = useModel()
@@ -30,7 +31,7 @@ export default function RequestsSentPage() {
   }, [setRequestsSent, setLoading, router]);
 
   if (!requestsSent) {
-    return <div className="h-screen w-full bg-gray-800">Loading...</div>;
+    return <DotsLoader />;
   }
 
   async function withdrawRequest (from: string, to: string) {

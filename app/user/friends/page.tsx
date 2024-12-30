@@ -3,6 +3,7 @@ import {useEffect} from "react";
 import axios from "axios";
 import {useModel} from "../../../hooks/user-model-store";
 import {useRouter} from "next/navigation";
+import DotsLoader from "../../../components/loading/dotLoader";
 
 export default function FriendsPage() {
   const { friends, setFriends, setLoading } = useModel()
@@ -30,7 +31,7 @@ export default function FriendsPage() {
   }, [setFriends, setLoading, router]);
 
   if (!friends) {
-    return <div className="h-screen w-full bg-gray-800">Loading...</div>;
+    return <DotsLoader />;
   }
 
   async function removeFriend (to: string, from: string) {

@@ -3,6 +3,7 @@ import {useModel} from "../../../../hooks/user-model-store";
 import {useRouter} from "next/navigation";
 import {useEffect} from "react";
 import axios from "axios";
+import DotsLoader from "../../../../components/loading/dotLoader";
 
 export default function MakeAdminPage() {
   const { requests, setRequests, setLoading } = useModel()
@@ -30,7 +31,7 @@ export default function MakeAdminPage() {
   }, [setRequests, setLoading, router]);
 
   if (!requests) {
-    return <div className="h-screen w-full bg-gray-800">Loading...</div>;
+    return <DotsLoader />;
   }
 
   async function rejectRequest (userId: string) {

@@ -7,6 +7,7 @@ import { useModel } from "../../../hooks/user-model-store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import axios from "axios";
+import DotsLoader from "../../../components/loading/dotLoader";
 
 export default function Club() {
   const { singleClub, setSingleClub, setLoading } = useModel();
@@ -36,7 +37,7 @@ export default function Club() {
   }, [setSingleClub, setLoading, clubId, router]);
 
   if (!singleClub) {
-    return <div>Loading...</div>;
+    return <DotsLoader />;
   }
   console.log(singleClub);
 
