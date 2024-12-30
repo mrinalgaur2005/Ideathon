@@ -241,18 +241,22 @@ export async function POST(request: Request) {
         info = await aiChatBotModel.findById(new ObjectId('676d8bf49e48cdfb0b216f3f'));
         text = getEventText(info);
         vectorStoreResult = await createVectorStore(text, qdrantClient, 'events', embeddings);
-        const botResponse = await getBotResponse(userInput, qdrantClient, embeddings, 'events', groqClient);
-        answer = botResponse.content ?? '';
+        const eventsBotResponse = await getBotResponse(userInput, qdrantClient, embeddings, 'events', groqClient);
+        answer = eventsBotResponse.content ?? '';
         break;
       case 'marks':
         info = await aiChatBotModel.findById(new ObjectId('676da65f9e48cdfb0b216f48'));
         text = getMarksText(info);
         vectorStoreResult = await createVectorStore(text, qdrantClient, 'marks', embeddings);
+        const marksBotResponse = await getBotResponse(userInput, qdrantClient, embeddings, 'marks', groqClient);
+        answer = marksBotResponse.content ?? '';
         break;
       case 'general':
         info = await aiChatBotModel.findById(new ObjectId('676da9b09e48cdfb0b216f49'));
         text = getGeneralText(info);
         vectorStoreResult = await createVectorStore(text, qdrantClient, 'general', embeddings);
+        const generalBotResponse = await getBotResponse(userInput, qdrantClient, embeddings, 'general', groqClient);
+        answer = generalBotResponse.content ?? '';
         break;
       default:
         text = 'Sorry, I could not understand your query.';
