@@ -1,9 +1,10 @@
 "use client"
-import {useModel} from "../../../../../hooks/user-model-store";
+import {useModel} from "../../../../hooks/user-model-store";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import mongoose from "mongoose";
+import DotsLoader from "../../../../components/loading/dotLoader";
 
 interface Teacher {
   _id: mongoose.Types.ObjectId;
@@ -88,7 +89,7 @@ export default function TeachersPage() {
   }
 
   if (!teachers.length) {
-    return <div className="h-screen w-full bg-gray-800">Loading...</div>;
+    return <DotsLoader />;
   }
 
   if (!single) {

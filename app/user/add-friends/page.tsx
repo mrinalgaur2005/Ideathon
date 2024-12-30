@@ -3,6 +3,7 @@ import {useModel} from "../../../hooks/user-model-store";
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import axios from "axios";
+import DotsLoader from "../../../components/loading/dotLoader";
 
 export default function AddFriendsPage() {
   const [id, setId] = useState<string>("");
@@ -32,7 +33,7 @@ export default function AddFriendsPage() {
   }, [setAddFriends, setLoading, router]);
 
   if (!addFriends) {
-    return <div className="h-screen w-full bg-gray-800">Loading...</div>;
+    return <DotsLoader />;
   }
 
   async function addFriend (to: string) {

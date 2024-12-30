@@ -5,6 +5,7 @@ import MarksCard from "../../../components/student/marksCard";
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { useModel } from '../../../hooks/user-model-store';
+import DotsLoader from "../../../components/loading/dotLoader";
 
 const Student = () => {
   const { profile, setProfile, setLoading } = useModel();
@@ -32,7 +33,7 @@ const Student = () => {
   }, [setProfile, setLoading]);
 
   if (!profile) {
-    return <div>Loading...</div>;
+    return <DotsLoader />;
   }
   console.log(profile);
 

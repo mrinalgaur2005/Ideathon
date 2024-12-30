@@ -6,6 +6,7 @@ import axios from "axios";
 import {useParams, useRouter} from "next/navigation";
 import {useModel} from "../../../../../hooks/user-model-store";
 import mongoose from "mongoose";
+import DotsLoader from "../../../../../components/loading/dotLoader";
 
 export default function AddClubPage() {
   const [clubName, setClubName] = useState<string>("");
@@ -49,7 +50,7 @@ export default function AddClubPage() {
   }, [clubId, router, setEditClub, setLoading]);
 
   if (!editClub) {
-    return <div className="flex items-center justify-center min-h-screen text-2xl text-[#C5C6C7]">Loading...</div>;
+    return <DotsLoader />;
   }
 
 

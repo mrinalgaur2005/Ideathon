@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import axios from "axios";
 import {useModel} from "../../../hooks/user-model-store";
+import DotsLoader from "../../../components/loading/dotLoader";
 
 export default function ClubsPage() {
   const { allClubs, setAllClub, setLoading } = useModel();
@@ -30,7 +31,7 @@ export default function ClubsPage() {
   }, [router, setAllClub, setLoading]);
 
   if (!allClubs) {
-    return <div className="flex items-center justify-center min-h-screen text-2xl text-[#C5C6C7]">Loading...</div>;
+    return <DotsLoader />;
   }
 
   return (

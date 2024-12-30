@@ -4,7 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files" />
+    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
+      <change afterPath="$PROJECT_DIR$/app/admin/user/subjects/students/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/loading/dotLoader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_22_24,_10_19 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_22_24__10_19PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_23_24,_2_40 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_23_24__2_40PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/student/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/student/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/add-friends/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/add-friends/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/friend-requests/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friend-requests/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/friends/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friends/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/requests-sent/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/requests-sent/page.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,8 +29,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -70,11 +86,11 @@
       <recent name="$PROJECT_DIR$/app/api/admin/user" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/events" />
+      <recent name="$PROJECT_DIR$/app/admin/user/subjects/teachers" />
       <recent name="$PROJECT_DIR$/app/api/admin/user" />
       <recent name="$PROJECT_DIR$/app/api/user/friends/remove-friend/[...studentId]" />
       <recent name="$PROJECT_DIR$/app/api/user/friends/reject-friend/[...studentId]" />
-      <recent name="$PROJECT_DIR$/app/api/user/friends/accept-friend/[...studentId]" />
-      <recent name="$PROJECT_DIR$/app/api/admin/clubs/[...clubId]" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -148,7 +164,8 @@
       <workItem from="1735473072434" duration="168000" />
       <workItem from="1735476153656" duration="3525000" />
       <workItem from="1735481667323" duration="351000" />
-      <workItem from="1735490418912" duration="12895000" />
+      <workItem from="1735490418912" duration="13947000" />
+      <workItem from="1735551425427" duration="350000" />
     </task>
     <servers />
   </component>
@@ -193,7 +210,6 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/model/User.ts</url>
           <line>207</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

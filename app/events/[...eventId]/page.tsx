@@ -5,6 +5,7 @@ import {redirect, useParams, useRouter} from "next/navigation";
 import axios from "axios";
 import StudentCard from "../../../components/student/studentCard";
 import mongoose from "mongoose";
+import DotsLoader from "../../../components/loading/dotLoader";
 
 interface InterestedMembers {
   _id: mongoose.Types.ObjectId;
@@ -47,7 +48,7 @@ export default function Event() {
   }, [eventId, setSingleEvent, setLoading, router]);
 
   if (!singleEvent) {
-    return <div>Loading...</div>;
+    return <DotsLoader />;
   }
   const event = singleEvent;
   console.log("fe")
