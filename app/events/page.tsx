@@ -92,7 +92,7 @@ export default function EventsPage() {
       <div className="flex flex-col w-1/5 items-center mt-8">
         <button
           className="text-xl font-bold  bg-gradient-to-br from-[#66FCF1] to-[#45A29E] text-black w-36 rounded-3xl mb-8 mt-2 hover:scale-105 transition-all"
-          onClick={() => router.push("/add-event")}
+          onClick={() => router.push("/events/add-event")}
         >
           Add Event
         </button>

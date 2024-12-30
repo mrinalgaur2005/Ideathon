@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/(auth)/auth/[...nextauth]/options.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/(auth)/auth/[...nextauth]/options.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/admin/user/teacher/accept/[...userId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/user/teacher/accept/[...userId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/next-auth.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/next-auth.d.ts" afterDir="false" />
-    </list>
+    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -154,7 +148,7 @@
       <workItem from="1735473072434" duration="168000" />
       <workItem from="1735476153656" duration="3525000" />
       <workItem from="1735481667323" duration="351000" />
-      <workItem from="1735490418912" duration="2609000" />
+      <workItem from="1735490418912" duration="12895000" />
     </task>
     <servers />
   </component>
@@ -192,5 +186,17 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixup! recovered files" />
     <option name="LAST_COMMIT_MESSAGE" value="fixup! recovered files" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/model/User.ts</url>
+          <line>207</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

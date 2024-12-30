@@ -138,7 +138,21 @@ interface Requests {
     }
 }
 
+interface Teacher {
+    _id: mongoose.Types.ObjectId;
+    user: {
+        email: string;
+        username: string;
+    }
+    teacher_id: string;
+    subjectTeaching: {
+        subject_code: string;
+        subject_name: string;
+    }[];
+}
+
 interface ModelStore {
+    teachers: Teacher[]|[];
     requests: Requests[]|[];
     currentRequests: CurrentRequests[]|[];
     requestsSent: RequestsSent[]|[];
@@ -151,6 +165,7 @@ interface ModelStore {
     allEvents: Event[];
     singleEvent:SingleEvent|null;
     isLoading: boolean;
+    setTeachers: (teachers: Teacher[]) => void;
     setRequests: (requests: Requests[]) => void;
     setCurrentRequests: (currentRequests: CurrentRequests[]) => void;
     setRequestsSent: (requestsSent: RequestsSent[]) => void;
@@ -166,6 +181,7 @@ interface ModelStore {
 }
 
 export const useModel = create<ModelStore>((set) => ({
+    teachers: [],
     requests: [],
     currentRequests: [],
     requestsSent: [],
@@ -178,6 +194,7 @@ export const useModel = create<ModelStore>((set) => ({
     editClub:null,
     profile: null,
     isLoading: false,
+    setTeachers: ((teachers) => set({ teachers: teachers })),
     setRequests: ((requests) => set({ requests: requests })),
     setCurrentRequests: ((currentRequests) => set({currentRequests: currentRequests})),
     setRequestsSent: ((requestsSent) => set({requestsSent: requestsSent})),
