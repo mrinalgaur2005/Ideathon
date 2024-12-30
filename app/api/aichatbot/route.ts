@@ -6,277 +6,309 @@ import { NextResponse } from "next/server";
 import { getServerSession, User } from "next-auth";
 import { Student, StudentModel, aiChatBotModel } from "../../../model/User";
 import { ObjectId } from "bson";
-// import { GoogleGenerativeAIEmbeddings } from "@google/generative-ai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
-import { AstraDBVectorStore } from "@langchain/community/vectorstores/astradb";
 import Groq from 'groq-sdk';
 
-const groqClient = new Groq({
-  apiKey: process.env.GROQ_API_KEY, // This is the default and can be omitted
-});
-
-// Initialize Google Generative AI
-if (!process.env.GOOGLE_API_KEY) {
-  throw new Error('GOOGLE_API_KEY is not defined');
+if (!process.env.GOOGLE_API_KEY || !process.env.QDRANT_URL || !process.env.QDRANT_API_KEY) {
+  throw new Error('Required environment variables are not defined');
 }
 
-// Initialize Qdrant Client
+const groqClient = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
+
 const qdrantClient = new QdrantClient({
   url: process.env.QDRANT_URL,
   apiKey: process.env.QDRANT_API_KEY,
 });
-
-// Helper function to classify queries
-const classifyQuery = (query: string): string => {
-  const marksKeywords = ['marks', 'exam', 'quiz', 'midsem', 'endsem', 'practical', 'score', 'result'];
-  const eventsKeywords = ['event', 'club', 'workshop', 'fest', 'competition', 'seminar'];
-  const generalKeywords = ['information', 'college', 'timing', 'library', 'administration', 'contact'];
-
-  const fuzzyMatch = (keywords: string[], query: string): boolean => {
-    return keywords.some((keyword) => query.toLowerCase().includes(keyword));
-  };
-
-  if (fuzzyMatch(marksKeywords, query)) return 'marks';
-  if (fuzzyMatch(eventsKeywords, query)) return 'events';
-  if (fuzzyMatch(generalKeywords, query)) return 'general';
-
-  return 'unknown';
-};
-
-// Helper functions to get data
-const getEventText = (eventInfo: any): string => {
-  const events = eventInfo?.Info?.events || [];
-  if (!events.length) return 'No events found.';
-
-  return events
-    .map((event: any, i: number) => `Event ${i + 1}:
-  Title: ${event.title || 'N/A'}
-  Description: ${event.description || 'N/A'}\n`)
-    .join('\n');
-};
-
-const getMarksText = (marksInfo: any): string => {
-  const marks = marksInfo?.Info?.marks || [];
-  if (!marks.length) return 'No marks information found.';
-
-  return marks
-    .map((mark: any, i: number) => `Subject ${i + 1}:
-  Subject Code and Name: ${mark.subject || 'N/A'}
-  Marks: ${mark.marks || 'N/A'}\n`)
-    .join('\n');
-};
-
-const getGeneralText = (generalInfo: any): string => {
-  const general = generalInfo?.Info?.general || [];
-  if (!general.length) return 'No general information found.';
-
-  return general
-    .map((info: any, i: number) => `Info ${i + 1}:
-  Title: ${info.subject || 'N/A'}
-  Description: ${info.description || 'N/A'}\n`)
-    .join('\n');
-};
-
-// Check if collection exists before creating
-const collectionExists = async (qdrantClient: QdrantClient, collectionName: string) => {
-  try {
-    const response = await qdrantClient.getCollection(collectionName);
-    return !!response; // If the collection exists, return true
-  } catch (error) {
-    if ((error as any).response?.status === 404) {
-      return false; // Collection does not exist
-    }
-    throw error; // Re-throw other errors
-  }
-};
 
 const embeddings = new GoogleGenerativeAIEmbeddings({
   apiKey: process.env.GOOGLE_API_KEY,
   model: "text-embedding-004",
 });
 
-const createVectorStore = async (
-  text: string,
-  qdrantClient: QdrantClient,
+// Helper function to classify queries
+const classifyQuery = (query: string): string => {
+  const queryLower = query.toLowerCase();
+  const categories = {
+    marks: ['marks', 'exam', 'quiz', 'midsem', 'endsem', 'practical', 'score', 'result', 'grade'],
+    events: ['event', 'club', 'workshop', 'fest', 'competition', 'seminar', 'meetup'],
+    general: ['information', 'college', 'timing', 'library', 'administration', 'contact', 'schedule']
+  };
+
+  for (const [category, keywords] of Object.entries(categories)) {
+    if (keywords.some(keyword => queryLower.includes(keyword))) {
+      return category;
+    }
+  }
+  return 'general';
+};
+
+const ensureCollection = async (
   collectionName: string,
-  embeddings: GoogleGenerativeAIEmbeddings
-) => {
-  try {
+  vectorSize: number
+): Promise<void> => {
+  if (!collectionName || !vectorSize) {
+    throw new Error('Collection name and vector size are required');
+  }
 
-    const textSplitter = new RecursiveCharacterTextSplitter({
-      chunkSize: 1000,
-      chunkOverlap: 200,
-    });
+  const maxRetries = 3;
+  let currentTry = 0;
 
-    // Split the text into chunks
-    const documentTexts = await textSplitter.splitText(text);
-    
-    // Get embeddings
-    const embeds = await Promise.all(documentTexts.map((text) => embeddings.embedQuery(text)));
-    
-    // Check if collection exists
-    const exists = await collectionExists(qdrantClient, collectionName);
-    if (!exists) {
-      const vectorSize = embeds[0]?.length || 768;
-      await qdrantClient.createCollection(collectionName, {
+  while (currentTry < maxRetries) {
+    try {
+      // Check if collection exists
+      try {
+        const collection = await qdrantClient.getCollection(collectionName);
+        console.log(`Collection ${collectionName} exists with config:`, collection);
+        
+        // Validate vector size matches
+        if (!collection.config.params.vectors || collection.config.params.vectors.size === undefined || collection.config.params.vectors.size !== vectorSize) {
+          throw new Error(`Vector size mismatch. Expected: ${vectorSize}, Got: ${collection.config.params.vectors?.size}`);
+        }
+        return;
+      } catch (error: any) {
+        // Only proceed with creation if collection doesn't exist
+        if (error.status !== 404) {
+          throw error;
+        }
+      }
+
+      // Collection doesn't exist, create it
+      const collectionConfig = {
         vectors: {
           size: vectorSize,
-          distance: 'Cosine',
+          distance: 'Cosine' as const,
         },
         optimizers_config: {
           default_segment_number: 2,
         },
         replication_factor: 2,
-      });
-    }
+        write_consistency_factor: 1, // Add this for better write consistency
+      };
 
-    // Create points with numeric IDs and clean payload
-    const points = documentTexts.map((text, i) => ({
-      id: i,  // Using number instead of string
-      vector: Array.from(embeds[i]),  // Ensure vector is a regular array
-      payload: {
-        text: text.trim(),  // Clean the text
+      await qdrantClient.createCollection(collectionName, collectionConfig);
+      console.log(`Created new collection: ${collectionName}`);
+      
+      // Validate collection was created
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Wait longer
+      const newCollection = await qdrantClient.getCollection(collectionName);
+      
+      if (!newCollection) {
+        throw new Error('Collection creation verification failed');
       }
-    }));
+      
+      return;
+    } catch (error: any) {
+      currentTry++;
+      console.error(`Attempt ${currentTry}/${maxRetries} failed:`, error);
+      
+      if (currentTry === maxRetries) {
+        throw new Error(`Collection creation failed after ${maxRetries} attempts: ${error.message || 'Unknown error'}`);
+      }
+      
+      // Exponential backoff
+      await new Promise(resolve => setTimeout(resolve, Math.pow(2, currentTry) * 1000));
+    }
+  }
+};
 
-    // Upsert points in batches of 100
-    const batchSize = 100;
-    for (let i = 0; i < points.length; i += batchSize) {
-      const batch = points.slice(i, i + batchSize);
+// Helper function to validate Qdrant client connection
+const validateQdrantConnection = async (): Promise<void> => {
+  try {
+    // Try to list collections as a connection test
+    await qdrantClient.getCollections();
+  } catch (error: any) {
+    throw new Error(`Failed to connect to Qdrant: ${error.message || 'Unknown error'}`);
+  }
+};
+
+// Modified createVectorStore with additional validation
+const createVectorStore = async (
+  text: string,
+  collectionName: string
+): Promise<void> => {
+  // Validate inputs
+  if (!text?.trim()) {
+    throw new Error('No text provided for vector store creation');
+  }
+
+  // Validate Qdrant connection first
+  await validateQdrantConnection();
+
+  const textSplitter = new RecursiveCharacterTextSplitter({
+    chunkSize: 1000,
+    chunkOverlap: 200,
+  });
+
+  const documentTexts = await textSplitter.splitText(text);
+  
+  if (!documentTexts.length) {
+    throw new Error('No text chunks generated');
+  }
+
+  const embeds = await Promise.all(
+    documentTexts.map(text => embeddings.embedQuery(text))
+  );
+
+  if (!embeds.length || !embeds[0].length) {
+    throw new Error('Failed to generate embeddings');
+  }
+
+  // Ensure collection exists with correct vector size
+  await ensureCollection(collectionName, embeds[0].length);
+
+  // Create points with unique IDs
+  const points = documentTexts.map((text, i) => ({
+    id: Date.now() + i, // More unique ID strategy
+    vector: Array.from(embeds[i]),
+    payload: { 
+      text: text.trim(),
+      timestamp: new Date().toISOString(),
+      chunkIndex: i
+    }
+  }));
+
+  // Upload in smaller batches with retry logic
+  const batchSize = 10; // Reduced batch size
+  for (let i = 0; i < points.length; i += batchSize) {
+    const batch = points.slice(i, i + batchSize);
+    let retries = 3;
+    while (retries > 0) {
       try {
         await qdrantClient.upsert(collectionName, {
           points: batch,
           wait: true
         });
-        console.log(`Successfully uploaded batch ${i / batchSize + 1}`);
+        console.log(`Successfully uploaded batch ${i/batchSize + 1}/${Math.ceil(points.length/batchSize)}`);
+        break;
       } catch (error) {
-        console.error('Error in batch upload:', {
-          batchNumber: i / batchSize + 1,
-          error: error instanceof Error ? error.message : 'Unknown error',
-          samplePoint: batch[0]
-        });
-        throw error;
+        retries--;
+        console.error(`Batch upload failed, ${retries} retries left:`, error);
+        if (retries === 0) throw error;
+        await new Promise(resolve => setTimeout(resolve, 2000));
       }
     }
-
-    return { 
-      success: true, 
-      message: `Successfully uploaded ${points.length} points to collection ${collectionName}`
-    };
-  } catch (error) {
-    console.error('Error creating vector store:', {
-      error: error instanceof Error ? error.message : 'Unknown error',
-      collectionName,
-      textLength: text.length
-    });
-    
-    return { 
-      success: false, 
-      message: error instanceof Error ? error.message : 'An unknown error occurred'
-    };
   }
 };
 
+// Improved bot response function
 const getBotResponse = async (
   userInput: string,
-  qdrantClient: QdrantClient,
-  embeddings: GoogleGenerativeAIEmbeddings,
   collectionName: string,
-  groqClient: Groq
-) => {
+  fallbackResponse: string
+): Promise<string> => {
+  try {
     const queryEmbed = await embeddings.embedQuery(userInput);
-    const searchedChunks = await qdrantClient.search(collectionName, {
+    
+    try {
+      const searchResults = await qdrantClient.search(collectionName, {
         vector: Array.from(queryEmbed),
         limit: 3,
-    });
-    const context = searchedChunks
-      .map(hit => hit.payload ? hit.payload["text"] : '')
-      .join(" ");
+      });
 
-    const detailed_prompt = `You are a question-answering chatbot. Answer the following question: ${userInput} \nContext: ${context}\n if the context is about marks, just print the marks of the student, their name, their roll number and the subject code and name. If the context is about events and club, give the name of club hosting it, where it is hosted, venue, date and time, and a description of the event in not more than 100 words.`;
+      if (!searchResults.length) {
+        return fallbackResponse;
+      }
 
-    const chatCompletion = await groqClient.chat.completions.create({
-      messages: [{ role: 'user', content: detailed_prompt }],
-      model: 'llama3-8b-8192',
-    });
+      const context = searchResults
+        .map(hit => hit.payload?.text || '')
+        .join(" ");
 
-    return chatCompletion.choices[0].message;
+      const prompt = `You are a helpful academic assistant. Based on this context: "${context}", 
+                     please answer this question: "${userInput}". 
+                     If the context is about marks, provide only the student's marks, name, roll number, 
+                     and subject details. For events, include the hosting club, venue, date/time, 
+                     and a brief description (max 100 words).`;
+
+      const completion = await groqClient.chat.completions.create({
+        messages: [{ role: 'user', content: prompt }],
+        model: 'llama3-8b-8192',
+      });
+
+      return completion.choices[0]?.message?.content || fallbackResponse;
+    } catch (error) {
+      console.error('Search error:', error);
+      return fallbackResponse;
+    }
+  } catch (error) {
+    console.error('Bot response error:', error);
+    return fallbackResponse;
+  }
 };
 
 export async function POST(request: Request) {
   try {
     await dbConnect();
-
     const session = await getServerSession(authOptions);
-    const user: User = session?.user as User;
-
-    if (!session || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized. User must be logged in.' }, 
-        { status: 401 }
-      );
+    
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = new mongoose.Types.ObjectId(user._id);
-    const student: Student | null = await StudentModel.findOne({ user_id: userId });
+    const userId = new mongoose.Types.ObjectId(session.user._id);
+    const student = await StudentModel.findOne({ user_id: userId });
 
     if (!student) {
+      return NextResponse.json({ error: 'Student not found' }, { status: 404 });
+    }
+
+    const { userInput } = await request.json();
+    const category = classifyQuery(userInput);
+
+    const categoryConfig = {
+      events: {
+        id: '676d8bf49e48cdfb0b216f3f',
+        fallback: 'I could not find specific event information. Please try asking about a specific event.',
+        getText: (info: any) => info?.Info?.events?.map((e: any) => 
+          `Event: ${e.title}\nDescription: ${e.description}`
+        ).join('\n') || ''
+      },
+      marks: {
+        id: '676da65f9e48cdfb0b216f48',
+        fallback: 'I could not find your marks information. Please specify the subject or exam.',
+        getText: (info: any) => info?.Info?.marks?.map((m: any) =>
+          `Subject: ${m.subject}\nMarks: ${m.marks}`
+        ).join('\n') || ''
+      },
+      general: {
+        id: '676da9b09e48cdfb0b216f49',
+        fallback: 'I could not find that specific information. Please try asking a more specific question.',
+        getText: (info: any) => info?.Info?.general?.map((g: any) =>
+          `${g.subject}: ${g.description}`
+        ).join('\n') || ''
+      }
+    };
+
+    const config = categoryConfig[category as keyof typeof categoryConfig];
+    const info = await aiChatBotModel.findById(new ObjectId(config.id));
+    
+    if (!info) {
       return NextResponse.json(
-        { success: false, message: 'Student not found' },
+        { error: 'Information not found' },
         { status: 404 }
       );
     }
 
-    const { userInput } = await request.json();
-    const classifiedQuery = classifyQuery(userInput);
-
-    let info;
-    let text;
-    let vectorStoreResult;
-    let answer = '';
-
-    switch (classifiedQuery) {
-      case 'events':
-        info = await aiChatBotModel.findById(new ObjectId('676d8bf49e48cdfb0b216f3f'));
-        text = getEventText(info);
-        vectorStoreResult = await createVectorStore(text, qdrantClient, 'events', embeddings);
-        const eventsBotResponse = await getBotResponse(userInput, qdrantClient, embeddings, 'events', groqClient);
-        answer = eventsBotResponse.content ?? '';
-        break;
-      case 'marks':
-        info = await aiChatBotModel.findById(new ObjectId('676da65f9e48cdfb0b216f48'));
-        text = getMarksText(info);
-        vectorStoreResult = await createVectorStore(text, qdrantClient, 'marks', embeddings);
-        const marksBotResponse = await getBotResponse(userInput, qdrantClient, embeddings, 'marks', groqClient);
-        answer = marksBotResponse.content ?? '';
-        break;
-      case 'general':
-        info = await aiChatBotModel.findById(new ObjectId('676da9b09e48cdfb0b216f49'));
-        text = getGeneralText(info);
-        vectorStoreResult = await createVectorStore(text, qdrantClient, 'general', embeddings);
-        const generalBotResponse = await getBotResponse(userInput, qdrantClient, embeddings, 'general', groqClient);
-        answer = generalBotResponse.content ?? '';
-        break;
-      default:
-        text = 'Sorry, I could not understand your query.';
-        vectorStoreResult = { success: true, response: text };
-    }
-
-    if (!vectorStoreResult.success) {
+    const text = config.getText(info);
+    
+    try {
+      await createVectorStore(text, category);
+      const response = await getBotResponse(userInput, category, config.fallback);
+      return NextResponse.json({ response }, { status: 200 });
+    } catch (error) {
+      console.error('Processing error:', error);
       return NextResponse.json(
-        { success: false, error: vectorStoreResult.message },
-        { status: 500 }
+        { response: config.fallback },
+        { status: 200 }
       );
     }
-    return NextResponse.json(answer, {status: 200});
+
   } catch (error) {
-    console.error('Error in POST route:', error);
+    console.error('API route error:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'An unknown error occurred'
-      },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
