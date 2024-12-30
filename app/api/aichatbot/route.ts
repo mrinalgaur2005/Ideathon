@@ -10,8 +10,11 @@ import { ObjectId } from "bson";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { AstraDBVectorStore } from "@langchain/community/vectorstores/astradb";
+import Groq from 'groq-sdk';
 
-
+const groqClient = new Groq({
+  apiKey: process.env.GROQ_API_KEY, // This is the default and can be omitted
+});
 
 // Initialize Google Generative AI
 if (!process.env.GOOGLE_API_KEY) {
@@ -88,16 +91,18 @@ const collectionExists = async (qdrantClient: QdrantClient, collectionName: stri
   }
 };
 
+const embeddings = new GoogleGenerativeAIEmbeddings({
+  apiKey: process.env.GOOGLE_API_KEY,
+  model: "text-embedding-004",
+});
+
 const createVectorStore = async (
   text: string,
   qdrantClient: QdrantClient,
   collectionName: string,
+  embeddings: GoogleGenerativeAIEmbeddings
 ) => {
   try {
-    const embeddings = new GoogleGenerativeAIEmbeddings({
-      apiKey: process.env.GOOGLE_API_KEY,
-      model: "text-embedding-004",
-    });
 
     const textSplitter = new RecursiveCharacterTextSplitter({
       chunkSize: 1000,
@@ -173,6 +178,31 @@ const createVectorStore = async (
   }
 };
 
+const getBotResponse = async (
+  userInput: string,
+  qdrantClient: QdrantClient,
+  embeddings: GoogleGenerativeAIEmbeddings,
+  collectionName: string,
+  groqClient: Groq
+) => {
+    const queryEmbed = await embeddings.embedQuery(userInput);
+    const searchedChunks = await qdrantClient.search(collectionName, {
+        vector: Array.from(queryEmbed),
+        limit: 3,
+    });
+    const context = searchedChunks
+      .map(hit => hit.payload ? hit.payload["text"] : '')
+      .join(" ");
+
+    const detailed_prompt = `You are a question-answering chatbot. Answer the following question: ${userInput} \nContext: ${context}\n if the context is about marks, just print the marks of the student, their name, their roll number and the subject code and name. If the context is about events and club, give the name of club hosting it, where it is hosted, venue, date and time, and a description of the event in not more than 100 words.`;
+
+    const chatCompletion = await groqClient.chat.completions.create({
+      messages: [{ role: 'user', content: detailed_prompt }],
+      model: 'llama3-8b-8192',
+    });
+
+    return chatCompletion.choices[0].message;
+};
 
 export async function POST(request: Request) {
   try {
@@ -204,22 +234,25 @@ export async function POST(request: Request) {
     let info;
     let text;
     let vectorStoreResult;
+    let answer = '';
 
     switch (classifiedQuery) {
       case 'events':
         info = await aiChatBotModel.findById(new ObjectId('676d8bf49e48cdfb0b216f3f'));
         text = getEventText(info);
-        vectorStoreResult = await createVectorStore(text, qdrantClient, 'events');
+        vectorStoreResult = await createVectorStore(text, qdrantClient, 'events', embeddings);
+        const botResponse = await getBotResponse(userInput, qdrantClient, embeddings, 'events', groqClient);
+        answer = botResponse.content ?? '';
         break;
       case 'marks':
         info = await aiChatBotModel.findById(new ObjectId('676da65f9e48cdfb0b216f48'));
         text = getMarksText(info);
-        vectorStoreResult = await createVectorStore(text, qdrantClient, 'marks');
+        vectorStoreResult = await createVectorStore(text, qdrantClient, 'marks', embeddings);
         break;
       case 'general':
         info = await aiChatBotModel.findById(new ObjectId('676da9b09e48cdfb0b216f49'));
         text = getGeneralText(info);
-        vectorStoreResult = await createVectorStore(text, qdrantClient, 'general');
+        vectorStoreResult = await createVectorStore(text, qdrantClient, 'general', embeddings);
         break;
       default:
         text = 'Sorry, I could not understand your query.';
@@ -232,8 +265,7 @@ export async function POST(request: Request) {
         { status: 500 }
       );
     }
-
-    return NextResponse.json({ success: true, response: text });
+    return NextResponse.json({ success: true, response: answer });
   } catch (error) {
     console.error('Error in POST route:', error);
     return NextResponse.json(
