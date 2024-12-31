@@ -296,12 +296,12 @@ export async function POST(request: Request) {
     try {
       await createVectorStore(text, category);
       const response = await getBotResponse(userInput, category, config.fallback);
-      return NextResponse.json({ response }, { status: 200 });
+      return NextResponse.json( response , { status: 200 });
     } catch (error) {
       console.error('Processing error:', error);
       return NextResponse.json(
         { response: config.fallback },
-        { status: 200 }
+        { status: 500 }
       );
     }
 

@@ -1,6 +1,7 @@
 "use client"
 
 import {useState} from "react";
+import axios from "axios";
 
 export default function StudentsSubjectPage () {
   const [student_id, setStudentId] = useState<string>("");
@@ -12,11 +13,30 @@ export default function StudentsSubjectPage () {
       setMessage("Student Id should have at least 5 digits");
       setTimeout(()=> setMessage(""), 5000);
     }
+
+    try {
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/subjects/student`, {student_id, subject_id})
+
+      if (res.status === 200) {
+        setMessage("Subject successfully added!");
+        setTimeout(()=> setMessage(""), 5000);
+      } else {
+        setMessage("Failed to add subject!");
+        setTimeout(()=> setMessage(""), 5000);
+      }
+    } catch (error) {
+      console.log(error);
+      setMessage("Failed to add subject!");
+      setTimeout(()=> setMessage(""), 5000);
+    }
   }
 
   return (
     <>
       <div className="flex flex-col items-center h-screen w-full bg-gray-800">
+        <div className="font-bold text-2xl mt-6 text-white">
+          Add Subject
+        </div>
         <input
           type="string"
           className="mt-12 w-60 h-14 pl-2 text-gray-950 text-lg font-bold"

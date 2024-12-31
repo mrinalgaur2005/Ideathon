@@ -1,11 +1,11 @@
 //add new subject
 
-import dbConnect from "../../../../../../lib/connectDb";
+import dbConnect from "../../../../../../../lib/connectDb";
 import {getServerSession, User} from "next-auth";
-import {authOptions} from "../../../../(auth)/auth/[...nextauth]/options";
+import {authOptions} from "../../../../../(auth)/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
 import mongoose from "mongoose";
-import {SubjectModel, TeacherModel} from "../../../../../../model/User";
+import {SubjectModel, Teacher, TeacherModel} from "../../../../../../../model/User";
 
 export async function POST(req: Request, { params }: { params: { teacherId: string[] } }) {
   try {
@@ -51,7 +51,7 @@ export async function POST(req: Request, { params }: { params: { teacherId: stri
 
     const teacherObjectId = new mongoose.Types.ObjectId(teacherId[0]);
 
-    const teacher = await TeacherModel.findOne(teacherObjectId);
+    const teacher: Teacher|null = await TeacherModel.findOne(teacherObjectId);
 
     if (!teacher) {
       return NextResponse.json(

@@ -1,10 +1,10 @@
 //get all teachers
 
-import dbConnect from "../../../../lib/connectDb";
+import dbConnect from "../../../../../lib/connectDb";
 import {getServerSession, User} from "next-auth";
-import {authOptions} from "../../(auth)/auth/[...nextauth]/options";
+import {authOptions} from "../../../(auth)/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
-import {TeacherModel} from "../../../../model/User";
+import {TeacherModel} from "../../../../../model/User";
 
 export async function GET() {
   try {
