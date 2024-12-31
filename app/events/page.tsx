@@ -9,21 +9,34 @@ import { useRouter } from "next/navigation";
 export default function EventsPage() {
   const { allEvents, isLoading, setAllEvents, setLoading } = useModel();
   const [page, setPage] = useState(1);
+  const [activeTab, setActiveTab] = useState("all");
   const router = useRouter();
-
   const [filterCriteria, setFilterCriteria] = useState<string[]>([]);
-  const maxPage = Math.ceil(allEvents.length / 10);
+  const [showFilters, setShowFilters] = useState(false); 
 
   const filteredEvents = useMemo(() => {
-    if (filterCriteria.length === 0) return allEvents;
-    return allEvents.filter((event) =>
-      filterCriteria.every((filter) =>
-        event.tags
-          .map((tag) => tag.trim().toLowerCase())
-          .includes(filter.trim().toLowerCase())
-      )
-    );
-  }, [allEvents, filterCriteria]);
+    let events = allEvents;
+
+    if (filterCriteria.length > 0) {
+      events = events.filter((event) =>
+        filterCriteria.every((filter) =>
+          event.tags
+            .map((tag) => tag.trim().toLowerCase())
+            .includes(filter.trim().toLowerCase())
+        )
+      );
+    }
+
+    if (activeTab === "interested") {
+      events = events.filter((event) => event.isInterested);
+    } else if (activeTab === "notinterested") {
+      events = events.filter((event) => !event.isInterested);
+    }
+
+    return events;
+  }, [allEvents, filterCriteria, activeTab]);
+
+  const maxPage = Math.ceil(filteredEvents.length / 10);
 
   const selectedEvents = useMemo(() => {
     const startIndex = (page - 1) * 10;
@@ -46,9 +59,31 @@ export default function EventsPage() {
     fetchAllEvents();
   }, [setAllEvents, setLoading]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [activeTab]);
+
   return (
-    <div className="flex flex-row h-screen w-full bg-gradient-to-b from-[#0B0C10] to-[#1F2833] overflow-auto">
-      <div className="flex flex-col w-4/5 h-full items-center mt-12">
+    <div className="flex flex-col md:flex-row h-screen w-full bg-gradient-to-b from-[#0B0C10] to-[#1F2833] overflow-auto">
+      <div className="flex flex-col w-full md:w-4/5 h-full items-center mt-6 md:mt-12 px-4">
+        {/* Tabs */}
+        <div className="flex flex-wrap justify-center md:flex-row space-x-2 md:space-x-4 mb-4 md:mb-6">
+          {["All", "Interested", "Not Interested"].map((tab) => (
+            <button
+              key={tab}
+              className={`px-4 md:px-6 py-2 rounded-lg text-white font-semibold transition-all duration-300 ease-in-out ${
+                activeTab === tab.toLowerCase().replace(/\s+/g, "")
+                  ? "bg-[#66FCF1] text-black scale-105 shadow-md"
+                  : "bg-[#1F2833] hover:bg-[#45A29E] hover:scale-105 hover:shadow-lg"
+              }`}
+              onClick={() => setActiveTab(tab.toLowerCase().replace(/\s+/g, ""))}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Event Cards */}
         <div className="flex flex-col w-full h-5/6 items-center overflow-y-auto">
           {isLoading ? (
             <div className="text-white">Loading...</div>
@@ -69,39 +104,52 @@ export default function EventsPage() {
             ))
           )}
         </div>
-        <div className="flex flex-row items-center justify-around w-1/3 h-20 text-white">
-          {/* Prev Button */}
+
+        {/* Pagination */}
+        <div className="flex flex-row items-center justify-between w-full md:w-1/3 h-20 text-white mt-4">
           <button
             onClick={() => page > 1 && setPage(page - 1)}
-            className="text-lg font-bold h-12 px-8 bg-gradient-to-br from-[#66FCF1] to-[#45A29E] text-black rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+            className="text-sm md:text-lg font-bold h-10 md:h-12 px-4 md:px-8 bg-gradient-to-br from-[#66FCF1] to-[#45A29E] text-black rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
           >
             Prev
           </button>
-
-          <div className="text-white text-xl font-semibold">{page}</div>
-
-          {/* Next Button */}
+          <div className="text-white text-base md:text-xl font-semibold">{page}</div>
           <button
             onClick={() => page < maxPage && setPage(page + 1)}
-            className="text-lg font-bold h-12 px-8 bg-gradient-to-br from-[#66FCF1] to-[#45A29E] text-black rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+            className="text-sm md:text-lg font-bold h-10 md:h-12 px-4 md:px-8 bg-gradient-to-br from-[#66FCF1] to-[#45A29E] text-black rounded-full shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
           >
             Next
           </button>
         </div>
       </div>
-      <div className="flex flex-col w-1/5 items-center mt-8">
+
+      {/* Sidebar / Filter Box */}
+      <div className="w-full md:w-1/5 flex flex-col items-center mt-4 md:mt-8">
+        {/* Toggle Button for Mobile */}
         <button
-          className="text-xl font-bold  bg-gradient-to-br from-[#66FCF1] to-[#45A29E] text-black w-36 rounded-3xl mb-8 mt-2 hover:scale-105 transition-all"
+          className="text-lg font-bold bg-gradient-to-br from-[#66FCF1] to-[#45A29E] text-black w-36 rounded-3xl mb-4 md:mb-8 hover:scale-105 transition-all md:hidden"
+          onClick={() => setShowFilters(!showFilters)}
+        >
+          {showFilters ? "Hide Filters" : "Show Filters"}
+        </button>
+
+        {/* FilterBox */}
+        {(showFilters || !showFilters) && (
+          <FilterBox
+            onFilterChange={(filters) => {
+              setFilterCriteria(filters);
+              setPage(1);
+            }}
+          />
+        )}
+
+        {/* Add Event Button */}
+        <button
+          className="hidden md:block text-lg font-bold bg-gradient-to-br from-[#66FCF1] to-[#45A29E] text-black w-36 rounded-3xl mb-8 hover:scale-105 transition-all"
           onClick={() => router.push("/events/add-event")}
         >
           Add Event
         </button>
-        <FilterBox
-          onFilterChange={(filters) => {
-            setFilterCriteria(filters);
-            setPage(1);
-          }}
-        />
       </div>
     </div>
   );
