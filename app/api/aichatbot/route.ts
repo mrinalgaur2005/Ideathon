@@ -34,7 +34,7 @@ const classifyQuery = (query: string): string => {
   const categories = {
     marks: ['marks', 'exam', 'quiz', 'midsem', 'endsem', 'practical', 'score', 'result', 'grade'],
     events: ['event', 'club', 'workshop', 'fest', 'competition', 'seminar', 'meetup'],
-    general: ['information', 'college', 'timing', 'library', 'administration', 'contact', 'schedule']
+    general: ['information', 'college', 'timing', 'library', 'administration', 'contact', 'schedule', 'chat', 'help', 'bot', 'assistant', 'chatbot']
   };
 
   for (const [category, keywords] of Object.entries(categories)) {
