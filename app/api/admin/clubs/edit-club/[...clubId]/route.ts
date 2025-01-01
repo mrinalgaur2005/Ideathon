@@ -3,7 +3,7 @@ import dbConnect from "../../../../../../lib/connectDb";
 import {getServerSession, User} from "next-auth";
 import {authOptions} from "../../../../(auth)/auth/[...nextauth]/options";
 import mongoose from "mongoose";
-import {ClubModel} from "../../../../../../model/User";
+import {ClubModel, StudentModel} from "../../../../../../model/User";
 
 export async function PATCH(req: NextRequest,     { params }: { params: { clubId: string[] } }) {
   try {
@@ -52,18 +52,126 @@ export async function PATCH(req: NextRequest,     { params }: { params: { clubId
 
     const clubObjectId = new mongoose.Types.ObjectId(clubId[0])
 
-    const updatedClub = await ClubModel.findByIdAndUpdate(clubObjectId, {clubName, clubLogo, clubIdSecs, clubMembers, clubEvents});
+    const club = await ClubModel.findById(clubObjectId);
 
-    if (!updatedClub) {
+    if (!club) {
       return NextResponse.json(
         {error: 'Failed to update clubs'},
         {status: 500}
       )
     }
 
+    const members = await StudentModel.aggregate([
+      {
+        $match: {
+          $or: [
+            {
+              student_id: {
+                $in: clubMembers,
+              }
+            },
+            {
+              student_id: {
+                $in: club.clubMembers,
+              }
+            }
+          ]
+        }
+      },
+      {
+        $set: {
+          clubsPartOf: {
+            $cond: {
+              if : { $in: ["$student_id", clubMembers] },
+              then: {
+                cond: {
+                  if: { $in: [club._id, "$clubsPartOf"] },
+                  then: "$clubsPartOf",
+                  else: { $concatArrays: ["clubsPartOf", [club._id]] },
+                }
+              },
+              else: {
+                $filter: {
+                  input: "$clubsPartOf",
+                  as: "club",
+                  cond: {
+                    $ne: ["$$club", club._id]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ])
 
+    if (!members) {
+      return NextResponse.json(
+        {error: "failed to update members"},
+        {status: 500}
+      )
+    }
 
-    return NextResponse.json(updatedClub, {status: 200});
+    const secys = await StudentModel.aggregate([
+      {
+        $match: {
+          $or: [
+            {
+              student_id: {
+                $in: clubIdSecs,
+              }
+            },
+            {
+              student_id: {
+                $in: club.clubIdSecs,
+              }
+            }
+          ]
+        }
+      },
+      {
+        $set: {
+          clubsHeadOf: {
+            $cond: {
+              if : { $in: ["$student_id", clubIdSecs] },
+              then: {
+                cond: {
+                  if: { $in: [club._id, "$clubsHeadOf"] },
+                  then: "$clubsHeadOf",
+                  else: { $concatArrays: ["$clubsHeadOf", [club._id]] },
+                }
+              },
+              else: {
+                $filter: {
+                  input: "$clubsHeadOf",
+                  as: "club",
+                  cond: {
+                    $ne: ["$$club", club._id]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ])
+
+    if (!secys) {
+      return NextResponse.json(
+        {error: "failed to update secys"},
+        {status: 500}
+      )
+    }
+
+    club.clubName = clubName;
+    club.clubLogo = clubLogo;
+    club.clubMembers = clubMembers;
+    club.clubIdSecs = clubIdSecs;
+    club.clubEvents = clubEvents;
+
+    await club.save();
+
+    return NextResponse.json(club, {status: 200});
 
   } catch (error) {
     console.error(error);

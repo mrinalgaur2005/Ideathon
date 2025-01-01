@@ -59,9 +59,9 @@ export async function POST(req: NextRequest) {
         $set: {
           clubsHeadOf: {
             $cond: {
-              if: { $in: [club._id, "$clubsHeadOf"] }, // Check if the club ID is already in the array
-              then: "$clubsHeadOf", // If already present, keep the array as is
-              else: { $concatArrays: ["$clubsHeadOf", [club._id]] }, // Add the club ID if not present
+              if: { $in: [club._id, "$clubsHeadOf"] },
+              then: "$clubsHeadOf",
+              else: { $concatArrays: ["$clubsHeadOf", [club._id]] },
             },
           }
         }
@@ -87,9 +87,9 @@ export async function POST(req: NextRequest) {
         $set: {
           clubsPartOf: {
             $cond: {
-              if: { $in: [club._id, "$clubsPartOf"] }, // Check if the club ID is already in the array
-              then: "$clubsPartOf", // If already present, keep the array as is
-              else: { $concatArrays: ["clubsPartOf", [club._id]] }, // Add the club ID if not present
+              if: { $in: [club._id, "$clubsPartOf"] },
+              then: "$clubsPartOf",
+              else: { $concatArrays: ["clubsPartOf", [club._id]] },
             },
           }
         }
