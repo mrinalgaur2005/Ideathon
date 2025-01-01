@@ -52,9 +52,9 @@ const FloatingChatbot = () => {
       {!isChatOpen && (
         <button
           onClick={() => setIsChatOpen(true)}
-          className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-transform"
+          className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-transform"
         >
-          <span className="text-white text-4xl font-bold">💬</span>
+          <span className="text-white text-3xl font-bold">💬</span>
         </button>
       )}
 
