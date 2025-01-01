@@ -8,7 +8,7 @@ import DotsLoader from "../../../components/loading/dotLoader";
 export default function AddFriendsPage() {
   const [id, setId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { addFriends, setAddFriends, setLoading } = useModel();
+  const {addFriends, setAddFriends, setLoading} = useModel();
   const router = useRouter();
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function AddFriendsPage() {
   }, [setAddFriends, setLoading, router]);
 
   if (!addFriends) {
-    return <DotsLoader />;
+    return <DotsLoader/>;
   }
 
   async function addFriend(to: string) {

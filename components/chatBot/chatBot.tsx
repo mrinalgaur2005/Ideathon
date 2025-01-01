@@ -52,7 +52,7 @@ const FloatingChatbot = () => {
       {!isChatOpen && (
         <button
           onClick={() => setIsChatOpen(true)}
-          className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-xl flex items-center justify-center hover:scale-110 transition-transform"
+          className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full shadow-xl flex items-center justify-center transition-transform hover:scale-110 transform duration-200 ease-in-out"
         >
           <span className="text-white text-3xl font-bold">💬</span>
         </button>
@@ -60,13 +60,15 @@ const FloatingChatbot = () => {
 
       {/* Expanded Chatbox */}
       {isChatOpen && (
-        <div className="w-[95%] sm:w-[600px] h-[80vh] bg-gray-800 rounded-2xl shadow-2xl flex flex-col">
+        <div
+          className="w-full sm:w-[95%] lg:w-[600px] h-[80vh] bg-gray-800 rounded-2xl shadow-xl flex flex-col transform duration-300 ease-in-out">
           {/* Header */}
-          <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-6 flex justify-between items-center rounded-t-2xl">
+          <div
+            className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-6 flex justify-between items-center rounded-t-2xl">
             <span className="text-2xl font-bold">College Connect Chat</span>
             <button
               onClick={() => setIsChatOpen(false)}
-              className="text-white text-3xl font-bold hover:opacity-80"
+              className="text-white text-3xl font-bold hover:opacity-80 transition-opacity"
             >
               ✖
             </button>
@@ -78,17 +80,17 @@ const FloatingChatbot = () => {
               <div key={index}>
                 {/* User Message */}
                 <div className="flex justify-end mb-4">
-                  <div className="bg-blue-600 text-white p-5 rounded-lg max-w-[85%] sm:max-w-[80%] lg:max-w-[75%] shadow-md text-lg">
+                  <div
+                    className="bg-blue-600 text-white p-5 rounded-lg max-w-[85%] sm:max-w-[80%] lg:max-w-[75%] shadow-md text-lg transform transition-transform duration-300 ease-in-out">
                     {message.userInput}
                   </div>
                 </div>
                 {/* Bot Response */}
                 <div className="flex justify-start mb-4">
                   <div
-                    className="bg-gray-700 text-gray-300 p-5 rounded-lg max-w-[85%] sm:max-w-[80%] lg:max-w-[75%] shadow-md text-lg whitespace-pre-wrap"
-                    dangerouslySetInnerHTML={{ __html: message.response }}
-                  >
-                  </div>
+                    className="bg-gray-700 text-gray-300 p-5 rounded-lg max-w-[85%] sm:max-w-[80%] lg:max-w-[75%] shadow-md text-lg whitespace-pre-wrap transform transition-transform duration-300 ease-in-out"
+                    dangerouslySetInnerHTML={{__html: message.response}}
+                  />
                 </div>
               </div>
             ))}
@@ -106,7 +108,7 @@ const FloatingChatbot = () => {
             <button
               disabled={isDisabled}
               onClick={handleSendMessage}
-              className="bg-gradient-to-r from-purple-500 to-blue-600 text-white px-6 py-4 rounded-xl text-lg font-bold hover:opacity-90 transition-opacity"
+              className="bg-gradient-to-r from-purple-500 to-blue-600 text-white px-6 py-4 rounded-xl text-lg font-bold hover:opacity-90 transition-opacity duration-300"
             >
               Send
             </button>
