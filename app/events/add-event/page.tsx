@@ -2,10 +2,22 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { CldUploadButton } from "next-cloudinary";
 
-export default function AddEventPage() {
+interface Event {
+  eventHostedBy: string;
+  tags: string[];
+  heading: string;
+  description: string;
+  poster: string;
+  eventAttachments: string[];
+  eventVenue: string;
+  eventTime: string;
+}
+
+export default function UpdateEventPage({ eventId }: { eventId: string }) {
+  const [eventDetails, setEventDetails] = useState<Event | null>(null);
   const [eventHostedBy, setEventHostedBy] = useState<string>("");
   const [tag1, setTag1] = useState<string>("");
   const [tag2, setTag2] = useState<string>("");
@@ -13,11 +25,13 @@ export default function AddEventPage() {
   const [heading, setHeading] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [poster, setPoster] = useState<string>("");
-  const [eventAttachments, seteventAttachments] = useState<string[]>([]);
-  const [clubs, setClubs] = useState<{clubName: string}[]>([]);
+  const [eventAttachments, setEventAttachments] = useState<string[]>([]);
   const [eventVenue, setEventVenue] = useState<string>("");
   const [date, setDate] = useState<string>('');
   const [time, setTime] = useState<string>('');
+  const [clubs, setClubs] = useState<{clubName: string}[]>([]);
+
+  const router = useRouter();
 
   function handlePosterUpload(result: any) {
     if (result.event === "success") {
@@ -27,14 +41,15 @@ export default function AddEventPage() {
 
   function handleEventAttachmentsUpload(result: any) {
     if (result.event === "success") {
-      seteventAttachments((prev) => [...prev, result.info.secure_url]);
+      setEventAttachments((prev) => [...prev, result.info.secure_url]);
     }
   }
 
-  async function handleAddEvent() {
+  async function handleUpdateEvent() {
     if (!poster || !date || !time || !eventHostedBy || !description || !eventVenue) {
       return;
     }
+
     const tags = [];
     if (tag1 != "") tags.push(tag1);
     if (tag2 != "") tags.push(tag2);
@@ -42,7 +57,7 @@ export default function AddEventPage() {
 
     const eventTime = new Date(`${date}T${time}`);
 
-    const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/add-event`, {
+    const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/update/${eventId}`, {
       eventHostedBy,
       poster,
       heading,
@@ -54,30 +69,47 @@ export default function AddEventPage() {
     });
 
     if (res.status == 200) {
-      redirect(`/events/${res.data._id}`);
+      router.push(`/events/${res.data._id}`);
     }
   }
 
-  
+  async function fetchEventDetails() {
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${eventId}`);
+    if (res.status === 200) {
+      setEventDetails(res.data);
+      setEventHostedBy(res.data.eventHostedBy);
+      setTag1(res.data.tags[0] || "");
+      setTag2(res.data.tags[1] || "");
+      setTag3(res.data.tags[2] || "");
+      setHeading(res.data.heading);
+      setDescription(res.data.description);
+      setPoster(res.data.poster);
+      setEventAttachments(res.data.eventAttachments);
+      setEventVenue(res.data.eventVenue);
+      setDate(res.data.eventTime.split('T')[0]);
+      setTime(res.data.eventTime.split('T')[1]);
+    }
+  }
 
   async function fetchClubs() {
     await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/clubs/head`)
       .then((response) => {
         if (response.status == 403) {
-          redirect('/');
+          router.push('/');
         }
         setClubs(response.data);
       }).catch((err) => {
         console.log(err);
-        redirect('/');
+        router.push('/');
       });
   }
 
   useEffect(() => {
+    fetchEventDetails();
     fetchClubs();
   }, []);
 
-  if (clubs.length === 0) {
+  if (!eventDetails || clubs.length === 0) {
     return <div>Loading...</div>;
   }
 
@@ -86,7 +118,7 @@ export default function AddEventPage() {
       <div className="flex flex-col w-full h-screen items-center  justify-center">
         <div className="flex flex-col w-2/5 h-4/5 justify-evenly items-center border-4 border-solid rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50 text-lg bg-gradient-to-br from-gray-200/60 to-gray-50/60">
           <div className="text-3xl font-bold">
-            Add Event
+            Update Event
           </div>
           <div className="flex flex-row justify-between items-center w-4/5 h-1/4">
             <div className="flex flex-col items-center w-2/5 h-5/6 bg-gradient-to-br from-cyan-700 to-cyan-500 border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
@@ -217,10 +249,10 @@ export default function AddEventPage() {
           </div>
           <button
             type="button"
-            onClick={handleAddEvent}
+            onClick={handleUpdateEvent}
             className="text-xl font-bold bg-gradient-to-br from-cyan-600 to-cyan-400 text-white w-36 rounded-3xl h-12"
           >
-            Add Event
+            Update Event
           </button>
         </div>
       </div>

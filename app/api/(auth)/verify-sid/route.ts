@@ -90,12 +90,15 @@ export async function POST(request: NextRequest) {
           );
         }
       } else {
+        user.sid_verification = false;
+        await user.save();
         return NextResponse.json(
           { success: false, message: 'Failed to extract text from image' },
           { status: 500 }
         );
       }
     } else {
+      
       return NextResponse.json(
         { success: false, message: 'SID verification already completed' },
         { status: 400 }
