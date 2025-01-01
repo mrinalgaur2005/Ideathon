@@ -5,7 +5,7 @@ import {getServerSession, User} from "next-auth";
 import {authOptions} from "../../../../(auth)/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
 import mongoose from "mongoose";
-import {FriendRequestModel, Student, StudentModel} from "../../../../../../model/User";
+import {FriendRequestModel, StudentModel} from "../../../../../../model/User";
 
 export async function PATCH(req: Request, { params } : { params : { studentId: string[] } } )  {
   try {
@@ -37,18 +37,9 @@ export async function PATCH(req: Request, { params } : { params : { studentId: s
     const to = new mongoose.Types.ObjectId(studentId[0]);
     const from = new mongoose.Types.ObjectId(studentId[1]);
 
-    const sentTo: Student|null = await StudentModel.findById(to);
-    const sentFrom: Student|null = await StudentModel.findById(from);
+    const deleteRequest = await FriendRequestModel.deleteOne({from, to});
 
-    if (!sentFrom || !sentTo) {
-      return NextResponse.json(
-        {error: "student not found"},
-        {status: 404}
-      )
-    }
-
-    const deleteRequest = await FriendRequestModel.deleteOne({from, to})
-
+    console.log("here")
     if (!deleteRequest) {
       return NextResponse.json(
         {error: "failed to delete friend request"},
@@ -56,11 +47,24 @@ export async function PATCH(req: Request, { params } : { params : { studentId: s
       )
     }
 
-    sentTo.friends = [...sentTo.friends, sentFrom._id as mongoose.Schema.Types.ObjectId];
-    sentFrom.friends = [...sentFrom.friends, sentTo._id as mongoose.Schema.Types.ObjectId];
+    console.log("here2")
+    const student1Update = await StudentModel.updateOne(
+      { _id: to },
+      { $addToSet: { friends: from } } // Adds `from` to `friends` array if it doesn't already exist
+    );
 
-    await sentTo.save();
-    await sentFrom.save();
+    const student2Update = await StudentModel.updateOne(
+      { _id: from },
+      { $addToSet: { friends: to } } // Adds `to` to `friends` array if it doesn't already exist
+    );
+
+// Check if the updates were successful
+    if (!student1Update.modifiedCount || !student2Update.modifiedCount) {
+      return NextResponse.json(
+        { error: "Failed to update friends for one or both students" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(
       {status: 200},

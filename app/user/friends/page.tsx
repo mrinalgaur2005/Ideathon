@@ -37,7 +37,7 @@ export default function FriendsPage() {
   async function removeFriend (to: string, from: string) {
     setLoading(true);
     try {
-      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/friends/remove-friends/${to}/${from}`)
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/friends/remove-friend/${to}/${from}`)
 
       if (res.status === 200 && friends) {
         setFriends({

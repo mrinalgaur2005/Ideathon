@@ -87,7 +87,7 @@ export async function PATCH(req: NextRequest,     { params }: { params: { clubId
                 cond: {
                   if: { $in: [club._id, "$clubsPartOf"] },
                   then: "$clubsPartOf",
-                  else: { $concatArrays: ["clubsPartOf", [club._id]] },
+                  else: { $concatArrays: ["$clubsPartOf", [club._id]] },
                 }
               },
               else: {

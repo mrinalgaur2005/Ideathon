@@ -55,7 +55,7 @@ export async function GET() {
       }
     ])
 
-    if (!requests || requests.length === 0) {
+    if (!requests) {
       return NextResponse.json({ error: 'Not Found' }, {status: 404});
     }
 

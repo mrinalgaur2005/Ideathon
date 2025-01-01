@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
             $cond: {
               if: { $in: [club._id, "$clubsPartOf"] },
               then: "$clubsPartOf",
-              else: { $concatArrays: ["clubsPartOf", [club._id]] },
+              else: { $concatArrays: ["$clubsPartOf", [club._id]] },
             },
           }
         }

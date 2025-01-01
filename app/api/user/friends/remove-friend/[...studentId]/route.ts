@@ -5,7 +5,7 @@ import {getServerSession, User} from "next-auth";
 import {authOptions} from "../../../../(auth)/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
 import mongoose from "mongoose";
-import {FriendRequestModel, Student, StudentModel} from "../../../../../../model/User";
+import {StudentModel} from "../../../../../../model/User";
 
 export async function PATCH(req: Request, { params } : { params : { studentId: string[] } } )  {
   try {
@@ -37,21 +37,22 @@ export async function PATCH(req: Request, { params } : { params : { studentId: s
     const to = new mongoose.Types.ObjectId(studentId[0]);
     const from = new mongoose.Types.ObjectId(studentId[1]);
 
-    const sentTo: Student|null = await StudentModel.findById(to);
-    const sentFrom: Student|null = await StudentModel.findById(from);
+    const student1Update = await StudentModel.updateOne(
+      { _id: to },
+      { $pull: { friends: from } }
+    );
 
-    if (!sentFrom || !sentTo) {
+    const student2Update = await StudentModel.updateOne(
+      { _id: from },
+      { $pull: { friends: to } }
+    );
+
+    if (!student1Update.modifiedCount || !student2Update.modifiedCount) {
       return NextResponse.json(
-        {error: "student not found"},
-        {status: 404}
-      )
+        { error: "Failed to remove friend for one or both students" },
+        { status: 500 }
+      );
     }
-
-    sentTo.friends = sentTo.friends.filter((id) => id.toString() !== from.toString());
-    sentFrom.friends = sentFrom.friends.filter((id) => id.toString() !== to.toString());
-
-    await sentTo.save();
-    await sentFrom.save();
 
     return NextResponse.json(
       {status: 200},

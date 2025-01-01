@@ -92,7 +92,6 @@ export default function FriendRequests() {
                 <div className="flex items-center space-x-4">
                   <img
                     src={request.from.profile}
-                    alt="Profile"
                     className="w-16 h-16 rounded-full object-cover border-2 border-blue-500"
                   />
                   <div>
