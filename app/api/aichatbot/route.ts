@@ -32,9 +32,9 @@ const embeddings = new GoogleGenerativeAIEmbeddings({
 const classifyQuery = (query: string): string => {
   const queryLower = query.toLowerCase();
   const categories = {
-    marks: ['marks', 'exam', 'quiz', 'midsem', 'endsem', 'practical', 'score', 'result', 'grade'],
-    events: ['event', 'club', 'workshop', 'fest', 'competition', 'seminar', 'meetup'],
-    general: ['information', 'college', 'timing', 'library', 'administration', 'contact', 'schedule']
+    marks: ['marks', 'exam', 'quiz', 'midsem', 'endsem', 'practical', 'score', 'result', 'grade', 'percentage', 'subject', 'course', 'gradebook', 'gpa', 'cgpa'],
+    events: ['event', 'club', 'workshop', 'fest', 'competition', 'seminar', 'meetup', 'activity', 'schedule', 'venue', 'date', 'time', 'host', 'organizer', 'participation', 'registration'],
+    general: ['information', 'college', 'timing', 'library', 'administration', 'contact', 'schedule', 'chat', 'help', 'bot', 'assistant', 'chatbot']
   };
 
   for (const [category, keywords] of Object.entries(categories)) {
@@ -238,6 +238,14 @@ const getBotResponse = async (
   }
 };
 
+const processUserInput = (userInput: string, wordToReplace: string, replacementWord: string) => {
+  // Use a regular expression to match the word with word boundaries
+  const regex = new RegExp(`\\b${wordToReplace}\\b`, 'gi');
+  // Replace the word if found
+  const modifiedInput = userInput.replace(regex, replacementWord);
+  return modifiedInput;
+};
+
 export async function POST(request: Request) {
   try {
     await dbConnect();
@@ -249,12 +257,16 @@ export async function POST(request: Request) {
 
     const userId = new mongoose.Types.ObjectId(session.user._id);
     const student = await StudentModel.findOne({ user_id: userId });
+    const Username = student?.name;
 
     if (!student) {
       return NextResponse.json({ error: 'Student not found' }, { status: 404 });
     }
 
-    const { userInput } = await request.json();
+    let { userInput } = await request.json();
+    const updatedInput = processUserInput(userInput, 'my', Username?.toLowerCase() || 'student'); 
+    userInput = updatedInput;
+
     const category = classifyQuery(userInput);
 
     const categoryConfig = {
