@@ -122,3 +122,83 @@ export async function GET(
         );
     }
 }
+
+export async function DELETE(
+    req: Request,
+    { params }: { params: { eventId: string[] } }
+  ) {
+    try {
+      await dbConnect();
+  
+      const session = await getServerSession(authOptions);
+      const user: User = session?.user as User;
+  
+      if (!session || !user) {
+        return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });
+      }
+  
+      const { eventId } = params;
+  
+      if (!eventId.length || !mongoose.Types.ObjectId.isValid(eventId[0])) {
+        return NextResponse.json({ error: 'Invalid or missing Event ID' }, { status: 400 });
+      }
+  
+      const eventObjectId = new mongoose.Types.ObjectId(eventId[0]);
+  
+      const deletedEvent = await EventModel.findByIdAndDelete(eventObjectId);
+  
+      if (!deletedEvent) {
+        return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+      }
+  
+      return NextResponse.json({ success: true, message: 'Event deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting event:', error);
+      return NextResponse.json({ success: false, message: 'Server error', error }, { status: 500 });
+    }
+  }
+
+  export async function PATCH(
+    req: Request,
+    { params }: { params: { eventId: string[] } }
+  ) {
+    try {
+      await dbConnect();
+  
+      const session = await getServerSession(authOptions);
+      const user: User = session?.user as User;
+  
+      if (!session || !user) {
+        return NextResponse.json({ error: 'Unauthorized. User must be logged in.' }, { status: 401 });
+      }
+  
+      const { eventId } = params;
+  
+      if (!eventId.length || !mongoose.Types.ObjectId.isValid(eventId[0])) {
+        return NextResponse.json({ error: 'Invalid or missing Event ID' }, { status: 400 });
+      }
+  
+      const eventObjectId = new mongoose.Types.ObjectId(eventId[0]);
+  
+      const body = await req.json();
+  
+      if (!body || Object.keys(body).length === 0) {
+        return NextResponse.json({ error: 'No data provided for update' }, { status: 400 });
+      }
+  
+      const updatedEvent = await EventModel.findByIdAndUpdate(
+        eventObjectId,
+        { $set: body },
+        { new: true, runValidators: true }
+      );
+  
+      if (!updatedEvent) {
+        return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+      }
+  
+      return NextResponse.json({ success: true, message: 'Event updated successfully', data: updatedEvent });
+    } catch (error) {
+      console.error('Error updating event:', error);
+      return NextResponse.json({ success: false, message: 'Server error', error }, { status: 500 });
+    }
+  }

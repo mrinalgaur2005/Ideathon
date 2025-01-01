@@ -38,6 +38,7 @@ interface SingleClub {
     clubLogo: string;
     clubIdSecs: {
         profile: string;
+        user_id:string;
         student_id: string;
         name: string;
     }[];

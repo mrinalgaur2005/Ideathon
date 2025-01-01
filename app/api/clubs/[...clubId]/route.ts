@@ -56,6 +56,7 @@ export async function GET(
           pipeline: [
             {
               $project: {
+                user_id:1,
                 profile: 1,
                 student_id: 1,
                 name: 1

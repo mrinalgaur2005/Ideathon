@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
 import { CldUploadButton } from 'next-cloudinary';
+import { signOut } from 'next-auth/react';
 
 const SIDVerificationPage = () => {
   const { username } = useParams();
@@ -35,7 +36,8 @@ const SIDVerificationPage = () => {
 
       if (response.data.success) {
         setMessage(response.data.message);
-        router.replace('/');
+        await signOut();
+        router.replace('/auth/sign-in');
       } else {
         setMessage(response.data.message);
       }
