@@ -1,43 +1,64 @@
-"use client"
+"use client";
 
-import {usePathname, useRouter} from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-export default function Layout({ children }: Readonly<{children: React.ReactNode;}>) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const currentPath = usePathname()
+  const currentPath = usePathname();
   const isActive = (path: string) => currentPath === path;
 
   return (
     <>
-      <div className="flex flex-col items-center w-full h-32 bg-gray-800">
-        <div className="flex flex-row w-4/5 h-full justify-around items-center ">
+      {/* Navigation Bar */}
+      <div className="w-full bg-gray-950 py-4 shadow-md">
+        <div className="flex justify-around items-center max-w-5xl mx-auto">
           <button
-            className={`h-14 w-48 rounded-full text-xl font-bold ${isActive("/user/friends") ? "bg-gray-950 text-white" : "bg-white text-gray-950"}`}
-            onClick={()=> router.push("/user/friends")}
+            className={`px-6 py-3 text-lg font-bold rounded-full transition-all duration-300 ${
+              isActive("/user/friends")
+                ? "bg-blue-700 text-white shadow-lg"
+                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+            }`}
+            onClick={() => router.push("/user/friends")}
           >
             Friends
           </button>
           <button
-            className={`h-14 w-48 rounded-full text-xl font-bold ${isActive("/user/add-friends") ? "bg-gray-950 text-white" : "bg-white text-gray-950"}`}
-            onClick={()=> router.push("/user/add-friends")}
+            className={`px-6 py-3 text-lg font-bold rounded-full transition-all duration-300 ${
+              isActive("/user/add-friends")
+                ? "bg-blue-700 text-white shadow-lg"
+                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+            }`}
+            onClick={() => router.push("/user/add-friends")}
           >
             Add Friends
           </button>
           <button
-            className={`h-14 w-48 rounded-full text-xl font-bold ${isActive("/user/friend-requests") ? "bg-gray-950 text-white" : "bg-white text-gray-950"}`}
-            onClick={()=> router.push("/user/friend-requests")}
+            className={`px-6 py-3 text-lg font-bold rounded-full transition-all duration-300 ${
+              isActive("/user/friend-requests")
+                ? "bg-blue-700 text-white shadow-lg"
+                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+            }`}
+            onClick={() => router.push("/user/friend-requests")}
           >
             Friend Requests
           </button>
           <button
-            className={`h-14 w-48 rounded-full text-xl font-bold ${isActive("/user/requests-sent") ? "bg-gray-950 text-white" : "bg-white text-gray-950"}`}
-            onClick={()=> router.push("/user/requests-sent")}
+            className={`px-6 py-3 text-lg font-bold rounded-full transition-all duration-300 ${
+              isActive("/user/requests-sent")
+                ? "bg-blue-700 text-white shadow-lg"
+                : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+            }`}
+            onClick={() => router.push("/user/requests-sent")}
           >
             Requests Sent
           </button>
         </div>
       </div>
-      {children}
+
+      {/* Content */}
+      <main className="bg-gradient-to-b from-gray-900 via-gray-800 to-black min-h-screen">
+        {children}
+      </main>
     </>
-  )
+  );
 }
