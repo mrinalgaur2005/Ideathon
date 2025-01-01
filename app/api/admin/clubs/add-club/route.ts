@@ -47,60 +47,28 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const secys = await StudentModel.aggregate([
-      {
-        $match: {
-          student_id: {
-            $in: clubIdSecs
-          }
-        }
-      },
-      {
-        $set: {
-          clubsHeadOf: {
-            $cond: {
-              if: { $in: [club._id, "$clubsHeadOf"] },
-              then: "$clubsHeadOf",
-              else: { $concatArrays: ["$clubsHeadOf", [club._id]] },
-            },
-          }
-        }
-      }
-    ])
+    const secysUpdate = await StudentModel.updateMany(
+      { student_id: { $in: clubIdSecs } },
+      { $addToSet: { clubsHeadOf: club._id } }
+    );
 
-    if (!secys) {
+    if (!secysUpdate.modifiedCount) {
       return NextResponse.json(
-        { error: 'Failed to add secy' },
-        {status: 500}
-      )
+        { error: "Failed to add club to secys" },
+        { status: 500 }
+      );
     }
 
-    const members = await StudentModel.aggregate([
-      {
-        $match: {
-          student_id: {
-            $in: clubMembers,
-          }
-        }
-      },
-      {
-        $set: {
-          clubsPartOf: {
-            $cond: {
-              if: { $in: [club._id, "$clubsPartOf"] },
-              then: "$clubsPartOf",
-              else: { $concatArrays: ["$clubsPartOf", [club._id]] },
-            },
-          }
-        }
-      }
-    ])
+    const membersUpdate = await StudentModel.updateMany(
+      { student_id: { $in: clubMembers } },
+      { $addToSet: { clubsPartOf: club._id } }
+    );
 
-    if (!members) {
+    if (!membersUpdate.modifiedCount) {
       return NextResponse.json(
-        {error: "failed to add club in members"},
-        {status: 500}
-      )
+        { error: "Failed to add club to members" },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(club, {status: 200});

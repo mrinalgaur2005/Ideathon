@@ -31,29 +31,16 @@ export async function PATCH(req: Request) {
       )
     }
 
-    const students = await StudentModel.aggregate([
-      {
-        $match: {
-          student_id: { $regex: `^${student_id}` },
-        }
-      },
-      {
-        $set: {
-          enrolledSubjectId: {
-            $concatArrays: [
-              "$enrolledSubjectId",
-              [subject_id]
-            ]
-          }
-        }
-      }
-    ])
+    const updateResult = await StudentModel.updateMany(
+      { student_id: { $regex: `^${student_id}` } },
+      { $addToSet: { enrolledSubjectId: subject_id } }
+    );
 
-    if (!students) {
+    if (!updateResult.modifiedCount) {
       return NextResponse.json(
-        {error: "failed to update students"},
-        {status: 500}
-      )
+        { error: "No students updated" },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json({status: 200});

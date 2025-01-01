@@ -50,15 +50,14 @@ export async function PATCH(req: Request, { params } : { params : { studentId: s
     console.log("here2")
     const student1Update = await StudentModel.updateOne(
       { _id: to },
-      { $addToSet: { friends: from } } // Adds `from` to `friends` array if it doesn't already exist
+      { $addToSet: { friends: from } }
     );
 
     const student2Update = await StudentModel.updateOne(
       { _id: from },
-      { $addToSet: { friends: to } } // Adds `to` to `friends` array if it doesn't already exist
+      { $addToSet: { friends: to } }
     );
 
-// Check if the updates were successful
     if (!student1Update.modifiedCount || !student2Update.modifiedCount) {
       return NextResponse.json(
         { error: "Failed to update friends for one or both students" },

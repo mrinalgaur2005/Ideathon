@@ -61,107 +61,40 @@ export async function PATCH(req: NextRequest,     { params }: { params: { clubId
       )
     }
 
-    const members = await StudentModel.aggregate([
-      {
-        $match: {
-          $or: [
-            {
-              student_id: {
-                $in: clubMembers,
-              }
-            },
-            {
-              student_id: {
-                $in: club.clubMembers,
-              }
-            }
-          ]
-        }
-      },
-      {
-        $set: {
-          clubsPartOf: {
-            $cond: {
-              if : { $in: ["$student_id", clubMembers] },
-              then: {
-                cond: {
-                  if: { $in: [club._id, "$clubsPartOf"] },
-                  then: "$clubsPartOf",
-                  else: { $concatArrays: ["$clubsPartOf", [club._id]] },
-                }
-              },
-              else: {
-                $filter: {
-                  input: "$clubsPartOf",
-                  as: "club",
-                  cond: {
-                    $ne: ["$$club", club._id]
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    ])
+    const removeMember = await StudentModel.updateMany(
+      { student_id: { $in: club.clubMembers } },
+      { $pull: { clubsPartOf: club._id } }
+    );
 
-    if (!members) {
+    const addMember = await StudentModel.updateMany(
+      { student_id: { $in: clubMembers } },
+      { $addToSet: { clubsPartOf: club._id } }
+    );
+
+    if (!addMember.upsertedCount || !removeMember.upsertedCount) {
       return NextResponse.json(
-        {error: "failed to update members"},
+        {error: 'Failed to update members'},
         {status: 500}
       )
     }
 
-    const secys = await StudentModel.aggregate([
-      {
-        $match: {
-          $or: [
-            {
-              student_id: {
-                $in: clubIdSecs,
-              }
-            },
-            {
-              student_id: {
-                $in: club.clubIdSecs,
-              }
-            }
-          ]
-        }
-      },
-      {
-        $set: {
-          clubsHeadOf: {
-            $cond: {
-              if : { $in: ["$student_id", clubIdSecs] },
-              then: {
-                cond: {
-                  if: { $in: [club._id, "$clubsHeadOf"] },
-                  then: "$clubsHeadOf",
-                  else: { $concatArrays: ["$clubsHeadOf", [club._id]] },
-                }
-              },
-              else: {
-                $filter: {
-                  input: "$clubsHeadOf",
-                  as: "club",
-                  cond: {
-                    $ne: ["$$club", club._id]
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    ])
+    const removeSecy = await StudentModel.updateMany(
+      { student_id: { $in: club.clubIdSecs } },
+      { $pull: { clubsHeadOf: club._id } }
+    );
 
-    if (!secys) {
+    const addSecy = await StudentModel.updateMany(
+      { student_id: { $in: clubIdSecs } },
+      { $addToSet: { clubsHeadOf: club._id } }
+    );
+
+    if (!addSecy.upsertedCount || !removeSecy.upsertedCount) {
       return NextResponse.json(
-        {error: "failed to update secys"},
+        {error: 'Failed to update secys'},
         {status: 500}
       )
     }
+
 
     club.clubName = clubName;
     club.clubLogo = clubLogo;
