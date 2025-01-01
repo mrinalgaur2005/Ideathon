@@ -25,9 +25,9 @@ export async function PATCH(req: NextRequest,     { params }: { params: { clubId
 
     const {clubName, clubLogo, clubIdSecs, clubMembers, clubEvents} = await req.json();
 
-    if (!clubName ) {
+    if (!clubName || clubLogo || !clubIdSecs.length) {
       return NextResponse.json(
-        {error: "ClubName is required"},
+        {error: "Data is missing"},
         {status: 403}
       );
     }
@@ -60,6 +60,8 @@ export async function PATCH(req: NextRequest,     { params }: { params: { clubId
         {status: 500}
       )
     }
+
+
 
     return NextResponse.json(updatedClub, {status: 200});
 

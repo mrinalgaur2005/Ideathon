@@ -5,16 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/admin/subjects/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/admin/subjects/student/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_24_24,_4_17 PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_24_24__4_17PM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/clubs/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/subjects/students/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/subjects/students/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/subjects/teachers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/subjects/teachers/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/admin/subjects/add/[...teacherId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/subjects/teacher/add/[...teacherId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/admin/subjects/remove/[...teacherId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/subjects/teacher/remove/[...teacherId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/admin/subjects/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/subjects/teacher/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/chatBot/chatBot.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatBot/chatBot.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -162,7 +156,10 @@
       <workItem from="1735490418912" duration="13947000" />
       <workItem from="1735551425427" duration="1037000" />
       <workItem from="1735573605003" duration="15386000" />
-      <workItem from="1735630632922" duration="381000" />
+      <workItem from="1735630632922" duration="3068000" />
+      <workItem from="1735646800736" duration="2798000" />
+      <workItem from="1735662088128" duration="1184000" />
+      <workItem from="1735671274748" duration="238000" />
     </task>
     <servers />
   </component>
@@ -200,16 +197,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixup! recovered files" />
     <option name="LAST_COMMIT_MESSAGE" value="fixup! recovered files" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/model/User.ts</url>
-          <line>207</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
