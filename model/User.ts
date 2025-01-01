@@ -1,6 +1,7 @@
 import { strict } from "assert";
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { v4 as uuidv4 } from 'uuid'
+import { string } from "zod";
 
 export interface User extends Document {
     username: string;
@@ -159,7 +160,7 @@ export interface Student extends Document {
     branch: string;
     sid_verification: boolean;
     enrolledSubjectId: string[];
-    teacherSubjectMap: Record<string, mongoose.Schema.Types.ObjectId>;
+    subjectTeacherMap: Record<string, mongoose.Schema.Types.ObjectId>;
     attendanceSubjectMap: Record<number, string>;
     clubsPartOf: mongoose.Schema.Types.ObjectId[];
     interestedEvents: mongoose.Schema.Types.ObjectId[];
@@ -185,7 +186,7 @@ const StudentSchema: Schema<Student> = new Schema({
     branch: { type: String, required: true },
     sid_verification: { type: Boolean, default: false },
     enrolledSubjectId: [{ type: String }],
-    teacherSubjectMap: {
+    subjectTeacherMap: {
         type: Map,
         of: Schema.Types.ObjectId,
     },
@@ -300,23 +301,25 @@ const SubjectSchema: Schema<Subject> = new Schema({
 
 export interface Attendance extends Document {
     subjectId: string;
+    teacherAttId: mongoose.Schema.Types.ObjectId;
     totalClasses: number;
     dateStudentMap: {
         date: Date;
-        studentPresent: mongoose.Schema.Types.ObjectId[];
+        studentPresent: number;
     }[];
     code: number;
 }
 
 const AttendanceSchema: Schema<Attendance> = new Schema({
     subjectId: { type: String, required: true },
+    teacherAttId: { type: Schema.Types.ObjectId, ref: "Teacher"},
     totalClasses: { type: Number, required: true },
     dateStudentMap: [{
         date: { type: Date, required: true },
-        studentPresent: [{ type: Schema.Types.ObjectId, ref: "Student" }],
+        studentPresent: [{ type: Number }],
     }],
     code: { type: Number},
-})
+});
 
 
 
