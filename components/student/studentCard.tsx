@@ -8,18 +8,16 @@ export default function StudentCard({
   profile: string;
 }) {
   return (
-    <>
-      <div className="flex flex-row items-center justify-start mt-5 p-4 h-3/6 w-fit border-2 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50 bg-[#1F2833]">
-        <img
-          src={profile || "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg"}
-          alt="Student Profile"
-          className="w-12 h-12 border-2 rounded-full border-cyan-300 shadow-md shadow-cyan-300/50"
-        />
-        <div className="flex flex-col ml-4 text-white">
-          <div className="text-lg font-bold">{name}</div>
-          <div className="text-sm">{student_id}</div>
-        </div>
+    <div className="flex flex-row items-center justify-start mt-5 p-4 w-full max-w-sm border-2 rounded-lg border-blue-800 bg-[#1E1E1E] hover:scale-105 transition-transform duration-300 ease-in-out shadow-lg shadow-blue-800/30 sm:max-w-md md:max-w-lg lg:max-w-xl">
+      <img
+        src={profile || "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg"}
+        alt="Student Profile"
+        className="w-14 h-14 border-2 rounded-full border-blue-800 shadow-md shadow-blue-800/50"
+      />
+      <div className="flex flex-col ml-4 text-gray-300 w-full">
+        <div className="text-lg font-semibold truncate">{name}</div> {/* Ensures name doesn't overflow */}
+        <div className="text-sm truncate">{student_id}</div> {/* Ensures student ID doesn't overflow */}
       </div>
-    </>
+    </div>
   );
 }

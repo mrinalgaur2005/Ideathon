@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { redirect } from "next/navigation";
 import { CldUploadButton } from "next-cloudinary";
+import NavigatorButton from "../../../components/general/navigator";
 
 export default function AddEventPage() {
   const [eventHostedBy, setEventHostedBy] = useState<string>("");
@@ -88,8 +89,18 @@ export default function AddEventPage() {
     );
   }
 
+  const dropdownItems = [
+    { label: "Events", href: "/events" },
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Home", href: "/" },
+  ];
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-black to-[#0B0C10] p-4">
+
+            <div className="absolute top-6 right-6">
+              <NavigatorButton buttonText="Navigate" dropdownItems={dropdownItems} />
+            </div>
       <div className="w-full max-w-4xl p-6 bg-gradient-to-br from-[#1F2833] to-[#0B0C10] text-white rounded-lg shadow-xl">
         {/* Header */}
         <h1 className="text-4xl font-bold text-center mb-8 text-gray-300">Add Event</h1>
