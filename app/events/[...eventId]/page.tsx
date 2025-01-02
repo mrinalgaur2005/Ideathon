@@ -1,7 +1,7 @@
-'use client'
-import {useEffect, useState} from "react";
+"use client";
+import { useEffect, useState } from "react";
 import { useModel } from "../../../hooks/user-model-store";
-import {redirect, useParams, useRouter} from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import StudentCard from "../../../components/student/studentCard";
 import mongoose from "mongoose";
@@ -50,9 +50,8 @@ export default function Event() {
   if (!singleEvent) {
     return <DotsLoader />;
   }
+
   const event = singleEvent;
-  console.log("fe")
-  console.log(event);
 
   async function handleInterested() {
     if (!event) {
@@ -66,9 +65,10 @@ export default function Event() {
         if (!interested) {
           setInterestedMembers((prev) => [...prev, res.data.studentInfo]);
         } else {
-          setInterestedMembers((prev) => prev.filter((item) => item._id.toString() !== res.data.studentInfo._id.toString()));
+          setInterestedMembers((prev) =>
+            prev.filter((item) => item._id.toString() !== res.data.studentInfo._id.toString())
+          );
         }
-
         setInterested((prev) => !prev);
       }
     } catch (error) {
@@ -76,84 +76,78 @@ export default function Event() {
     }
   }
 
-  if (!event) {
-    return <div>Loading...</div>; // Show loading state while data is being fetched
-  }
-
   return (
-    <>
-      <div className="flex flex-col items-center w-full h-screen">
-        <div className="flex flex-row items-center w-3/5 h-1/3 mt-12 justify-between ">
-          <div className="flex flex-col w-3/5 h-full ">
-            <div className="flex flex-row items-center w-full justify-between">
-              <div className="text-3xl font-bold">
-                {event?.heading}
-              </div>
-              <button
-                className={`text-lg font-bold ${
-                  !interested
-                    ? "bg-red-600"
-                    : "bg-gradient-to-br from-cyan-600 to-cyan-400"
-                } text-white w-1/3 rounded-3xl mr-4`}
-                onClick={handleInterested}
-              >
-                {interested ? "Interested" : "Not Interested"}
-              </button>
-            </div>
-            <div className="text-xl font-bold mt-3 mb-2">
-              Description
-            </div>
-            <div
-              className="h-full w-full justify-evenly border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
-              {event?.description}
-            </div>
+    <div className="flex flex-col items-center w-full h-screen bg-[#181717] text-gray-400">
+      {/* Event Header */}
+      <div className="flex flex-col sm:flex-row items-center w-full sm:w-4/5 h-1/3 mt-12 justify-between">
+        <div className="flex flex-col w-full sm:w-3/5 h-full">
+          <div className="flex flex-row items-center justify-between">
+            <div className="text-3xl font-bold text-gray-200">{event?.heading}</div>
+            <button
+              className={`text-lg font-bold px-6 py-2 rounded-md transition ${
+                interested
+                  ? "bg-gradient-to-br from-cyan-800 to-blue-800"
+                  : "bg-gradient-to-br from-red-600 to-red-500"
+              } text-white`}
+              onClick={handleInterested}
+            >
+              {interested ? "Interested" : "Not Interested"}
+            </button>
           </div>
-          <img
-            src={event?.poster}
-            className="h-full w-1/3 object-fill"
-            alt=""
-          />
+          <div className="text-xl font-bold text-gray-300 mt-3 mb-2">Description</div>
+          <div className="p-4 bg-[#1E1E1E] border border-blue-800 rounded-md shadow-lg">
+            {event?.description}
+          </div>
         </div>
-        <div className="flex flex-row w-3/5 h-3/5 mt-10 justify-between">
-          <div className="flex flex-col w-3/5 h-full">
-            <div className="flex flex-row items-center justify-between w-full h-3/5 ">
-              <div className="flex flex-col w-1/2 h-3/4 text-lg font-bold pl-2 justify-around border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
-                <div>
-                  Venue: <span className="ml-2">{event?.eventVenue}</span>
-                </div>
-                <div>
-                  Date: <span className="ml-2">{new Date(event?.eventTime).toLocaleString()}</span>
-                </div>
-                <div>
-                Hosted By: <span className="ml-2">{event?.eventHostedBy}</span>
-                </div>
+        <img
+          src={event?.poster}
+          className="w-full sm:w-1/3 h-full object-cover rounded-md shadow-md border border-blue-800"
+          alt="Event Poster"
+        />
+      </div>
+
+      {/* Event Details */}
+      <div className="flex flex-col sm:flex-row w-full sm:w-4/5 h-3/5 mt-10 justify-between">
+        <div className="flex flex-col w-full sm:w-3/5 h-full">
+          <div className="flex flex-col sm:flex-row justify-between">
+            <div className="flex flex-col w-full sm:w-1/2 p-4 bg-[#1E1E1E] border border-blue-800 rounded-md shadow-lg">
+              <div>
+                <strong>Venue:</strong> <span>{event?.eventVenue}</span>
               </div>
-              <div className="flex flex-col w-1/3 h-3/4 items-center text-lg font-bold border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
-                <div className="text-xl mt-3 mb-2">
-                  Tags
-                </div>
-                {event?.tags.map((tag) => {
-                  return <div key={tag} className="mt-2">{tag}</div>
-                })}
+              <div>
+                <strong>Date:</strong>{" "}
+                <span>{new Date(event?.eventTime).toLocaleString()}</span>
+              </div>
+              <div>
+                <strong>Hosted By:</strong> <span>{event?.eventHostedBy}</span>
               </div>
             </div>
-            <div className="flex flex-col w-full h-2/5 border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
-              <div className="ml-2 text-2xl font-bold">
-                Attachments
-              </div>
-              {/*attachments */}
+            <div className="flex flex-col w-full sm:w-1/3 p-4 bg-[#1E1E1E] border border-blue-800 rounded-md shadow-lg mt-4 sm:mt-0">
+              <div className="text-xl font-bold text-gray-300 mb-2">Tags</div>
+              {event?.tags.map((tag) => (
+                <div key={tag} className="mt-1">
+                  {tag}
+                </div>
+              ))}
             </div>
           </div>
-          <div className="flex flex-col items-center w-1/3 h-full overflow-y-auto border-4 rounded-xl border-cyan-300 shadow-md shadow-cyan-300/50">
-            <div className="text-2xl font-bold mt-3 mb-2">
-              Interested People
-            </div>
-            {interestedMembers.map((member) => {
-              return <StudentCard key={member.student_id} name={member.name} student_id={member.student_id} profile={member.profile} />
-            })}
+          <div className="flex flex-col w-full mt-4 p-4 bg-[#1E1E1E] border border-blue-900 rounded-md shadow-lg">
+            <div className="text-xl font-bold text-gray-300 mb-2">Attachments</div>
+            {/* Attachments go here */}
           </div>
+        </div>
+        <div className="flex flex-col w-full sm:w-1/3 h-4/5 p-4 overflow-y-auto bg-[#1E1E1E] border border-blue-800 rounded-md shadow-lg">
+          <div className="text-xl font-bold text-gray-300 mb-4">Interested People</div>
+          {interestedMembers.map((member) => (
+            <StudentCard
+              key={member.student_id}
+              name={member.name}
+              student_id={member.student_id}
+              profile={member.profile}
+            />
+          ))}
         </div>
       </div>
-    </>
-  )
+    </div>
+  );
 }

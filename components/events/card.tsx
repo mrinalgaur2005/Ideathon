@@ -1,4 +1,3 @@
-// EventCard Component
 "use client";
 import axios from "axios";
 import Tag from "./tag";
@@ -46,30 +45,28 @@ export default function EventCard({
 
   const router = useRouter();
   return (
-    <div
-      className="flex flex-col sm:flex-row w-full sm:w-3/5 mt-8 rounded-xl border-[1px] border-[#66FCF1] bg-gradient-to-br from-[#0B0C10] to-[#1F2833] shadow-lg transform hover:scale-[1.02] transition-transform duration-300"
-    >
+    <div className="flex flex-col sm:flex-row w-full sm:w-4/5 max-w-3xl mt-8 rounded-lg border-2 border-[#1E2A47] bg-gradient-to-br from-[#0B0C10] to-[#1F2833] shadow-lg transform hover:scale-[1.03] transition-transform duration-300">
       {/* Image Section */}
-      <div className="w-full sm:w-1/3 h-64 sm:h-[90%]">
+      <div className="w-full sm:w-1/3 h-56 sm:h-auto">
         <img
           src={poster}
           alt="event poster"
-          className="h-full w-full object-cover rounded-t-xl sm:rounded-l-xl"
+          className="h-full w-full object-cover rounded-t-lg sm:rounded-l-lg"
         />
       </div>
 
       {/* Content Section */}
-      <div className="flex flex-col justify-between w-full sm:w-2/3 p-6 text-white">
+      <div className="flex flex-col justify-between w-full sm:w-2/3 p-4 sm:p-6 text-white">
+        {/* Header Section */}
         <div>
-          {/* Heading and Hosted By */}
           <div className="flex justify-between items-center">
             <h2
-              className="text-3xl font-extrabold tracking-wide text-[#66FCF1] hover:text-[#C5C6C7] transition-colors cursor-pointer"
+              className="text-2xl sm:text-3xl font-tracking-wide text-gray-400 hover:text-gray-200 transition-colors cursor-pointer"
               onClick={() => router.push(`/events/${_id}`)}
             >
               {heading}
             </h2>
-            <span className="text-xl font-semibold text-[#C5C6C7]">
+            <span className="text-lg sm:text-xl font-medium text-gray-400">
               {eventHostedBy}
             </span>
           </div>
@@ -82,29 +79,33 @@ export default function EventCard({
           </div>
 
           {/* Description */}
-          <p className="mt-4 text-sm text-[#C5C6C7] leading-relaxed max-h-32 overflow-hidden hover:overflow-auto">
+          <p className="mt-4 text-sm sm:text-base text-gray-400 leading-relaxed max-h-24 sm:max-h-32 overflow-hidden hover:overflow-auto transition-all duration-300">
             {description}
           </p>
         </div>
 
         {/* Time and Venue */}
         <div className="mt-6">
-          <p className="text-sm">
-            <span className="font-bold">Time:</span> {" "}
+          <p className="text-sm sm:text-base text-gray-400">
+            <span className="font-semibold bg-gradient-to-br from-cyan-800 to-blue-600 text-transparent bg-clip-text">
+              Time:
+            </span>{" "}
             {new Date(eventTime).toLocaleString()}
           </p>
-          <p className="text-sm">
-            <span className="font-bold">Venue:</span> {" "}
+          <p className="text-sm sm:text-base text-gray-400">
+            <span className="font-semibold bg-gradient-to-br from-cyan-800 to-blue-600 text-transparent bg-clip-text">
+              Venue:
+            </span>{" "}
             {eventVenue}
           </p>
         </div>
 
         {/* Interested Button */}
         <button
-          className={`mt-6 px-4 py-2 rounded-full font-bold text-sm w-1/2 self-center transition-all ${
+          className={`mt-6 px-4 py-2 rounded-md font-medium sm:font-bold text-sm sm:text-base w-full sm:w-1/2 self-center transition-all duration-300 ${
             interested
-              ? "bg-[#66FCF1] text-black hover:bg-[#45A29E]"
-              : "bg-[#C5C6C7] text-black hover:bg-[#A8C8D2]"
+              ? "bg-gradient-to-br from-cyan-800 to-blue-600 text-gray-400 hover:from-blue-700 hover:to-blue-800"
+              : "bg-gradient-to-br from-cyan-800 to-blue-600 text-gray-400 hover:from-blue-700 hover:to-blue-800"
           }`}
           onClick={handleInterested}
         >
