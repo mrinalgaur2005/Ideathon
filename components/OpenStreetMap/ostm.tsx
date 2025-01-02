@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -19,11 +19,9 @@ const OpenStreetmap: React.FC = () => {
   const [studentId, setStudentId] = useState<string>('23104073')
   const wsRef = useRef<WebSocket | null>(null)
   const userLocationRef = useRef<LatLngExpression | null>(null)
-  const mapRef = useRef<any>(null)
   const ZOOM_LEVEL = 10
   const sendLocationTimeout = useRef<NodeJS.Timeout | null>(null)
 
-  // Effect for WebSocket connection and data fetching
   useEffect(() => {
     const storedStudentId = localStorage.getItem('studentId') || '23104073'
     setStudentId(storedStudentId)
@@ -56,7 +54,7 @@ const OpenStreetmap: React.FC = () => {
             ...updatedMarkers,
           }))
         } else {
-          setMarkers({})
+          setMarkers({});
           console.log('No friends :(')
         }
         sendLocation()
@@ -76,7 +74,6 @@ const OpenStreetmap: React.FC = () => {
     }
   }, [])
 
-  // Effect for geolocation updates
   useEffect(() => {
     const geoSuccess = (position: GeolocationPosition) => {
       const userLoc = { lat: position.coords.latitude, lng: position.coords.longitude }
@@ -101,16 +98,6 @@ const OpenStreetmap: React.FC = () => {
       console.warn('Geolocation not supported by the browser')
     }
   }, [])
-
-  // New useEffect to initialize the map once (this avoids multiple initializations)
-  useEffect(() => {
-    if (mapRef.current && !mapRef.current._leaflet_id) {
-      mapRef.current = L.map(mapRef.current).setView(center, ZOOM_LEVEL)
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(mapRef.current)
-    }
-  }, [center])
 
   const sendLocation = () => {
     if (wsRef.current?.readyState === WebSocket.OPEN && userLocationRef.current) {
@@ -145,16 +132,12 @@ const OpenStreetmap: React.FC = () => {
   })
 
   return (
-    <MapContainer
-      center={center}
-      zoom={ZOOM_LEVEL}
-      style={{ height: '500px', width: '100%' }}
-      ref={mapRef}
-    >
+    <MapContainer center={center} zoom={ZOOM_LEVEL} style={{ height: '500px', width: '100%' }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
+
       {/* Render friends' markers */}
       {Object.values(markers).map((marker) => (
         <Marker
