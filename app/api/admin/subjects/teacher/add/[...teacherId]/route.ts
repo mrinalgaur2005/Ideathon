@@ -51,11 +51,14 @@ export async function POST(req: Request, { params }: { params: { teacherId: stri
 
     const teacherObjectId = new mongoose.Types.ObjectId(teacherId[0]);
 
-    const teacher: Teacher|null = await TeacherModel.findOne(teacherObjectId);
+    const teacher = await TeacherModel.updateOne(
+      { _id: teacherObjectId },
+      {  $addToSet: { subjectTeaching: {subject_name, subject_code} } }
+    );
 
-    if (!teacher) {
+    if (!teacher.modifiedCount) {
       return NextResponse.json(
-        {error: 'Teacher not found'},
+        {error: 'Failed to update teacher'},
         {status: 404}
       )
     }
@@ -70,9 +73,6 @@ export async function POST(req: Request, { params }: { params: { teacherId: stri
         {status: 500}
       )
     }
-
-    teacher.subjectTeaching = [...teacher.subjectTeaching, {subject_name, subject_code}];
-    await teacher.save();
 
     return NextResponse.json({status: 200});
   } catch (error) {

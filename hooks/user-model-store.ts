@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import mongoose from "mongoose";
+import {string} from "zod";
 
 interface Event {
     _id: mongoose.Types.ObjectId,
@@ -152,7 +153,28 @@ interface Teacher {
     }[];
 }
 
+interface Subjects {
+    _id: mongoose.Types.ObjectId;
+    subjectTeaching: {
+        subject_code: string;
+        subject_name: string;
+    }[];
+}
+
+interface Group {
+    _id: mongoose.Types.ObjectId;
+    groupName: string;
+}
+
+interface Student {
+    name: string;
+    student_id: string;
+}
+
 interface ModelStore {
+    students: Student[]|[];
+    groups: Group[]|[];
+    subjects: Subjects|null;
     teachers: Teacher[]|[];
     requests: Requests[]|[];
     currentRequests: CurrentRequests[]|[];
@@ -166,6 +188,9 @@ interface ModelStore {
     allEvents: Event[];
     singleEvent:SingleEvent|null;
     isLoading: boolean;
+    setStudents: (students: Student[]) => void;
+    setGroups: (groups: Group[]) => void;
+    setSubjects: (subjects: Subjects) => void;
     setTeachers: (teachers: Teacher[]) => void;
     setRequests: (requests: Requests[]) => void;
     setCurrentRequests: (currentRequests: CurrentRequests[]) => void;
@@ -182,6 +207,9 @@ interface ModelStore {
 }
 
 export const useModel = create<ModelStore>((set) => ({
+    students: [],
+    groups: [],
+    subjects: null,
     teachers: [],
     requests: [],
     currentRequests: [],
@@ -195,6 +223,9 @@ export const useModel = create<ModelStore>((set) => ({
     editClub:null,
     profile: null,
     isLoading: false,
+    setStudents: ((students) => set({students: students})),
+    setGroups: ((groups) => set({groups: groups})),
+    setSubjects: ((subjects) => set({ subjects: subjects })),
     setTeachers: ((teachers) => set({ teachers: teachers })),
     setRequests: ((requests) => set({ requests: requests })),
     setCurrentRequests: ((currentRequests) => set({currentRequests: currentRequests})),

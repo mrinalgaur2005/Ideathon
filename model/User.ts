@@ -221,7 +221,12 @@ const TeacherSchema: Schema<Teacher> = new Schema({
         required: true,
     },
     teacher_id: { type: String, required: true, unique: true },
-    subjectTeaching: [{ type: String }],
+    subjectTeaching: [
+        {
+            subject_name: { type: String, required: true },
+            subject_code: { type: String, required: true },
+        },
+    ]
 });
 
 export interface Club extends Document {
@@ -301,24 +306,26 @@ const SubjectSchema: Schema<Subject> = new Schema({
 
 export interface Attendance extends Document {
     subjectId: string;
-    teacherAttId: mongoose.Schema.Types.ObjectId;
+    teacherId: mongoose.Schema.Types.ObjectId;
     totalClasses: number;
     dateStudentMap: {
-        date: Date;
-        studentPresent: number;
+        date: string;
+        studentsPresent: string[];
+        lectureCount: number;
     }[];
-    code: number;
+    groupName: string;
 }
 
 const AttendanceSchema: Schema<Attendance> = new Schema({
     subjectId: { type: String, required: true },
-    teacherAttId: { type: Schema.Types.ObjectId, ref: "Teacher"},
+    teacherId: { type: Schema.Types.ObjectId, ref: "Teacher", required: true }, // teacher ki user id
     totalClasses: { type: Number, required: true },
     dateStudentMap: [{
-        date: { type: Date, required: true },
-        studentPresent: [{ type: Number }],
+        date: { type: String, required: true },
+        studentsPresent: [{ type: String }],
+        lectureCount: { type: Number, required: true },
     }],
-    code: { type: Number},
+    groupName: { type: String, required: true },
 });
 
 
