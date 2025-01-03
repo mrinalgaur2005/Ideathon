@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
+import axios from 'axios'
 
 interface MarkerData {
   student_id: string
@@ -16,15 +17,46 @@ const OpenStreetmap: React.FC = () => {
   const [center, setCenter] = useState<LatLngExpression>({ lat: 30.7652305, lng: 76.7846207 })
   const [userLocation, setUserLocation] = useState<LatLngExpression | null>(null)
   const [markers, setMarkers] = useState<Record<string, MarkerData>>({})
-  const [studentId, setStudentId] = useState<string>('23104073')
+  const [studentId, setStudentId] = useState<string>('')
   const wsRef = useRef<WebSocket | null>(null)
   const userLocationRef = useRef<LatLngExpression | null>(null)
   const ZOOM_LEVEL = 10
   const sendLocationTimeout = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    const storedStudentId = localStorage.getItem('studentId') || '23104073'
-    setStudentId(storedStudentId)
+    const fetchStudentId = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/getStudentId')
+        if (response.data?.student_id) {
+          const fetchedStudentId = response.data.student_id
+          setStudentId(fetchedStudentId)
+          localStorage.setItem('studentId', fetchedStudentId)
+          console.log('Fetched Student ID:', fetchedStudentId)
+        } else {
+          console.error('Student ID is empty in API response')
+        }
+      } catch (error) {
+        console.error('Failed to fetch student ID:', error)
+      }
+    }
+
+    const storedStudentId = localStorage.getItem('studentId')
+    if (storedStudentId) {
+      setStudentId(storedStudentId)
+      console.log('Using stored Student ID:', storedStudentId)
+    } else {
+      fetchStudentId()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (studentId) {
+      console.log('Student ID updated to:', studentId)
+    }
+  }, [studentId])
+
+  useEffect(() => {
+    if (!studentId) return
 
     const socket = new WebSocket('ws://localhost:3000')
     wsRef.current = socket
@@ -36,8 +68,8 @@ const OpenStreetmap: React.FC = () => {
 
     socket.onmessage = (event) => {
       try {
-        console.log('Received data:', event.data)
         const data = JSON.parse(event.data)
+        console.log('Received data:', data)
 
         if (data.latitudeData && data.latitudeData.length > 0) {
           const updatedMarkers: Record<string, MarkerData> = {}
@@ -48,14 +80,10 @@ const OpenStreetmap: React.FC = () => {
               longitude: marker.longitude,
             }
           })
-
-          setMarkers((prevMarkers) => ({
-            ...prevMarkers,
-            ...updatedMarkers,
-          }))
+          setMarkers(updatedMarkers)
         } else {
-          setMarkers({});
-          console.log('No friends :(')
+          setMarkers({})
+          console.log('No friends found.')
         }
         sendLocation()
       } catch (error) {
@@ -72,7 +100,7 @@ const OpenStreetmap: React.FC = () => {
         socket.close()
       }
     }
-  }, [])
+  }, [studentId])
 
   useEffect(() => {
     const geoSuccess = (position: GeolocationPosition) => {
@@ -106,10 +134,10 @@ const OpenStreetmap: React.FC = () => {
       sendLocationTimeout.current = setTimeout(() => {
         const locationData = {
           student_id: studentId,
-          latitude: userLocationRef.current!.lat,
-          longitude: userLocationRef.current!.lng,
+          latitude: userLocationRef.current.lat,
+          longitude: userLocationRef.current.lng,
         }
-        wsRef.current!.send(JSON.stringify(locationData))
+        wsRef.current.send(JSON.stringify(locationData))
         console.log('Sent location data:', locationData)
       }, 1000)
     } else {
@@ -117,6 +145,7 @@ const OpenStreetmap: React.FC = () => {
     }
   }
 
+  // Custom map icons
   const customIcon = new L.Icon({
     iconUrl: 'https://res.cloudinary.com/dlinkc1gw/image/upload/v1735823181/qq0ndgdcexmxhxnnbgln.png',
     iconSize: [32, 32],
