@@ -11,6 +11,7 @@ interface MarkerData {
   student_id: string
   latitude: number
   longitude: number
+  distance?: number // Distance in km
 }
 
 const OpenStreetmap: React.FC = () => {
@@ -22,6 +23,40 @@ const OpenStreetmap: React.FC = () => {
   const userLocationRef = useRef<LatLngExpression | null>(null)
   const ZOOM_LEVEL = 10
   const sendLocationTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  // Rectangle bounds
+  const RECTANGLE_BOUNDS = {
+    minLatitude: Math.min(30.762473, 30.766436, 30.770325, 30.767316),
+    maxLatitude: Math.max(30.762473, 30.766436, 30.770325, 30.767316),
+    minLongitude: Math.min(76.782157, 76.779274, 76.790160, 76.791514),
+    maxLongitude: Math.max(76.782157, 76.779274, 76.790160, 76.791514),
+  }
+
+  // Function to calculate distance
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
+    const R = 6371000 // Radius of the Earth in meters
+    const dLat = (lat2 - lat1) * (Math.PI / 180)
+    const dLon = (lon2 - lon1) * (Math.PI / 180)
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return R * c // Distance in meters
+  }
+
+  // Function to check if coordinates are within the rectangle
+  const isWithinRectangle = (latitude: number, longitude: number): boolean => {
+    const { minLatitude, maxLatitude, minLongitude, maxLongitude } = RECTANGLE_BOUNDS
+    return (
+      latitude >= minLatitude &&
+      latitude <= maxLatitude &&
+      longitude >= minLongitude &&
+      longitude <= maxLongitude
+    )
+  }
 
   useEffect(() => {
     const fetchStudentId = async () => {
@@ -50,12 +85,6 @@ const OpenStreetmap: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    if (studentId) {
-      console.log('Student ID updated to:', studentId)
-    }
-  }, [studentId])
-
-  useEffect(() => {
     if (!studentId) return
 
     const socket = new WebSocket('ws://localhost:3000')
@@ -74,16 +103,27 @@ const OpenStreetmap: React.FC = () => {
         if (data.latitudeData && data.latitudeData.length > 0) {
           const updatedMarkers: Record<string, MarkerData> = {}
           data.latitudeData.forEach((marker: any) => {
-            updatedMarkers[marker.student_id] = {
-              student_id: marker.student_id,
-              latitude: marker.latitude,
-              longitude: marker.longitude,
+            if (isWithinRectangle(marker.latitude, marker.longitude)) {
+              const distance = userLocation
+                ? calculateDistance(
+                    userLocation.lat,
+                    userLocation.lng,
+                    marker.latitude,
+                    marker.longitude
+                  )
+                : null
+              updatedMarkers[marker.student_id] = {
+                student_id: marker.student_id,
+                latitude: marker.latitude,
+                longitude: marker.longitude,
+                distance: distance ? parseFloat((distance / 1000).toFixed(2)) : undefined, // Convert to km
+              }
             }
           })
           setMarkers(updatedMarkers)
         } else {
           setMarkers({})
-          console.log('No friends found.')
+          console.log('No friends found or outside the rectangle.')
         }
         sendLocation()
       } catch (error) {
@@ -100,7 +140,7 @@ const OpenStreetmap: React.FC = () => {
         socket.close()
       }
     }
-  }, [studentId])
+  }, [studentId, userLocation])
 
   useEffect(() => {
     const geoSuccess = (position: GeolocationPosition) => {
@@ -176,6 +216,8 @@ const OpenStreetmap: React.FC = () => {
         >
           <Popup>
             Friend ID: {marker.student_id}
+            <br />
+            Distance: {marker.distance ? `${marker.distance} km` : 'Calculating...'}
           </Popup>
         </Marker>
       ))}
