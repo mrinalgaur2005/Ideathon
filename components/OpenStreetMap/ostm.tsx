@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { LatLngExpression } from 'leaflet'
+import { LatLngBoundsExpression, LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import axios from 'axios'
@@ -21,10 +21,15 @@ const OpenStreetmap: React.FC = () => {
   const [studentId, setStudentId] = useState<string>('')
   const wsRef = useRef<WebSocket | null>(null)
   const userLocationRef = useRef<LatLngExpression | null>(null)
-  const ZOOM_LEVEL = 10
+  const ZOOM_LEVEL = 17
   const sendLocationTimeout = useRef<NodeJS.Timeout | null>(null)
 
-  // Rectangle bounds
+  // Lock map within these bounds
+  const MAX_BOUNDS: LatLngBoundsExpression = [
+    [30.690355, 76.723096], // Southwest corner
+    [30.774525,76.798471], // Northeast corner
+  ]
+
   const RECTANGLE_BOUNDS = {
     minLatitude: Math.min(30.762473, 30.766436, 30.770325, 30.767316),
     maxLatitude: Math.max(30.762473, 30.766436, 30.770325, 30.767316),
@@ -32,9 +37,8 @@ const OpenStreetmap: React.FC = () => {
     maxLongitude: Math.max(76.782157, 76.779274, 76.790160, 76.791514),
   }
 
-  // Function to calculate distance
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
-    const R = 6371000 // Radius of the Earth in meters
+    const R = 6371000 // Radius of Earth in meters
     const dLat = (lat2 - lat1) * (Math.PI / 180)
     const dLon = (lon2 - lon1) * (Math.PI / 180)
     const a =
@@ -47,7 +51,6 @@ const OpenStreetmap: React.FC = () => {
     return R * c // Distance in meters
   }
 
-  // Function to check if coordinates are within the rectangle
   const isWithinRectangle = (latitude: number, longitude: number): boolean => {
     const { minLatitude, maxLatitude, minLongitude, maxLongitude } = RECTANGLE_BOUNDS
     return (
@@ -116,7 +119,7 @@ const OpenStreetmap: React.FC = () => {
                 student_id: marker.student_id,
                 latitude: marker.latitude,
                 longitude: marker.longitude,
-                distance: distance ? parseFloat((distance / 1000).toFixed(2)) : undefined, // Convert to km
+                distance: distance ? parseFloat((distance / 1000).toFixed(2)) : undefined,
               }
             }
           })
@@ -185,7 +188,6 @@ const OpenStreetmap: React.FC = () => {
     }
   }
 
-  // Custom map icons
   const customIcon = new L.Icon({
     iconUrl: 'https://res.cloudinary.com/dlinkc1gw/image/upload/v1735823181/qq0ndgdcexmxhxnnbgln.png',
     iconSize: [32, 32],
@@ -201,37 +203,39 @@ const OpenStreetmap: React.FC = () => {
   })
 
   return (
-    <div style={{ filter: 'invert(1) hue-rotate(180deg)' }}>
-    <MapContainer center={center} zoom={ZOOM_LEVEL} style={{ height: '500px', width: '100%' }}>
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
+    <div style={{ filter: 'invert(0.95) hue-rotate(210deg)' }}>
+      <MapContainer
+        center={center}
+        zoom={ZOOM_LEVEL}
+        style={{ height: '500px', width: '100%' }}
+        maxBounds={MAX_BOUNDS}
+        maxBoundsViscosity={1.0} // Prevents the map from panning outside bounds
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        />
 
-      {/* Render friends' markers */}
-      {Object.values(markers).map((marker) => (
-        <Marker
-          key={marker.student_id}
-          position={[marker.latitude, marker.longitude]}
-          icon={customIcon}
-        >
-          <Popup>
-            Friend ID: {marker.student_id}
-            <br />
-            Distance: {marker.distance ? `${marker.distance} km` : 'Calculating...'}
-          </Popup>
-        </Marker>
-      ))}
+        {Object.values(markers).map((marker) => (
+          <Marker
+            key={marker.student_id}
+            position={[marker.latitude, marker.longitude]}
+            icon={customIcon}
+          >
+            <Popup>
+              Friend ID: {marker.student_id}
+              <br />
+              Distance: {marker.distance ? `${marker.distance} km` : 'Calculating...'}
+            </Popup>
+          </Marker>
+        ))}
 
-      {/* Render user's location */}
-      {userLocation && (
-        <Marker position={userLocation} icon={userIcon}>
-          <Popup>
-            Your location
-          </Popup>
-        </Marker>
-      )}
-    </MapContainer>
+        {userLocation && (
+          <Marker position={userLocation} icon={userIcon}>
+            <Popup>Your location</Popup>
+          </Marker>
+        )}
+      </MapContainer>
     </div>
   )
 }
