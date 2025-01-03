@@ -329,6 +329,12 @@ const AttendanceSchema: Schema<Attendance> = new Schema({
 });
 
 
+interface Resource extends Document {
+    subjectId: string;
+
+}
+
+
 
 export interface Request extends Document {
     user_id: mongoose.Schema.Types.ObjectId;
