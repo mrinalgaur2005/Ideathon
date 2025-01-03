@@ -4,10 +4,10 @@ import { writeFile, createReadStream } from "fs";
 import { unlink } from "fs/promises";
 import { join } from "path";
 import csvParser from "csv-parser";
-import { authOptions } from "../../(auth)/auth/[...nextauth]/options";
-import dbConnect from "../../../../lib/connectDb";
-import { SubjectModel } from "../../../../model/User";
-import { getAiMarks } from "../../../../lib/aiMarks";
+import { authOptions } from "../../../(auth)/auth/[...nextauth]/options";
+import dbConnect from "../../../../../lib/connectDb";
+import { SubjectModel } from "../../../../../model/User";
+import { getAiMarks } from "../../../../../lib/aiMarks";
 
 interface CSVRow {
   student_id: string;

@@ -50,7 +50,7 @@ export async function PATCH(req: Request, { params } : { params : { studentId: s
     console.log("here2")
     const student1Update = await StudentModel.updateOne(
       { _id: to },
-      { $addToSet: { friends: from } }
+      {  $addToSet: { friends: from } }
     );
 
     const student2Update = await StudentModel.updateOne(

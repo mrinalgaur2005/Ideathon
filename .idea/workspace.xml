@@ -4,7 +4,26 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files" />
+    <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
+      <change afterPath="$PROJECT_DIR$/app/api/teacher/subjects/attendance/[...subjectId]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/teacher/subjects/groups/[...subjectId]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/teacher/subjects/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/teacher/subjects/groups/[...subjectId]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/teacher/subjects/groups/attendance/[...subjectId]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/teacher/subjects/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_27_24,_11_51 AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_27_24__11_51AM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/admin/subjects/teacher/add/[...teacherId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/subjects/teacher/add/[...teacherId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/attendance/[teacherId]/[...subjectId]/route.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/attendance/confirmButton/route.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/marks/[...teacherId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/teacher/marks/[...teacherId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/user/friends/accept-friend/[...studentId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/friends/accept-friend/[...studentId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -70,11 +89,11 @@
       <recent name="$PROJECT_DIR$/app/api/admin/user" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/api/teacher/subjects/groups/[...subjectId]" />
+      <recent name="$PROJECT_DIR$/app/api/teacher" />
       <recent name="$PROJECT_DIR$/app/api/admin/subjects/teacher" />
       <recent name="$PROJECT_DIR$/app/admin" />
       <recent name="$PROJECT_DIR$/app/events" />
-      <recent name="$PROJECT_DIR$/app/admin/user/subjects/teachers" />
-      <recent name="$PROJECT_DIR$/app/api/admin/user" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -156,7 +175,11 @@
       <workItem from="1735662088128" duration="1184000" />
       <workItem from="1735671274748" duration="238000" />
       <workItem from="1735719997150" duration="3868000" />
-      <workItem from="1735738596357" duration="10016000" />
+      <workItem from="1735738596357" duration="21727000" />
+      <workItem from="1735803780445" duration="3957000" />
+      <workItem from="1735834776101" duration="1436000" />
+      <workItem from="1735887939114" duration="9151000" />
+      <workItem from="1735912253570" duration="2503000" />
     </task>
     <servers />
   </component>
