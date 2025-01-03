@@ -201,6 +201,7 @@ const OpenStreetmap: React.FC = () => {
   })
 
   return (
+    <div style={{ filter: 'invert(1) hue-rotate(180deg)' }}>
     <MapContainer center={center} zoom={ZOOM_LEVEL} style={{ height: '500px', width: '100%' }}>
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -231,6 +232,7 @@ const OpenStreetmap: React.FC = () => {
         </Marker>
       )}
     </MapContainer>
+    </div>
   )
 }
 
