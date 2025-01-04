@@ -4,7 +4,7 @@ import { QdrantClient } from '@qdrant/js-client-rest';
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import { getServerSession, User } from "next-auth";
-import { Student, StudentModel, aiChatBotModel } from "../../../model/User";
+import { Student, StudentModel, TeacherModel, aiChatBotModel } from "../../../model/User";
 import { ObjectId } from "bson";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
@@ -58,7 +58,6 @@ const ensureCollection = async (
 
   while (currentTry < maxRetries) {
     try {
-      // Check if collection exists
       try {
         const collection = await qdrantClient.getCollection(collectionName);
         console.log(`Collection ${collectionName} exists with config:`, collection);
@@ -69,13 +68,11 @@ const ensureCollection = async (
         }
         return;
       } catch (error: any) {
-        // Only proceed with creation if collection doesn't exist
         if (error.status !== 404) {
           throw error;
         }
       }
 
-      // Collection doesn't exist, create it
       const collectionConfig = {
         vectors: {
           size: vectorSize,
@@ -85,7 +82,7 @@ const ensureCollection = async (
           default_segment_number: 2,
         },
         replication_factor: 2,
-        write_consistency_factor: 1, // Add this for better write consistency
+        write_consistency_factor: 1, 
       };
 
       await qdrantClient.createCollection(collectionName, collectionConfig);
@@ -108,23 +105,19 @@ const ensureCollection = async (
         throw new Error(`Collection creation failed after ${maxRetries} attempts: ${error.message || 'Unknown error'}`);
       }
       
-      // Exponential backoff
       await new Promise(resolve => setTimeout(resolve, Math.pow(2, currentTry) * 1000));
     }
   }
 };
 
-// Helper function to validate Qdrant client connection
 const validateQdrantConnection = async (): Promise<void> => {
   try {
-    // Try to list collections as a connection test
     await qdrantClient.getCollections();
   } catch (error: any) {
     throw new Error(`Failed to connect to Qdrant: ${error.message || 'Unknown error'}`);
   }
 };
 
-// Modified createVectorStore with additional validation
 const createVectorStore = async (
   text: string,
   collectionName: string
@@ -134,7 +127,6 @@ const createVectorStore = async (
     throw new Error('No text provided for vector store creation');
   }
 
-  // Validate Qdrant connection first
   await validateQdrantConnection();
 
   const textSplitter = new RecursiveCharacterTextSplitter({
@@ -156,12 +148,10 @@ const createVectorStore = async (
     throw new Error('Failed to generate embeddings');
   }
 
-  // Ensure collection exists with correct vector size
   await ensureCollection(collectionName, embeds[0].length);
 
-  // Create points with unique IDs
   const points = documentTexts.map((text, i) => ({
-    id: Date.now() + i, // More unique ID strategy
+    id: Date.now() + i, 
     vector: Array.from(embeds[i]),
     payload: { 
       text: text.trim(),
@@ -170,8 +160,7 @@ const createVectorStore = async (
     }
   }));
 
-  // Upload in smaller batches with retry logic
-  const batchSize = 10; // Reduced batch size
+  const batchSize = 10; 
   for (let i = 0; i < points.length; i += batchSize) {
     const batch = points.slice(i, i + batchSize);
     let retries = 3;
@@ -193,7 +182,6 @@ const createVectorStore = async (
   }
 };
 
-// Improved bot response function
 const getBotResponse = async (
   userInput: string,
   collectionName: string,
@@ -216,17 +204,19 @@ const getBotResponse = async (
         .map(hit => hit.payload?.text || '')
         .join(" ");
 
-      const prompt = `You are a helpful academic assistant. Based on this context: "${context}", 
+      const prompt = `You are a helpful academic assistant for a college website which assits students and teachers for their day to day college related queries. 
+                     Based on this context: "${context}", 
                      please answer this question: "${userInput}". 
                      If the context is about marks, provide only the student's marks, name, roll number, 
-                     and subject details. For events, include the hosting club, venue, date/time, 
-                     and a brief description (max 100 words).`;
+                     and subject details.
+                     For events, include the hosting club, venue, date/time, 
+                     and a brief description (max 100 words).
+                     If the context is about general information, provide a brief description of the topic.`;
 
       const completion = await groqClient.chat.completions.create({
         messages: [{ role: 'user', content: prompt }],
         model: 'llama3-8b-8192',
       });
-
       return completion.choices[0]?.message?.content || fallbackResponse;
     } catch (error) {
       console.error('Search error:', error);
@@ -246,6 +236,31 @@ const processUserInput = (userInput: string, wordToReplace: string, replacementW
   return modifiedInput;
 };
 
+const classifySID = (userInput: string, student: Student | null): boolean => {
+  const userTryingSid = student?.student_id?.toString(); // Convert ObjectId to string
+  const userTryingName = String(student?.name).toLowerCase(); // Normalize name
+  const queryLower = userInput.toLowerCase(); // Normalize input
+
+  console.log('Processed userInput:', queryLower);
+  console.log('Converted student_id:', userTryingSid);
+  console.log('Converted student name:', userTryingName);
+
+  const categories = {
+    sid: [userTryingSid],
+    name: [userTryingName],
+  };
+
+  for (const [category, keywords] of Object.entries(categories)) {
+    console.log(`Checking category: ${category}, keywords: ${keywords}`);
+    if (keywords.some(keyword => keyword && queryLower.includes(keyword))) {
+      console.log('Match found in category:', category);
+      return true;
+    }
+  }
+
+  console.error('No match found for userInput.');
+  return false;
+};
 export async function POST(request: Request) {
   try {
     await dbConnect();
@@ -257,18 +272,22 @@ export async function POST(request: Request) {
 
     const userId = new mongoose.Types.ObjectId(session.user._id);
     const student = await StudentModel.findOne({ user_id: userId });
+    const teacher = await TeacherModel.findOne({ user_id: userId });
     const Username = student?.name;
-
-    if (!student) {
-      return NextResponse.json({ error: 'Student not found' }, { status: 404 });
-    }
 
     let { userInput } = await request.json();
     const updatedInput = processUserInput(userInput, 'my', Username?.toLowerCase() || 'student'); 
     userInput = updatedInput;
 
     const category = classifyQuery(userInput);
-
+    if(category === 'marks' && !teacher){
+      const isUserOwner = classifySID(userInput, student);
+      console.log("Category:", isUserOwner);
+      if(isUserOwner === false){
+        const response = 'You are not allowed to see results of other students\n 💠 Incase you are trying to find your own result, make sure there is no typo in the Name or Student ID you are providin in the query 💠';
+        return NextResponse.json(response, { status: 200 });
+      }
+    }
     const categoryConfig = {
       events: {
         id: '676d8bf49e48cdfb0b216f3f',
