@@ -5,14 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/api/teacher/subjects/resources/[...subjectId]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpers/deleteCloudinary.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/user/resources/[...subjectId]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/user/resources/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/resources/[...subjectId]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/resources/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/admin/subjects/teacher/add/[...teacherId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/subjects/teacher/add/[...teacherId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/subjects/teachers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/subjects/teachers/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/teacher/subjects/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/teacher/subjects/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/teacher/subjects/resources/[...subjectId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/teacher/subjects/resources/[...subjectId]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/friends/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friends/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -170,7 +170,9 @@
       <workItem from="1735834776101" duration="1436000" />
       <workItem from="1735887939114" duration="9151000" />
       <workItem from="1735912253570" duration="2503000" />
-      <workItem from="1735936579519" duration="3194000" />
+      <workItem from="1735936579519" duration="4282000" />
+      <workItem from="1735976191219" duration="1696000" />
+      <workItem from="1735985050166" duration="1185000" />
     </task>
     <servers />
   </component>

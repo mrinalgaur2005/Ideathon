@@ -24,7 +24,7 @@ export default function TeachersPage() {
   const [teacher, setTeacher] = useState<Teacher|null>(null);
   const [subject_code, setSubjectCode] = useState<string>("");
   const [subject_name, setSubjectName] = useState<string>("");
-  const { teachers, setTeachers, setLoading } = useModel()
+  const { teachers, setTeachers, isLoading, setLoading } = useModel()
   const router = useRouter();
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function TeachersPage() {
     }
   }
 
-  if (!teachers.length) {
+  if (isLoading) {
     return <DotsLoader />;
   }
 
