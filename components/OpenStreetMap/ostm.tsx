@@ -64,7 +64,7 @@ const OpenStreetmap: React.FC = () => {
   useEffect(() => {
     const fetchStudentId = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/getStudentId')
+        const response = await axios.get('http://localhost:3000/api/getStudentId')
         if (response.data?.student_id) {
           const fetchedStudentId = response.data.student_id
           setStudentId(fetchedStudentId)
@@ -89,8 +89,8 @@ const OpenStreetmap: React.FC = () => {
 
   useEffect(() => {
     if (!studentId) return
-
-    const socket = new WebSocket('ws://localhost:3000')
+    
+    const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}`)
     wsRef.current = socket
 
     socket.onopen = () => {
@@ -106,7 +106,11 @@ const OpenStreetmap: React.FC = () => {
         if (data.latitudeData && data.latitudeData.length > 0) {
           const updatedMarkers: Record<string, MarkerData> = {}
           data.latitudeData.forEach((marker: any) => {
+            console.log(isWithinRectangle(marker.latitude,marker.longitude));
+            
             if (isWithinRectangle(marker.latitude, marker.longitude)) {
+              console.log('correct way');
+              
               const distance = userLocation
                 ? calculateDistance(
                     userLocation.lat,
@@ -124,7 +128,14 @@ const OpenStreetmap: React.FC = () => {
             }
           })
           setMarkers(updatedMarkers)
+          // console.log('Markers are:', JSON.stringify(markers, null, 2));
+          Object.values(markers).forEach((marker) => {
+            console.log('Marker details:', marker);
+          });
+          
         } else {
+          console.log('inside this');
+          
           setMarkers({})
           console.log('No friends found or outside the rectangle.')
         }
