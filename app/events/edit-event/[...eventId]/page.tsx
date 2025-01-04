@@ -2,26 +2,17 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { redirect } from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
 import { CldUploadButton } from "next-cloudinary";
 import { useModel } from "../../../../hooks/user-model-store";
-import NavigatorButton from "../../../../components/general/navigator"; // Import the NavigatorButton component
+import NavigatorButton from "../../../../components/general/navigator";
+import DotsLoader from "@/components/loading/dotLoader"; // Import the NavigatorButton component
 
-interface Event {
-  _id: string;
-  poster: string;
-  heading: string;
-  eventHostedBy: string;
-  description: string;
-  tags: string[];
-  eventTime: Date;
-  eventVenue: string;
-  isInterested: boolean;
-}
-
-export default function EditEventPage({ params }: { params: Promise<{ eventId: string }> }) {
-  const { allClubs, setSingleEvent, singleEvent, setAllEvents } = useModel();
-
+export default function EditEventPage() {
+  const { setSingleEvent, singleEvent } = useModel();
+  const params = useParams();
+  const router = useRouter();
+  const eventId = params.eventId?.[0];
   const [eventHostedBy, setEventHostedBy] = useState<string>("");
   const [tag1, setTag1] = useState<string>("");
   const [tag2, setTag2] = useState<string>("");
@@ -35,38 +26,34 @@ export default function EditEventPage({ params }: { params: Promise<{ eventId: s
   const [time, setTime] = useState<string>("");
 
   useEffect(() => {
-    const getEventId = async () => {
-      const resolvedParams = await params;
-      if (resolvedParams.eventId) {
-        fetchEventDetails(resolvedParams.eventId);
+    if (!eventId) return;
+
+    const fetchEventDetails = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${eventId}`);
+        const event = response.data.data;
+        setSingleEvent(event);
+
+        // Pre-fill form with the fetched event details
+        setEventHostedBy(event.eventHostedBy);
+        setHeading(event.heading);
+        setDescription(event.description);
+        setPoster(event.poster);
+        setEventVenue(event.eventVenue);
+        setEventAttachments(event.eventAttachments);
+        setDate(event.eventTime.slice(0, 10));
+        setTime(event.eventTime.slice(11, 16));
+        setTag1(event.tags[0] || "");
+        setTag2(event.tags[1] || "");
+        setTag3(event.tags[2] || "");
+      } catch (error) {
+        console.error("Error fetching event details:", error);
       }
     };
 
-    getEventId();
-  }, [params]);
+    fetchEventDetails();
+  }, [eventId, params, setSingleEvent]);
 
-  const fetchEventDetails = async (eventId: string) => {
-    try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${eventId}`);
-      const event = response.data.data;
-      setSingleEvent(event);
-
-      // Pre-fill form with the fetched event details
-      setEventHostedBy(event.eventHostedBy);
-      setHeading(event.heading);
-      setDescription(event.description);
-      setPoster(event.poster);
-      setEventVenue(event.eventVenue);
-      setEventAttachments(event.eventAttachments);
-      setDate(event.eventTime.slice(0, 10));
-      setTime(event.eventTime.slice(11, 16));
-      setTag1(event.tags[0] || "");
-      setTag2(event.tags[1] || "");
-      setTag3(event.tags[2] || "");
-    } catch (error) {
-      console.error("Error fetching event details:", error);
-    }
-  };
 
   function handlePosterUpload(result: any) {
     if (result.event === "success") {
@@ -93,8 +80,7 @@ export default function EditEventPage({ params }: { params: Promise<{ eventId: s
     const eventTime = new Date(`${date}T${time}`);
 
     try {
-      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/edit-event/${(await params).eventId}`, {
-        eventHostedBy,
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${eventId}`, {
         poster,
         heading,
         tags,
@@ -105,8 +91,7 @@ export default function EditEventPage({ params }: { params: Promise<{ eventId: s
       });
 
       if (res.status === 200) {
-        setSingleEvent(res.data.data);
-        redirect(`/events/${res.data._id}`);
+        router.push(`/events/${eventId}`);
       }
     } catch (error) {
       console.error("Error saving event:", error);
@@ -114,7 +99,7 @@ export default function EditEventPage({ params }: { params: Promise<{ eventId: s
   }
 
   if (!singleEvent) {
-    return <div>Loading...</div>;
+    return <DotsLoader/>;
   }
 
   const dropdownItems = [
@@ -123,146 +108,170 @@ export default function EditEventPage({ params }: { params: Promise<{ eventId: s
     { label: "Home", href: "/" },
   ];
 
-  
 
   return (
-    <div className="flex flex-col w-full min-h-screen bg-gray-900 text-gray-300">
-      {/* Navigator Button */}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-black to-[#0B0C10] p-4">
       <div className="absolute top-6 right-6">
         <NavigatorButton buttonText="Navigate" dropdownItems={dropdownItems} />
       </div>
+      <div className="w-full max-w-4xl p-6 bg-gradient-to-br from-[#1F2833] to-[#0B0C10] text-white rounded-lg shadow-xl">
+        {/* Header */}
+        <h1 className="text-4xl font-bold text-center mb-8 text-gray-300">Edit Event</h1>
 
-      <div className="flex flex-col w-full max-w-4xl mx-auto h-auto justify-evenly items-center border border-blue-900 shadow-lg shadow-gray-700/60 text-lg rounded bg-gradient-to-br from-gray-800 to-gray-900 p-8 mt-12 sm:mt-24">
-        <h1 className="text-3xl font-bold text-gray-100 mb-8 text-center">Edit Event</h1>
+        {/* Form Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Club Selection */}
+          <div className="space-y-4">
+            <label className="block text-lg font-semibold text-gray-300">Select Club</label>
+            {eventHostedBy}
+          </div>
 
-        {/* Club Selection */}
-        <div className="w-full mb-6">
-          <label className="block text-lg font-medium mb-2">Select Club</label>
-          <select
-            value={eventHostedBy}
-            onChange={(e) => setEventHostedBy(e.target.value)}
-            className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {allClubs.map((club) => (
-              <option key={club._id} value={club.clubName}>
-                {club.clubName}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Tags Selection */}
-        <div className="w-full mb-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {[tag1, tag2, tag3].map((tag, index) => (
-            <div key={index}>
-              <label className="block text-lg font-medium mb-2">Tag {index + 1}</label>
+          {/* Tags */}
+          <div className="space-y-4">
+            <label className="block text-lg font-semibold  text-gray-300">Select Tags</label>
+            {[tag1, tag2, tag3].map((tag, index) => (
               <select
+                key={index}
                 value={tag}
-                onChange={(e) => {
-                  if (index === 0) setTag1(e.target.value);
-                  else if (index === 1) setTag2(e.target.value);
-                  else setTag3(e.target.value);
-                }}
-                className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) =>
+                  index === 0
+                    ? setTag1(e.target.value)
+                    : index === 1
+                      ? setTag2(e.target.value)
+                      : setTag3(e.target.value)
+                }
+                className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
               >
-                <option>Tag1</option>
-                <option>Tag2</option>
-                <option>Tag3</option>
+                {["Tech", "Coding", "Robotics", "Music", "Dance", "Art", "Comedy", ""].map((tag, index) => (
+                  <option value={tag} key={index}>{tag}</option>
+                ))}
               </select>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Poster Upload */}
-        <div className="w-full mb-6">
-          <label className="block text-lg font-medium mb-2">Upload Poster</label>
-          <CldUploadButton
-            uploadPreset={process.env.NEXT_PUBLIC_CLOUDNARY_UPLOAD_PRESET as string}
-            onSuccess={handlePosterUpload}
-            className="px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded"
-          >
-            Upload Poster
-          </CldUploadButton>
-        </div>
-
-        {/* Attachments Upload */}
-        <div className="w-full mb-6">
-          <label className="block text-lg font-medium mb-2">Upload Attachments</label>
-          <CldUploadButton
-            uploadPreset={process.env.NEXT_PUBLIC_CLOUDNARY_UPLOAD_PRESET as string}
-            onSuccess={handleEventAttachmentsUpload}
-            className="px-4 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded"
-          >
-            Upload Attachments
-          </CldUploadButton>
-        </div>
-
-        {/* Event Details Inputs */}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        {/* Event Details */}
+        <div className="space-y-6 mt-8">
           <div>
-            <label className="block text-lg font-medium mb-2">Event Heading</label>
+            <label className="block text-lg font-semibold text-gray-300">Heading</label>
             <input
-              type="text"
               value={heading}
               onChange={(e) => setHeading(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="text"
+              placeholder="Event Heading"
+              className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
             />
           </div>
+
           <div>
-            <label className="block text-lg font-medium mb-2">Event Venue</label>
+            <label className="block text-lg font-semibold  text-gray-300">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Event Description"
+              className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
+              rows={4}
+            />
+          </div>
+
+          <div>
+            <label className="block text-lg font-semibold  text-gray-300">Event Venue</label>
             <input
-              type="text"
               value={eventVenue}
               onChange={(e) => setEventVenue(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="text"
+              placeholder="Enter the event venue"
+              className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
             />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <label className="block text-lg font-semibold  text-gray-300">Date</label>
+              <input
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                type="date"
+                className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
+              />
+            </div>
+            <div>
+              <label className="block text-lg font-semibold  text-gray-300">Time</label>
+              <input
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                type="time"
+                className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Event Date and Time */}
-        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          <div>
-            <label className="block text-lg font-medium mb-2">Event Date</label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+        {/* Poster & Attachments */}
+        <div className="space-y-6 mt-8">
+          <div className="flex items-center space-x-4">
+            <label className="block text-lg font-semibold  text-gray-300">Poster</label>
+            <CldUploadButton
+              uploadPreset={
+                process.env.NEXT_PUBLIC_CLOUDNARY_UPLOAD_PRESET as string
+              }
+              onSuccess={handlePosterUpload}
+              className="px-4 py-2 bg-gradient-to-br from-cyan-800 to-blue-700 hover:from-blue-600 hover:to-cyan-600 text-white rounded shadow hover:scale-105 transform transition-all duration-300"
+            >
+              Upload
+            </CldUploadButton>
           </div>
-          <div>
-            <label className="block text-lg font-medium mb-2">Event Time</label>
-            <input
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+          {poster && (
+            <div>
+              <label className="block text-lg font-semibold  text-gray-300">Uploaded Poster:</label>
+              <img src={poster} alt="Event Poster" className="w-full h-auto rounded-lg mt-2" />
+            </div>
+          )}
+
+          <div className="flex items-center space-x-4">
+            <label className="block text-lg font-semibold  text-gray-300">Attachments</label>
+            <CldUploadButton
+              uploadPreset={
+                process.env.NEXT_PUBLIC_CLOUDNARY_UPLOAD_PRESET as string
+              }
+              onSuccess={handleEventAttachmentsUpload}
+              className="px-4 py-2 bg-gradient-to-br from-cyan-800 to-blue-600 hover:from-blue-600 hover:to-cyan-600 text-white rounded shadow hover:scale-105 transform transition-all duration-300"
+            >
+              Upload
+            </CldUploadButton>
           </div>
+          {eventAttachments.length > 0 && (
+            <div>
+              <label className="block text-lg font-semibold  text-gray-300">Uploaded Attachments:</label>
+              <ul className="list-disc list-inside space-y-2">
+                {eventAttachments.map((attachment, index) => (
+                  <li key={index} className="text-gray-300">
+                    <a
+                      href={attachment}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline hover:text-cyan-500"
+                    >
+                      Attachment {index + 1}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
-        {/* Description */}
-        <div className="w-full mb-6">
-          <label className="block text-lg font-medium mb-2">Event Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={4}
-          ></textarea>
-        </div>
-
-        {/* Save Button */}
-        <div className="w-full flex justify-center">
+        {/* Submit Button */}
+        <div className="mt-8 text-center">
           <button
+            type="button"
             onClick={handleSaveEvent}
-            className="px-6 py-3 bg-blue-700 hover:bg-blue-600 text-gray-400 hover:text-white font-bold rounded transition"
+            className="px-11 py-3 bg-gradient-to-br from-cyan-900 to-blue-600 text-white font-semibold rounded-lg shadow-lg hover:from-blue-600 hover:to-cyan-500 hover:scale-105 transform transition-all duration-300"
           >
-            Save Changes
+            Save Event
           </button>
         </div>
       </div>
     </div>
   );
 }
-
