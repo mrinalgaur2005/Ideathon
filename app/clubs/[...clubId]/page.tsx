@@ -1,18 +1,18 @@
 "use client"
-import HeadCard from "../../../components/student/headCard";
+
 import SmallEventCard from "../../../components/events/smallCard";
-import StudentCard from "../../../components/student/studentCard";
 import { redirect, useParams } from "next/navigation";
 import { useModel } from "../../../hooks/user-model-store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import axios from "axios";
 import DotsLoader from "../../../components/loading/dotLoader";
-import { getToken } from "next-auth/jwt";
 import { useSession } from "next-auth/react";
+import StudentCard from "@/components/student/studentCard";
+import HeadCard from "@/components/student/headCard";
 
 export default function Club() {
-  const { singleClub, setSingleClub, setLoading } = useModel();
+  const { singleClub, setSingleClub, isLoading, setLoading } = useModel();
   const router = useRouter();
   const params = useParams();
   const clubId = params.clubId?.[0];
@@ -39,26 +39,21 @@ export default function Club() {
     fetchData();
   }, [setSingleClub, setLoading, clubId, router]);
 
-  if (!singleClub) {
+  if (!singleClub || isLoading) {
     return <DotsLoader />;
   }
 
   const isSecy = singleClub.clubIdSecs.some(secy => secy.user_id === session?.user?._id);
   console.log(singleClub);
-  
+
   return (
     <>
       <div className="flex flex-col items-center h-screen bg-gradient-to-b from-[#1F2833] to-[#0B0C10]">
         <div className="flex flex-row items-center w-4/5 h-1/3 mt-12 justify-between space-x-6">
           <div className="flex flex-col w-3/5 h-full text-[#C5C6C7]">
-            <div className="text-3xl font-bold">
-              Club Name: {singleClub.clubName}
-            </div>
+            <div className="text-3xl font-bold">Club Name: {singleClub.clubName}</div>
             <div>
-              <div className="text-2xl mt-6 mb-3 font-bold">
-                Secy:
-              </div>
-
+              <div className="text-2xl mt-6 mb-3 font-bold">Secy:</div>
               {singleClub.clubIdSecs.map((secy) => (
                 <div key={secy.student_id}>
                   <HeadCard
@@ -81,9 +76,7 @@ export default function Club() {
         <div className="flex flex-row justify-between h-full w-4/5 mt-10 space-x-6">
           <div className="flex flex-col w-3/5 h-full justify-between text-[#C5C6C7]">
             <div className="flex flex-row justify-between items-center">
-              <div className="text-3xl font-bold mb-4">
-                Events
-              </div>
+              <div className="text-3xl font-bold mb-4">Events</div>
               <button
                 className="text-xl font-bold bg-gradient-to-br from-[#45A29E] to-[#66FCF1] text-[#0B0C10] w-1/4 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300"
                 onClick={() => {
@@ -108,9 +101,7 @@ export default function Club() {
             </div>
           </div>
           <div className="flex flex-col items-center w-1/4 h-full overflow-y-auto border-2 rounded-xl border-[#45A29E] shadow-md bg-[#1F2833] p-4">
-            <div className="text-3xl font-bold mt-2 text-[#C5C6C7]">
-              Members
-            </div>
+            <div className="text-3xl font-bold mt-2 text-[#C5C6C7]">Members</div>
             <div className="overflow-y-auto w-full">
               {singleClub.clubMembers.map((member) => (
                 <div key={member.student_id}>

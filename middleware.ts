@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/sign-in', request.url));
   }
   
-  if(!token?.sid_verification && url.pathname.startsWith('/dashboard')){
+  if(!token?.sid_verification && url.pathname.startsWith('/dashboard/student')){
     return NextResponse.redirect(new URL(`/verify-sid/${token?.username}`, request.url));
   }
 

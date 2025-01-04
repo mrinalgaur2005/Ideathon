@@ -5,14 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/api/user/resources/[...subjectId]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/user/resources/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/resources/[...subjectId]/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/resources/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin/subjects/teachers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/subjects/teachers/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/teacher/subjects/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/teacher/subjects/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/user/friends/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friends/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/clubs/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/[...clubId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/events/add-event/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/add-event/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/events/smallCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/smallCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/student/headCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/student/headCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/student/studentCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/student/studentCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/middleware.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,7 +173,10 @@
       <workItem from="1735912253570" duration="2503000" />
       <workItem from="1735936579519" duration="4282000" />
       <workItem from="1735976191219" duration="1696000" />
-      <workItem from="1735985050166" duration="1185000" />
+      <workItem from="1735985050166" duration="4726000" />
+      <workItem from="1736003028073" duration="54000" />
+      <workItem from="1736005381956" duration="622000" />
+      <workItem from="1736015697437" duration="1460000" />
     </task>
     <servers />
   </component>

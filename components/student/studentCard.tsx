@@ -15,8 +15,8 @@ export default function StudentCard({
         className="w-14 h-14 border-2 rounded-full border-blue-800 shadow-md shadow-blue-800/50"
       />
       <div className="flex flex-col ml-4 text-gray-300 w-full">
-        <div className="text-lg font-semibold truncate">{name}</div> {/* Ensures name doesn't overflow */}
-        <div className="text-sm truncate">{student_id}</div> {/* Ensures student ID doesn't overflow */}
+        <div className="text-lg font-semibold truncate">{name}</div>
+        <div className="text-sm truncate">{student_id}</div>
       </div>
     </div>
   );

@@ -42,53 +42,57 @@ export default function SmallEventCard({ heading, isInterested, eventTime, event
   }
 
   return (
-    <div className="flex flex-col w-full max-w-3xl h-auto mt-8 border rounded-xl border-[#45A29E] shadow-md bg-gradient-to-b from-[#1F2833] to-[#0B0C10] p-6 transition-all duration-300 hover:shadow-lg hover:scale-105">
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold text-[#C5C6C7] mb-2 sm:mb-0">{heading}</h2>
+    <div className="flex flex-col w-full max-w-3xl mt-8 bg-gray-800 rounded-lg shadow-xl p-6 hover:scale-105 transform transition-transform duration-300">
+      {/* Heading and Interest Button */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-blue-500 truncate">{heading}</h2>
         <button
-          className={`text-lg font-bold py-2 px-6 rounded-full transition-all duration-300 ${
+          className={`text-lg font-bold py-2 px-6 rounded-lg transition-all duration-300 ${
             interested
-              ? "bg-red-600 hover:bg-red-700 text-white shadow-lg"
-              : "bg-gradient-to-br from-[#45A29E] to-[#66FCF1] hover:from-[#66FCF1] hover:to-[#45A29E] text-[#0B0C10]"
+              ? "bg-red-700 hover:bg-red-800 text-white"
+              : "bg-blue-600 hover:bg-blue-700 text-white"
           }`}
           onClick={handleInterested}
         >
-          {interested ? "Interested" : "Not Interested"}
+          {interested ? "Unmark Interest" : "Mark Interested"}
         </button>
       </div>
-      <div className="flex flex-col sm:flex-row justify-between items-center text-[#C5C6C7]">
-        <div className="text-lg">
-          <p>
-            <span className="font-semibold">Date:</span> {new Date(eventTime).toLocaleString()}
-          </p>
-          <p>
-            <span className="font-semibold">Venue:</span> {eventVenue}
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row items-center mt-4 sm:mt-0">
-          <button
-            className="text-lg font-bold py-2 px-6 rounded-full bg-gradient-to-br from-[#45A29E] to-[#66FCF1] hover:from-[#66FCF1] hover:to-[#45A29E] text-[#0B0C10] transition-all duration-300 shadow-md"
-            onClick={() => router.push(`/events/${_id}`)}
-          >
-            Show Details
-          </button>
-          {isSecy && (
-            <div className="flex flex-row mt-2 sm:mt-0 sm:ml-4">
-              <button
-                className="text-lg font-bold py-2 px-4 rounded-full bg-blue-500 hover:bg-blue-700 text-white transition-all duration-300 shadow-md"
-                onClick={() => router.push(`/events/edit-event/${_id}`)}
-              >
-                Edit
-              </button>
-              <button
-                className="text-lg font-bold py-2 px-4 rounded-full bg-red-500 hover:bg-red-700 text-white transition-all duration-300 shadow-md ml-2"
-                onClick={handleDelete}
-              >
-                Delete
-              </button>
-            </div>
-          )}
-        </div>
+
+      {/* Event Details */}
+      <div className="mt-4 text-gray-300">
+        <p>
+          <span className="font-semibold">Date:</span>{" "}
+          {new Date(eventTime).toLocaleString()}
+        </p>
+        <p>
+          <span className="font-semibold">Venue:</span> {eventVenue}
+        </p>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex justify-between items-center mt-6">
+        <button
+          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
+          onClick={() => router.push(`/events/${_id}`)}
+        >
+          View Details
+        </button>
+        {isSecy && (
+          <div className="flex space-x-4">
+            <button
+              className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
+              onClick={() => router.push(`/events/edit-event/${_id}`)}
+            >
+              Edit
+            </button>
+            <button
+              className="bg-red-700 hover:bg-red-800 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

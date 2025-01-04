@@ -5,6 +5,7 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 import { CldUploadButton } from "next-cloudinary";
 import NavigatorButton from "../../../components/general/navigator";
+import DotsLoader from "@/components/loading/dotLoader";
 
 export default function AddEventPage() {
   const [eventHostedBy, setEventHostedBy] = useState<string>("");
@@ -83,9 +84,7 @@ export default function AddEventPage() {
 
   if (clubs.length === 0) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-black to-[#0B0C10] text-white">
-        Loading...
-      </div>
+      <DotsLoader />
     );
   }
 
@@ -97,10 +96,9 @@ export default function AddEventPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-black to-[#0B0C10] p-4">
-
-            <div className="absolute top-6 right-6">
-              <NavigatorButton buttonText="Navigate" dropdownItems={dropdownItems} />
-            </div>
+      <div className="absolute top-6 right-6">
+        <NavigatorButton buttonText="Navigate" dropdownItems={dropdownItems} />
+      </div>
       <div className="w-full max-w-4xl p-6 bg-gradient-to-br from-[#1F2833] to-[#0B0C10] text-white rounded-lg shadow-xl">
         {/* Header */}
         <h1 className="text-4xl font-bold text-center mb-8 text-gray-300">Add Event</h1>
@@ -135,15 +133,14 @@ export default function AddEventPage() {
                   index === 0
                     ? setTag1(e.target.value)
                     : index === 1
-                    ? setTag2(e.target.value)
-                    : setTag3(e.target.value)
+                      ? setTag2(e.target.value)
+                      : setTag3(e.target.value)
                 }
                 className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
               >
-                <option value="">Select</option>
-                <option>Tag1</option>
-                <option>Tag2</option>
-                <option>Tag3</option>
+                {["Tech", "Coding", "Robotics", "Music", "Dance", "Art", "Comedy", ""].map((tag, index) => (
+                  <option value={tag} key={index}>{tag}</option>
+                ))}
               </select>
             ))}
           </div>
@@ -170,6 +167,17 @@ export default function AddEventPage() {
               placeholder="Event Description"
               className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
               rows={4}
+            />
+          </div>
+
+          <div>
+            <label className="block text-lg font-semibold  text-gray-300">Event Venue</label>
+            <input
+              value={eventVenue}
+              onChange={(e) => setEventVenue(e.target.value)}
+              type="text"
+              placeholder="Enter the event venue"
+              className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
             />
           </div>
 
@@ -209,6 +217,12 @@ export default function AddEventPage() {
               Upload
             </CldUploadButton>
           </div>
+          {poster && (
+            <div>
+              <label className="block text-lg font-semibold  text-gray-300">Uploaded Poster:</label>
+              <img src={poster} alt="Event Poster" className="w-full h-auto rounded-lg mt-2" />
+            </div>
+          )}
 
           <div className="flex items-center space-x-4">
             <label className="block text-lg font-semibold  text-gray-300">Attachments</label>
@@ -222,6 +236,25 @@ export default function AddEventPage() {
               Upload
             </CldUploadButton>
           </div>
+          {eventAttachments.length > 0 && (
+            <div>
+              <label className="block text-lg font-semibold  text-gray-300">Uploaded Attachments:</label>
+              <ul className="list-disc list-inside space-y-2">
+                {eventAttachments.map((attachment, index) => (
+                  <li key={index} className="text-gray-300">
+                    <a
+                      href={attachment}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline hover:text-cyan-500"
+                    >
+                      Attachment {index + 1}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         {/* Submit Button */}
