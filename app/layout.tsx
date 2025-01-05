@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import 'leaflet/dist/leaflet.css'
 import { Toaster } from "../components/ui/toaster";
 import AuthProvider from '../context/AuthProvider';
 import SignOutButton from "../components/signOutButton";

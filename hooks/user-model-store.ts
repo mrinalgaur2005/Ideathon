@@ -10,7 +10,10 @@ interface Event {
     description: string,
     tags: string[],
     eventTime: Date,
-    eventVenue: string,
+    eventVenue: {
+        lat: number;
+        lng: number;
+    },
     isInterested: boolean,
 }
 
@@ -22,7 +25,10 @@ interface SingleEvent {
     description: string;
     tags: string[];
     eventTime: Date;
-    eventVenue: string;
+    eventVenue: {
+        lat: number;
+        lng: number;
+    },
     isInterested: boolean;
     interestedMembersArr: {
         _id: mongoose.Types.ObjectId;
