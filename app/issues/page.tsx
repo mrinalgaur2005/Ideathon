@@ -31,9 +31,11 @@ export default function IssuesPage() {
         if (res.status === 200) {
           setIssues(res.data);
         } else {
+          router.push("/");
           console.error("Failed to fetch issues");
         }
       } catch (error) {
+        router.push("/");
         console.error("Error fetching issues:", error);
       } finally {
         setLoading(false);

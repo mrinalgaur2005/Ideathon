@@ -26,9 +26,11 @@ export default function AddIssuePage() {
           setDescription(res.data.description);
           setAttachments(res.data.attachments);
         } else {
+          router.push("/my-issues");
           console.error("Failed to fetch issues");
         }
       } catch (error) {
+        router.push("/mt-issues");
         console.error("Error fetching issues:", error);
       } finally {
         setLoading(false);
