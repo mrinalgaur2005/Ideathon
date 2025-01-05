@@ -92,14 +92,6 @@ export default function FriendsPage() {
 
                 {/* Action Buttons */}
                 <div className="flex space-x-4">
-                  {/* Chat Button */}
-                  <button
-                    className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
-                    onClick={() => router.push(`/chat/${friend._id.toString()}`)}
-                  >
-                    Chat
-                  </button>
-
                   {/* Remove Friend Button */}
                   <button
                     className="bg-red-700 hover:bg-red-800 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
