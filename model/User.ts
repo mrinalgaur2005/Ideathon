@@ -246,7 +246,10 @@ const ClubSchema: Schema<Club> = new Schema({
 });
 export interface Event extends Document {
     eventHostedBy: mongoose.Schema.Types.ObjectId;
-    eventVenue: string;
+    eventVenue: {
+        lat: number;
+        lng: number;
+    };
     eventTime: Date;
     interestedMembersArr: mongoose.Schema.Types.ObjectId[];
     eventAttachments?: string[];
@@ -259,9 +262,12 @@ export interface Event extends Document {
 const EventSchema: Schema<Event> = new Schema({
     eventHostedBy: {
         type: Schema.Types.ObjectId,
-        ref:"Club"
+        ref: "Club",
     },
-    eventVenue: { type: String, required: true },
+    eventVenue: {
+        lat: { type: Number, required: true },
+        lng: { type: Number, required: true },
+    },
     eventTime: { type: Date, required: true },
     interestedMembersArr: [{ type: Schema.Types.ObjectId, ref: "Student" }],
     eventAttachments: [{ type: String }],

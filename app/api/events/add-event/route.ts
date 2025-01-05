@@ -11,7 +11,6 @@ import { saveAIEvents } from '../../../../lib/aiEvents';
 export async function POST(req: Request) {
     try {
         await dbConnect();
-
         const session = await getServerSession(authOptions);
         const user: User = session?.user as User;
 
@@ -38,7 +37,14 @@ export async function POST(req: Request) {
                 { status: 400 }
             );
         }
-
+        console.log(heading);
+        
+        console.log(eventVenue);
+        const mappedEventVenue = {
+            lat: eventVenue.lat,
+            lng: eventVenue.lng,
+        };
+        
         const club = await ClubModel.findOne({ clubName: eventHostedBy });
 
         if (!club) {
@@ -58,10 +64,12 @@ export async function POST(req: Request) {
                 { status: 403 }
             );
         }
+        console.log(mappedEventVenue);
+        
 
         const newEvent = new EventModel({
             eventHostedBy: club._id,
-            eventVenue,
+            eventVenue:mappedEventVenue,
             eventTime,
             poster,
             interestedMembersArr: [],
@@ -70,7 +78,7 @@ export async function POST(req: Request) {
             description,
             tags,
         });
-
+        
         const savedEvent = await newEvent.save();
 
         club.clubEvents.push(savedEvent._id as mongoose.Schema.Types.ObjectId);
