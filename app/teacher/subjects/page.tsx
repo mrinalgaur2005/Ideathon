@@ -39,7 +39,7 @@ export default function SubjectsPage() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white flex items-center justify-center">
         <div className="text-gray-400 text-lg">
-          No subjects found. Please add some subjects!
+          No subjects found. Please tell admin to add some subjects!
         </div>
       </div>
     );

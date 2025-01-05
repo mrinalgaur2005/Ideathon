@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "../components/ui/toaster";
 import AuthProvider from '../context/AuthProvider';
-import StoreProvider from "../context/StoreProvider";
 import SignOutButton from "../components/signOutButton";
 import FloatingChatbot from "../components/chatBot/chatBot";
 
@@ -30,16 +29,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <StoreProvider>
-         <AuthProvider>
-           <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-            {children}
-            <FloatingChatbot />
-            <SignOutButton />
-            <Toaster />
-           </body>
-        </AuthProvider>
-      </StoreProvider>
+       <AuthProvider>
+         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          {children}
+          <FloatingChatbot />
+          <SignOutButton />
+          <Toaster />
+         </body>
+      </AuthProvider>
     </html>
   );
 }

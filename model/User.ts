@@ -370,6 +370,23 @@ const FriendRequestSchema: Schema<FriendRequest> = new Schema({
     to: {type: Schema.Types.ObjectId, ref: "Student" },
 })
 
+
+export interface Issue extends Document {
+    title: string;
+    description: string;
+    attachments: string[];
+    author: mongoose.Schema.Types.ObjectId;
+    votes: mongoose.Schema.Types.ObjectId[];
+}
+
+const IssueSchema: Schema<Issue> = new Schema({
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    attachments: [{ type: String }],
+    author: { type: Schema.Types.ObjectId, ref: "Student" }, //userId
+    votes: [{ type: Schema.Types.ObjectId, ref: "Student" }], //userId
+}, {timestamps: true})
+
 interface Eventai {
     title: string;
     description: string;
@@ -452,6 +469,9 @@ const FriendRequestModel: Model<FriendRequest> =
 const ResourceModel: Model<Resource> =
     mongoose.models.Resource || mongoose.model<Resource>("Resource", ResourceSchema);
 
+const IssueModel: Model<Issue> =
+    mongoose.models.Issue || mongoose.model<Issue>("Issue", IssueSchema);
+
 export {
     UserModel,
     StudentModel,
@@ -463,5 +483,6 @@ export {
     RequestModel,
     FriendRequestModel,
     aiChatBotModel,
-    ResourceModel
+    ResourceModel,
+    IssueModel,
 };

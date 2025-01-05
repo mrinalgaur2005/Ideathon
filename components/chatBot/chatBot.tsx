@@ -1,6 +1,7 @@
 "use client"
 import { useState } from "react";
 import axios from "axios";
+import {useSession} from "next-auth/react";
 
 interface Chat {
   userInput: string;
@@ -8,12 +9,14 @@ interface Chat {
 }
 
 const FloatingChatbot = () => {
+  const {data: session} = useSession();
   const [chat, setChat] = useState<Chat[]>([
     { userInput: "Hi!", response: "Hello! How can I assist you today?" },
   ]);
   const [userMessage, setUserMessage] = useState("");
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+
 
   const handleSendMessage = async () => {
     if (!userMessage.trim()) return;
@@ -45,6 +48,9 @@ const FloatingChatbot = () => {
 
     setIsDisabled(false);
   };
+
+
+  if (!session) return null;
 
   return (
     <div className="fixed bottom-8 right-8 z-50">

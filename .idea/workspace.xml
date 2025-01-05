@@ -5,14 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/api/teacher/subjects/resources/[...subjectId]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/helpers/deleteCloudinary.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/admin/subjects/teacher/add/[...teacherId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/subjects/teacher/add/[...teacherId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/teacher/subjects/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/teacher/subjects/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/teacher/subjects/resources/[...subjectId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/teacher/subjects/resources/[...subjectId]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/chatBot/chatBot.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/chatBot/chatBot.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/context/StoreProvider.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/middleware.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +46,7 @@
   }
 }</component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -170,7 +167,13 @@
       <workItem from="1735834776101" duration="1436000" />
       <workItem from="1735887939114" duration="9151000" />
       <workItem from="1735912253570" duration="2503000" />
-      <workItem from="1735936579519" duration="3194000" />
+      <workItem from="1735936579519" duration="4282000" />
+      <workItem from="1735976191219" duration="1696000" />
+      <workItem from="1735985050166" duration="4726000" />
+      <workItem from="1736003028073" duration="54000" />
+      <workItem from="1736005381956" duration="622000" />
+      <workItem from="1736015697437" duration="8495000" />
+      <workItem from="1736059367137" duration="8324000" />
     </task>
     <servers />
   </component>

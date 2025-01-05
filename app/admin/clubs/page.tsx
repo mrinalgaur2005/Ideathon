@@ -6,7 +6,7 @@ import {useModel} from "../../../hooks/user-model-store";
 import DotsLoader from "../../../components/loading/dotLoader";
 
 export default function ClubsPage() {
-  const { allClubs, setAllClub, setLoading } = useModel();
+  const { allClubs, setAllClub, isLoading, setLoading } = useModel();
   const router = useRouter();
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function ClubsPage() {
     fetchData();
   }, [router, setAllClub, setLoading]);
 
-  if (!allClubs) {
+  if (isLoading) {
     return <DotsLoader />;
   }
 
