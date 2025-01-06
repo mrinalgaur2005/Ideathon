@@ -30,6 +30,8 @@ export async function POST(req: Request) {
             description,
             tags,
         } = await req.json();
+        const url = req.url;
+        console.log(url);
 
         if (!eventHostedBy || !eventVenue || !eventTime || !heading || !description || !poster) {
             return NextResponse.json(
@@ -84,8 +86,11 @@ export async function POST(req: Request) {
         club.clubEvents.push(savedEvent._id as mongoose.Schema.Types.ObjectId);
         await club.save();
 
+        const gettingEventforAI = await EventModel.findOne({ heading: heading });
+        const link = "http://"+ String(url.split("/")[2]) + "/events/" + String(gettingEventforAI?._id); 
+        const aiDescription = description + "\n"+"Tags for this event are: " + tags.join(" ") + "\n" + "This is the link to the event: " + link;
         console.log("Adding event to AI system...");
-        await saveAIEvents(heading, description);
+        await saveAIEvents(heading, aiDescription);
         console.log("Event added to AI system.");
 
         return NextResponse.json(savedEvent, { status: 200 });
