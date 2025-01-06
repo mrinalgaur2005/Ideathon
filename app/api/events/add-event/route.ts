@@ -24,6 +24,7 @@ export async function POST(req: Request) {
             poster,
             eventHostedBy,
             eventVenue,
+            eventCoordinates,
             eventTime,
             eventAttachments,
             heading,
@@ -38,13 +39,9 @@ export async function POST(req: Request) {
             );
         }
         console.log(heading);
-        
+
         console.log(eventVenue);
-        const mappedEventVenue = {
-            lat: eventVenue.lat,
-            lng: eventVenue.lng,
-        };
-        
+
         const club = await ClubModel.findOne({ clubName: eventHostedBy });
 
         if (!club) {
@@ -64,31 +61,56 @@ export async function POST(req: Request) {
                 { status: 403 }
             );
         }
-        console.log(mappedEventVenue);
-        
 
-        const newEvent = new EventModel({
-            eventHostedBy: club._id,
-            eventVenue:mappedEventVenue,
-            eventTime,
-            poster,
-            interestedMembersArr: [],
-            eventAttachments: eventAttachments || [],
-            heading,
-            description,
-            tags,
-        });
-        
-        const savedEvent = await newEvent.save();
 
-        club.clubEvents.push(savedEvent._id as mongoose.Schema.Types.ObjectId);
-        await club.save();
+        if (eventCoordinates) {
+            const newEvent = new EventModel({
+                eventHostedBy: club._id,
+                eventVenue,
+                eventCoordinates,
+                eventTime,
+                poster,
+                interestedMembersArr: [],
+                eventAttachments: eventAttachments || [],
+                heading,
+                description,
+                tags,
+            });
 
-        console.log("Adding event to AI system...");
-        await saveAIEvents(heading, description);
-        console.log("Event added to AI system.");
+            const savedEvent = await newEvent.save();
 
-        return NextResponse.json(savedEvent, { status: 200 });
+            club.clubEvents.push(savedEvent._id as mongoose.Schema.Types.ObjectId);
+            await club.save();
+
+            console.log("Adding event to AI system...");
+            await saveAIEvents(heading, description);
+            console.log("Event added to AI system.");
+
+            return NextResponse.json(savedEvent, { status: 200 });
+        } else {
+            const newEvent = new EventModel({
+                eventHostedBy: club._id,
+                eventVenue,
+                eventTime,
+                poster,
+                interestedMembersArr: [],
+                eventAttachments: eventAttachments || [],
+                heading,
+                description,
+                tags,
+            });
+
+            const savedEvent = await newEvent.save();
+
+            club.clubEvents.push(savedEvent._id as mongoose.Schema.Types.ObjectId);
+            await club.save();
+
+            console.log("Adding event to AI system...");
+            await saveAIEvents(heading, description);
+            console.log("Event added to AI system.");
+
+            return NextResponse.json(savedEvent, { status: 200 });
+        }
     } catch (error) {
         console.error('Error:', error);
         return NextResponse.json(

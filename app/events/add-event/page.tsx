@@ -9,7 +9,8 @@ import DotsLoader from "@/components/loading/dotLoader";
 import MapComponent from "@/components/map/mapComponent";
 
 export default function AddEventPage() {
-  const [eventVenueCoords, setEventVenueCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [eventCoordinates, setEventCoordinates] = useState<{ lat: number; lng: number } | null>(null);
+  const [eventVenue, setEventVenue] = useState<string>("")
   const [eventHostedBy, setEventHostedBy] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [heading, setHeading] = useState("");
@@ -34,11 +35,11 @@ export default function AddEventPage() {
   }
 
   function handleLocationSelect(lat: number, lng: number) {
-    setEventVenueCoords({ lat, lng });
+    setEventCoordinates({ lat, lng });
   }
 
   async function handleAddEvent() {
-    if (!poster || !date || !time || !eventHostedBy || !description || !eventVenueCoords) {
+    if (!poster || !date || !time || !eventHostedBy || !description || !eventVenue) {
       alert("Please fill all required fields.");
       return;
     }
@@ -51,13 +52,12 @@ export default function AddEventPage() {
       tags,
       description,
       eventAttachments,
-      eventVenue: eventVenueCoords,
+      eventVenue,
       eventTime,
+      eventCoordinates
     };
 
     try {
-      console.log(eventVenueCoords);
-      
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/add-event`,
         payload
@@ -167,12 +167,23 @@ export default function AddEventPage() {
           <div className="mt-8">
             <label className="block text-lg font-semibold text-gray-300">Event Venue (Map)</label>
             <MapComponent onLocationSelect={handleLocationSelect} />
-            {eventVenueCoords && (
+            {eventCoordinates && (
               <p className="text-gray-300 mt-2">
-                Selected Location: Latitude {eventVenueCoords.lat}, Longitude {eventVenueCoords.lng}
+                Selected Location: Latitude {eventCoordinates.lat}, Longitude {eventCoordinates.lng}
               </p>
             )}
           </div>
+
+          <div>
+          <label className="block text-lg font-semibold text-gray-300">Event Venue</label>
+          <input
+            value={eventVenue}
+            onChange={(e) => setEventVenue(e.target.value)}
+            type="text"
+            placeholder="Event Heading"
+            className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
+          />
+        </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>

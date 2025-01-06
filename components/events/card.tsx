@@ -12,10 +12,7 @@ interface EventCardProps {
   description: string;
   tags: string[];
   eventTime: Date;
-  eventVenue: {
-    lat:number,
-    lng:number
-  };
+  eventVenue: string;
   isInterested: boolean;
 }
 
@@ -99,7 +96,7 @@ export default function EventCard({
             <span className="font-semibold bg-gradient-to-br from-cyan-800 to-blue-600 text-transparent bg-clip-text">
               Venue:
             </span>{" "}
-            lat {eventVenue.lat} long {eventVenue.lng}
+            {eventVenue}
           </p>
         </div>
 

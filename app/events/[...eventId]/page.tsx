@@ -112,7 +112,7 @@ export default function Event() {
           <div className="flex flex-col sm:flex-row justify-between">
             <div className="flex flex-col w-full sm:w-1/2 p-4 bg-[#1E1E1E] border border-blue-800 rounded-md shadow-lg">
               <div>
-                <strong>Venue:</strong> <span>lat {event?.eventVenue.lat} long{event?.eventVenue.lng}</span>
+                <strong>Venue:</strong> <span>{event.eventVenue}</span>
               </div>
               <div>
                 <strong>Date:</strong>{" "}
