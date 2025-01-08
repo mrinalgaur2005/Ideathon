@@ -5,18 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_29_24,_10_54 PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_29_24,_7_46 PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_29_24__10_54PM__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_29_24__7_46PM__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_30_24,_3_20 PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_30_24__3_20PM__Changes_.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/study-requests/edit-request/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/study-requests/my-requests/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/study-requests/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/study-requests/add-request/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/study-requests/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/study-requests/my-requests/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/study-requests/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/admin/clubs/edit-club/[...clubId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/admin/clubs/edit-club/[...clubId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/events/add-event/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/add-event/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/[...eventId]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/events/add-event/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/add-event/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/events/card.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/events/card.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-request/[...studyRequestId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/[...studyRequestId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-request/add-request/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/add-reuest-to-teach/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-request/add-reuest-to-teach/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/edit-request-to-teach/[...requestToTeachId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-request/edit-request-to-teach/[...requestToTeachId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/edit-request-to-teach/[...requestToTeachId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-request/edit-request/[...studyRequestId]/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-request/edit-request/[...studyRequestId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/edit-request/[...studyRequestId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-request/my-request-to-teach/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/my-request-to-teach/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-request/my-request/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-request/page.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
     </list>
@@ -55,7 +60,7 @@
   }
 }</component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -183,7 +188,13 @@
       <workItem from="1736005381956" duration="622000" />
       <workItem from="1736015697437" duration="8495000" />
       <workItem from="1736059367137" duration="10380000" />
-      <workItem from="1736164657551" duration="5515000" />
+      <workItem from="1736164657551" duration="6350000" />
+      <workItem from="1736182719895" duration="1744000" />
+      <workItem from="1736235191519" duration="1089000" />
+      <workItem from="1736266445785" duration="30000" />
+      <workItem from="1736322350336" duration="2281000" />
+      <workItem from="1736334930878" duration="1509000" />
+      <workItem from="1736346401880" duration="7966000" />
     </task>
     <servers />
   </component>
@@ -221,5 +232,17 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixup! recovered files" />
     <option name="LAST_COMMIT_MESSAGE" value="fixup! recovered files" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/hooks/user-model-store.ts</url>
+          <line>165</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
