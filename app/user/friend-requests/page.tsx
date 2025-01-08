@@ -4,7 +4,6 @@ import {useRouter} from "next/navigation";
 import {useEffect} from "react";
 import axios from "axios";
 import DotsLoader from "../../../components/loading/dotLoader";
-
 export default function FriendRequests() {
   const { currentRequests, setCurrentRequests, setLoading } = useModel()
   const router = useRouter();
@@ -68,14 +67,14 @@ export default function FriendRequests() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
       {/* Page Header */}
-      <div className="w-full py-10 bg-gray-950 shadow-lg">
+      {/* <div className="w-full py-10 bg-gray-950 shadow-lg">
         <h1 className="text-3xl font-extrabold text-center text-blue-500 tracking-wide">
           Friend Requests
         </h1>
-      </div>
+      </div> */}
 
       {/* Friend Requests List */}
-      <div className="flex flex-col items-center mt-10 px-4">
+      <div className="flex flex-col items-center px-4">
         {currentRequests.length === 0 ? (
           <div className="text-gray-400 text-lg mt-20">
             You have no pending friend requests.

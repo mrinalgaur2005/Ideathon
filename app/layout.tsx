@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import 'leaflet/dist/leaflet.css'
+import "leaflet/dist/leaflet.css";
 import { Toaster } from "../components/ui/toaster";
-import AuthProvider from '../context/AuthProvider';
+import AuthProvider from "../context/AuthProvider";
 import SignOutButton from "../components/signOutButton";
 import FloatingChatbot from "../components/chatBot/chatBot";
+import Navbar from "@/components/navbar/Navbar";
+import ClientOnly from "@/components/ClientOnly";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,13 +32,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-       <AuthProvider>
-         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <AuthProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <ClientOnly>
+            <Navbar />
+          </ClientOnly>
+
           {children}
           <FloatingChatbot />
           <SignOutButton />
           <Toaster />
-         </body>
+        </body>
       </AuthProvider>
     </html>
   );

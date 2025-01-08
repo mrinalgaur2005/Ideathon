@@ -4,7 +4,6 @@ import {useModel} from "../../../hooks/user-model-store";
 import {useRouter} from "next/navigation";
 import axios from "axios";
 import DotsLoader from "../../../components/loading/dotLoader";
-
 export default function RequestsSentPage() {
   const { requestsSent, setRequestsSent, setLoading } = useModel()
   const router = useRouter();
@@ -54,14 +53,14 @@ export default function RequestsSentPage() {
     <>
       <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
         {/* Page Header */}
-        <div className="w-full py-10 bg-gray-950 shadow-lg">
+        {/* <div className="w-full py-10 bg-gray-950 shadow-lg">
           <h1 className="text-3xl font-extrabold text-center text-blue-500 tracking-wide">
             Requests Sent
           </h1>
-        </div>
+        </div> */}
 
         {/* Requests Sent List */}
-        <div className="flex flex-col items-center mt-8 px-4">
+        <div className="flex flex-col items-center px-4">
           {requestsSent.length === 0 ? (
             <div className="text-gray-400 text-lg mt-20">
               You have not sent any requests.

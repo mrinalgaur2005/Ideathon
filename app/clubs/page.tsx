@@ -52,14 +52,14 @@ export default function ClubsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
       {/* Page Header */}
-      <div className="w-full py-10 bg-gray-950 shadow-lg">
+      {/* <div className="w-full py-10 bg-gray-950 shadow-lg">
         <h1 className="text-4xl font-extrabold text-center text-blue-500 tracking-wide">
           Clubs
         </h1>
-      </div>
+      </div> */}
 
       {/* Clubs List */}
-      <div className="flex flex-col items-center mt-10 px-4">
+      <div className="flex flex-col items-center px-4">
         <div className="w-full max-w-7xl max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
           {allClubs.map((club) => (
             <div
