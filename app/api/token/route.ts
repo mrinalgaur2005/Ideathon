@@ -3,10 +3,13 @@ import { AccessToken } from 'livekit-server-sdk';
 
 export async function GET(req: NextRequest) {
   const room = req.nextUrl.searchParams.get('room');
-  const username = req.nextUrl.searchParams.get('username');
-  if (!room) {
+  const username = req.nextUrl.searchParams.get('studentName');
+  console.log(room);
+  console.log(username);
+  
+  if (!room) {    
     return NextResponse.json({ error: 'Missing "room" query parameter' }, { status: 400 });
-  } else if (!username) {
+  } else if (!username) {    
     return NextResponse.json({ error: 'Missing "username" query parameter' }, { status: 400 });
   }
 
@@ -14,13 +17,15 @@ export async function GET(req: NextRequest) {
   const apiSecret = process.env.LIVEKIT_API_SECRET;
   const wsUrl = process.env.NEXT_PUBLIC_LIVEKITWS_URL;
 
+  console.log(wsUrl);
+  
+
   if (!apiKey || !apiSecret || !wsUrl) {
     return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 });
   }
 
   const at = new AccessToken(apiKey, apiSecret, { identity: username });
 
-  at.addGrant({ room, roomJoin: true, canPublish: true, canSubscribe: true });
-
+  at.addGrant({ room, roomJoin: true, canPublish: true, canSubscribe: true });  
   return NextResponse.json({ token: await at.toJwt() });
 }
