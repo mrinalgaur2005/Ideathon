@@ -126,7 +126,7 @@ export default function StudyRequestsPage() {
                   {/* Edit */}
                   <button
                     className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
-                    onClick={() => router.push(`/my-requests/edit/${request._id}`)}
+                    onClick={() => router.push(`/study-requests/edit-request/${request._id.toString()}`)}
                   >
                     Edit
                   </button>

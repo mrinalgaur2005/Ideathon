@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {useParams, useRouter} from "next/navigation";
 import { CldUploadButton } from "next-cloudinary";
+import DotsLoader from "@/components/loading/dotLoader";
 
 export default function AddStudyRequestPage() {
   const [subjectId, setSubjectId] = useState("");
@@ -20,10 +21,15 @@ export default function AddStudyRequestPage() {
     async function fetchStudyRequests() {
       setLoading(true);
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests`);
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/edit-request/${studyRequestId}`);
         if (res.status === 200) {
-          setStudyRequests(res.data);
+          setSubjectId(res.data.subjectId);
+          setSubjectName(res.data.subjectName);
+          setDescription(res.data.description);
+          setAttachments(res.data.attachments);
+          setPrice(res.data.price);
         } else {
+          router.push("/study-requests");
           console.error("Failed to fetch study requests");
         }
       } catch (error) {
@@ -35,7 +41,7 @@ export default function AddStudyRequestPage() {
     }
 
     fetchStudyRequests();
-  }, [router, setLoading, setStudyRequests]);
+  }, [router, setLoading, studyRequestId]);
 
   const handleUpload = (result: any) => {
     if (result.event === "success") {
@@ -53,7 +59,7 @@ export default function AddStudyRequestPage() {
 
     setLoading(true);
     try {
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests`, {
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/edit-request/${studyRequestId}`, {
         subjectId,
         subjectName,
         description,
@@ -65,15 +71,19 @@ export default function AddStudyRequestPage() {
         alert("Study request created successfully!");
         router.push("/study-requests/my-requests");
       } else {
-        alert("Failed to create study request. Please try again.");
+        alert("Failed to update study request. Please try again.");
       }
     } catch (error) {
-      console.error("Error creating study request:", error);
-      alert("An error occurred while creating the study request.");
+      console.error("Error updating study request:", error);
+      alert("An error occurred while updating the study request.");
     } finally {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return <DotsLoader />
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white flex items-center justify-center">
@@ -162,7 +172,7 @@ export default function AddStudyRequestPage() {
             }`}
             disabled={loading}
           >
-            {loading ? "Submitting..." : "Submit"}
+            {loading ? "Updating..." : "Update"}
           </button>
         </form>
       </div>
