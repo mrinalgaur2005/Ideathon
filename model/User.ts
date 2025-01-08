@@ -395,6 +395,42 @@ const IssueSchema: Schema<Issue> = new Schema({
     votes: [{ type: Schema.Types.ObjectId, ref: "Student" }], //userId
 }, {timestamps: true})
 
+
+export interface StudyRequest extends Document {
+    user_id: mongoose.Schema.Types.ObjectId;
+    subjectId: string;
+    subjectName: string;
+    description: string;
+    attachments: string[];
+    price: number;
+}
+
+const StudyRequestSchema: Schema<StudyRequest> = new Schema({
+    user_id: { type: Schema.Types.ObjectId, ref: "Student" },
+    subjectId: { type: String, required: true },
+    subjectName: { type: String, required: true },
+    description: { type: String, required: true },
+    attachments: [{ type: String }],
+    price: { type: Number, required: true },
+})
+
+
+export interface RequestToTeach extends Document {
+    studyRequestId: mongoose.Schema.Types.ObjectId;
+    user_id: mongoose.Schema.Types.ObjectId;
+    description: string;
+    attachments: string[];
+    phoneNumber: number;
+}
+
+const RequestToTeachSchema: Schema<RequestToTeach> = new Schema({
+    studyRequestId: { type: Schema.Types.ObjectId, ref: "StudyRequest" },
+    user_id: { type: Schema.Types.ObjectId, ref: "Student" },
+    description: { type: String, required: true },
+    attachments: [{ type: String }],
+    phoneNumber: { type: Number, required: true },
+})
+
 interface Eventai {
     title: string;
     description: string;
@@ -480,6 +516,12 @@ const ResourceModel: Model<Resource> =
 const IssueModel: Model<Issue> =
     mongoose.models.Issue || mongoose.model<Issue>("Issue", IssueSchema);
 
+const StudyRequestModel: Model<StudyRequest> =
+    mongoose.models.StudyRequest || mongoose.model<StudyRequest>("StudyRequest", StudyRequestSchema);
+
+const RequestToTeachModel: Model<RequestToTeach> =
+    mongoose.models.RequestToTeach || mongoose.model<RequestToTeach>("RequestToTeach", RequestToTeachSchema);
+
 export {
     UserModel,
     StudentModel,
@@ -493,4 +535,6 @@ export {
     aiChatBotModel,
     ResourceModel,
     IssueModel,
+    StudyRequestModel,
+    RequestToTeachModel,
 };
