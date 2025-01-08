@@ -9,7 +9,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { label: "Study Request", href: "/study-requests" },
     { label: "My Requests", href: "/study-requests/my-requests" },
-    { label: "My Requests to Teach", href: "/study-requests/my-request-to-teach" },
+    { label: "My Requests to Teach", href: "/study-requests/my-requests-to-teach" },
     { label: "Add Request", href: "/study-requests/add-request" },
   ];
 

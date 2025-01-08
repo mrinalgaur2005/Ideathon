@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
+      <change afterPath="$PROJECT_DIR$/app/study-requests/add-request-to-teach/[...studyRequestId]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/study-requests/edit-request/[...studyRequestId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/study-requests/edit-request/[...studyRequestId]/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/study-requests/edit-request/[...studyRequestId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/edit-request/[...studyRequestId]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/study-requests/my-requests/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/my-requests/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-requests/add-reuest-to-teach/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/study-requests/add-request-to-teach/[...studyRequestId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-requests/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-requests/my-request-to-teach/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/my-requests-to-teach/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-requests/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,11 +77,11 @@
       <recent name="$PROJECT_DIR$/app/api/admin/user" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/api/study-requests/add-request-to-teach/[...studyRequestId]" />
       <recent name="$PROJECT_DIR$/app/api/study-requests/edit-request/[...studyRequestId]" />
       <recent name="$PROJECT_DIR$/app/api/teacher/subjects/groups/[...subjectId]" />
       <recent name="$PROJECT_DIR$/app/api/teacher" />
       <recent name="$PROJECT_DIR$/app/api/admin/subjects/teacher" />
-      <recent name="$PROJECT_DIR$/app/admin" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -179,7 +181,7 @@
       <workItem from="1736266445785" duration="30000" />
       <workItem from="1736322350336" duration="2281000" />
       <workItem from="1736334930878" duration="1509000" />
-      <workItem from="1736346401880" duration="11342000" />
+      <workItem from="1736346401880" duration="13394000" />
     </task>
     <servers />
   </component>

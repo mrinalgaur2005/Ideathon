@@ -122,6 +122,7 @@ export default function StudyRequestsPage() {
                   </div>
                   <button
                     className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
+                    onClick={()=> router.push(`/study-requests/add-request-to-teach/${request._id.toString()}`)}
                   >
                     Apply Now
                   </button>
