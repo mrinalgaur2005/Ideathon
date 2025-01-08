@@ -176,7 +176,37 @@ interface Resource {
     fileName: string;
 }
 
+interface StudyRequest {
+    _id: mongoose.Types.ObjectId;
+    user_id: {
+        _id: mongoose.Types.ObjectId;
+        name: string;
+        student_id: string;
+        profile: string;
+        branch: string;
+        semester: number;
+    };
+    subjectId: string;
+    subjectName: string;
+    description: string;
+    attachments: string[];
+    price: number;
+    applied: mongoose.Types.ObjectId[];
+}
+
+interface MyRequest {
+    _id: mongoose.Types.ObjectId;
+    subjectId: string;
+    subjectName: string;
+    description: string;
+    attachments: string[];
+    price: number;
+    applied: number;
+}
+
 interface ModelStore {
+    myRequests: MyRequest[]|[];
+    studyRequests: StudyRequest[]|[];
     resources: Resource[]|[];
     students: Student[]|[];
     groups: Group[]|[];
@@ -194,6 +224,8 @@ interface ModelStore {
     allEvents: Event[];
     singleEvent:SingleEvent|null;
     isLoading: boolean;
+    setMyRequests: (myRequests: MyRequest[]) => void;
+    setStudyRequests: (studyRequests: StudyRequest[]) => void;
     setResources: (resources: Resource[]) => void;
     setStudents: (students: Student[]) => void;
     setGroups: (groups: Group[]) => void;
@@ -214,6 +246,8 @@ interface ModelStore {
 }
 
 export const useModel = create<ModelStore>((set) => ({
+    myRequests: [],
+    studyRequests: [],
     resources: [],
     students: [],
     groups: [],
@@ -231,6 +265,8 @@ export const useModel = create<ModelStore>((set) => ({
     editClub:null,
     profile: null,
     isLoading: false,
+    setMyRequests: ((myRequests) => set({myRequests: myRequests})),
+    setStudyRequests: ((studyRequests) => set({studyRequests: studyRequests})),
     setResources: ((resources) => set({resources: resources})),
     setStudents: ((students) => set({students: students})),
     setGroups: ((groups) => set({groups: groups})),

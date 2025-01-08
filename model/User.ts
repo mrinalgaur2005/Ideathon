@@ -403,15 +403,17 @@ export interface StudyRequest extends Document {
     description: string;
     attachments: string[];
     price: number;
+    applied: mongoose.Schema.Types.ObjectId[];  // id of people who applied
 }
 
 const StudyRequestSchema: Schema<StudyRequest> = new Schema({
-    user_id: { type: Schema.Types.ObjectId, ref: "Student" },
+    user_id: { type: Schema.Types.ObjectId, ref: "Student", required: true },
     subjectId: { type: String, required: true },
     subjectName: { type: String, required: true },
     description: { type: String, required: true },
     attachments: [{ type: String }],
     price: { type: Number, required: true },
+    applied: [{ type: Schema.Types.ObjectId }]
 })
 
 
@@ -429,6 +431,31 @@ const RequestToTeachSchema: Schema<RequestToTeach> = new Schema({
     description: { type: String, required: true },
     attachments: [{ type: String }],
     phoneNumber: { type: Number, required: true },
+})
+
+
+export interface AcceptedStudyRequest extends Document {
+    studentId: mongoose.Schema.Types.ObjectId;
+    teacherId: mongoose.Schema.Types.ObjectId;
+    subjectId: string;
+    subjectName: string;
+    description: string;
+    studentAttachments: string[];
+    teacherAttachments: string[];
+    teacherPhoneNumber: number;
+    studentPhoneNumber: number;
+}
+
+const AcceptedStudyRequestSchema: Schema<AcceptedStudyRequest> = new Schema({
+    studentId: { type: Schema.Types.ObjectId, ref: "Student" },
+    teacherId: { type: Schema.Types.ObjectId, ref: "Student" },
+    subjectId: { type: String, required: true },
+    subjectName: { type: String, required: true },
+    description: { type: String, required: true },
+    studentAttachments: [ { type: String } ],
+    teacherAttachments: [ { type: String } ],
+    teacherPhoneNumber: { type: Number, required: true },
+    studentPhoneNumber: { type: Number, required: true },
 })
 
 interface Eventai {
@@ -522,6 +549,9 @@ const StudyRequestModel: Model<StudyRequest> =
 const RequestToTeachModel: Model<RequestToTeach> =
     mongoose.models.RequestToTeach || mongoose.model<RequestToTeach>("RequestToTeach", RequestToTeachSchema);
 
+const AcceptedStudyRequestModel: Model<AcceptedStudyRequest> =
+    mongoose.models.AcceptedStudyRequest || mongoose.model<AcceptedStudyRequest>("AcceptedStudyRequest", AcceptedStudyRequestSchema);
+
 export {
     UserModel,
     StudentModel,
@@ -537,4 +567,5 @@ export {
     IssueModel,
     StudyRequestModel,
     RequestToTeachModel,
+    AcceptedStudyRequestModel,
 };
