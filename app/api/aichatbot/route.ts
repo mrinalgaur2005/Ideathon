@@ -210,7 +210,7 @@ const getBotResponse = async (
                      If the context is about marks, provide only the student's marks, name, roll number, 
                      and subject details.
                      For events, include the hosting club, venue, date/time, 
-                     and a brief description (max 100 words).
+                     and a brief description and the link to the event (max 100 words).
                      If the context is about general information, provide a brief description of the topic.`;
 
       const completion = await groqClient.chat.completions.create({
