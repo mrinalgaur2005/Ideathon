@@ -4,7 +4,7 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-900 to-black text-white">
       {/* Navbar */}
-      <nav className="bg-black bg-opacity-60 backdrop-blur-md p-4 fixed w-full z-10 shadow-lg">
+      {/* <nav className="bg-black bg-opacity-60 backdrop-blur-md p-4 fixed w-full z-10 shadow-lg">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="text-2xl font-bold">College Compass</div>
           <div className="space-x-4">
@@ -12,7 +12,7 @@ const LandingPage = () => {
             <button className="bg-transparent text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"><a href="/sign-up">Sign Up</a></button>
           </div>
         </div>
-      </nav>
+      </nav> */}
 
       {/* Hero Section */}
       <div className="text-center py-16 sm:py-20 px-6 sm:px-10">
