@@ -91,6 +91,22 @@ export async function POST(req: Request, { params }: { params: { studyRequestId:
       )
     }
 
+    const studyRequest = await StudyRequestModel.findOne({ _id: studyRequestObjectId });
+
+    if (!studyRequest) {
+      return NextResponse.json(
+        {error: "study request not found"},
+        {status: 404}
+      )
+    }
+
+    if (studyRequest.applied.some(id => id.toString() === userId.toString())) {
+      return NextResponse.json(
+        {error: "already applied"},
+        {status: 403}
+      )
+    }
+
     const requestToTeach = await RequestToTeachModel.create({
       studyRequestId: studyRequestObjectId,
       user_id: userId,
@@ -106,10 +122,7 @@ export async function POST(req: Request, { params }: { params: { studyRequestId:
       )
     }
 
-    await StudyRequestModel.findOneAndUpdate(
-      { _id: studyRequestObjectId },
-      { $push: { applied: userId } }
-    );
+    studyRequest.applied = [...studyRequest.applied, userId as unknown as mongoose.Schema.Types.ObjectId];
 
     return NextResponse.json({status: 200});
   } catch (error) {

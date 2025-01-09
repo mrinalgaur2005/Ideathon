@@ -71,7 +71,7 @@ export default function AddRequestToTeachPage() {
 
       if (res.status === 200) {
         alert("Request to teach submitted successfully!");
-        router.push("/my-requests-to-teach");
+        router.push("/study-requests/my-requests-to-teach");
       } else {
         alert("Failed to submit request. Please try again.");
       }
