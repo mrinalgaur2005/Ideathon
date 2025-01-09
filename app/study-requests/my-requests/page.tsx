@@ -43,7 +43,7 @@ export default function StudyRequestsPage() {
 
     try {
       const res = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/my-requests/${deletePopup.requestId}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests/${deletePopup.requestId}`
       );
       if (res.status === 200) {
         alert("Request deleted successfully!");
@@ -89,7 +89,7 @@ export default function StudyRequestsPage() {
                   Applied: <span className="font-semibold text-white">{request.applied}</span>
                 </div>
                 <div className="text-sm text-gray-500 mt-2">
-                  Price: <span className="font-semibold text-white">${request.price}</span>
+                  Price: <span className="font-semibold text-white">₹{request.price}</span>
                 </div>
 
                 {/* Attachments */}
@@ -118,7 +118,7 @@ export default function StudyRequestsPage() {
                   {/* View Details */}
                   <button
                     className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
-                    onClick={() => router.push(`/my-requests/${request._id}`)}
+                    onClick={() => router.push(`/study-requests/${request._id.toString()}`)}
                   >
                     View Details
                   </button>

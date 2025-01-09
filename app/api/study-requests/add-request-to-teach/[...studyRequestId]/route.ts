@@ -3,7 +3,7 @@ import {getServerSession, User} from "next-auth";
 import {authOptions} from "@/app/api/(auth)/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
 import mongoose from "mongoose";
-import {RequestToTeachModel, StudyRequestModel} from "@/model/User";
+import {RequestToTeachModel, StudyRequest, StudyRequestModel} from "@/model/User";
 
 export async function GET(req: Request, { params }: { params: { studyRequestId: string[] } }) {
   try {
@@ -91,7 +91,7 @@ export async function POST(req: Request, { params }: { params: { studyRequestId:
       )
     }
 
-    const studyRequest = await StudyRequestModel.findOne({ _id: studyRequestObjectId });
+    const studyRequest: StudyRequest|null = await StudyRequestModel.findOne({ _id: studyRequestObjectId });
 
     if (!studyRequest) {
       return NextResponse.json(
@@ -123,6 +123,7 @@ export async function POST(req: Request, { params }: { params: { studyRequestId:
     }
 
     studyRequest.applied = [...studyRequest.applied, userId as unknown as mongoose.Schema.Types.ObjectId];
+    await studyRequest.save();
 
     return NextResponse.json({status: 200});
   } catch (error) {

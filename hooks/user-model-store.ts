@@ -226,7 +226,41 @@ interface MyRequestToTeach {
     }
 }
 
+export interface SingleRequest {
+    studyRequest: {
+        _id: mongoose.Types.ObjectId;
+        user_id: mongoose.Types.ObjectId;
+        subjectId: string;
+        subjectName: string;
+        description: string;
+        attachments: string[];
+        price: number;
+        applied: mongoose.Types.ObjectId[];
+    },
+    requestsToTeach: {
+        _id: mongoose.Types.ObjectId;
+        attachments: string[];
+        phoneNumber: number;
+        description: string;
+        teacher: {
+            student_id: string;
+            name: string;
+            profile: string;
+            semester: number;
+            branch: string;
+            subjectMarks: {
+                subjectId: string;
+                allMarks: {
+                    examType: string;
+                    marks: number;
+                }[];
+            }[]
+        }
+    }[]
+}
+
 interface ModelStore {
+    singleRequest: SingleRequest|null;
     myRequestsToTeach: MyRequestToTeach[]|[];
     myRequests: MyRequest[]|[];
     studyRequests: StudyRequest[]|[];
@@ -247,6 +281,7 @@ interface ModelStore {
     allEvents: Event[];
     singleEvent:SingleEvent|null;
     isLoading: boolean;
+    setSingleRequest: (singleRequest: SingleRequest) => void;
     setMyRequestsToTeach: (myRequestsToTeach: MyRequestToTeach[]) => void;
     setMyRequests: (myRequests: MyRequest[]) => void;
     setStudyRequests: (studyRequests: StudyRequest[]) => void;
@@ -270,6 +305,7 @@ interface ModelStore {
 }
 
 export const useModel = create<ModelStore>((set) => ({
+    singleRequest: null,
     myRequestsToTeach: [],
     myRequests: [],
     studyRequests: [],
@@ -290,6 +326,7 @@ export const useModel = create<ModelStore>((set) => ({
     editClub:null,
     profile: null,
     isLoading: false,
+    setSingleRequest: ((singleRequest) => set({singleRequest})),
     setMyRequestsToTeach: ((myRequestsToTeach) => set({myRequestsToTeach})),
     setMyRequests: ((myRequests) => set({myRequests: myRequests})),
     setStudyRequests: ((studyRequests) => set({studyRequests: studyRequests})),

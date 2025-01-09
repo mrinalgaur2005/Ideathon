@@ -44,7 +44,7 @@ export default function MyRequestsToTeachPage() {
 
     try {
       const res = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests-to-teach/edit/${deletePopup.requestId}/${deletePopup.studyRequestId}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests-to-teach/${deletePopup.requestId}/${deletePopup.studyRequestId}`
       );
       if (res.status === 200) {
         alert("Request deleted successfully!");
@@ -140,9 +140,7 @@ export default function MyRequestsToTeachPage() {
                   <button
                     className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
                     onClick={() =>
-                      router.push(
-                        `/requests-to-teach/edit/${request._id.toString()}`
-                      )
+                      router.push(`/study-requests/edit-request-to-teach/${request.studyRequest._id.toString()}/${request._id.toString()}`)
                     }
                   >
                     Edit

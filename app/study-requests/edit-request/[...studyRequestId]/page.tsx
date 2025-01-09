@@ -21,7 +21,7 @@ export default function AddStudyRequestPage() {
     async function fetchStudyRequests() {
       setLoading(true);
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/edit-request/${studyRequestId}`);
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests/${studyRequestId}`);
         if (res.status === 200) {
           setSubjectId(res.data.subjectId);
           setSubjectName(res.data.subjectName);
@@ -59,7 +59,7 @@ export default function AddStudyRequestPage() {
 
     setLoading(true);
     try {
-      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/edit-request/${studyRequestId}`, {
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests/${studyRequestId}`, {
         subjectId,
         subjectName,
         description,
