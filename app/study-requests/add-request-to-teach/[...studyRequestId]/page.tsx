@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import {useParams, useRouter} from "next/navigation";
 import axios from "axios";
 import { CldUploadButton } from "next-cloudinary";
-import DotsLoader from "@/components/loading/dotLoader";
 
 interface StudyRequest {
   _id: string;
@@ -20,39 +19,30 @@ export default function AddRequestToTeachPage() {
   const [description, setDescription] = useState<string>("");
   const [attachments, setAttachments] = useState<string[]>([]);
   const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
   const params = useParams();
-  const studyRequestId = params.requestToTeachId?.[0];
-  const requestToTeachId = params.requestToTeachId?.[1];
+  const studyRequestId = params.studyRequestId?.[0];
 
   useEffect(() => {
     async function fetchStudyRequest() {
       if (!studyRequestId) return;
-      setLoading(true);
+
       try {
         const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/add-request-to-teach/${studyRequestId}`);
-        const res2 = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests-to-teach/${requestToTeachId}`)
-
-        if (res.status === 200 && res2.status === 200) {
+        if (res.status === 200) {
           setStudyRequest(res.data);
-          setDescription(res2.data.description);
-          setPhoneNumber(res2.data.phoneNumber.toString());
-          setAttachments(res2.data.attachments);
         } else {
           console.error("Failed to fetch study request");
         }
       } catch (error) {
-        router.push("/");
         console.error("Error fetching study request:", error);
-      } finally {
-        setLoading(false);
       }
     }
 
     fetchStudyRequest();
-  }, [requestToTeachId, router, studyRequestId]);
+  }, [studyRequestId]);
 
   const handleUpload = (result: any) => {
     if (result.event === "success") {
@@ -63,22 +53,15 @@ export default function AddRequestToTeachPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(description);
-    console.log(phoneNumber.length);
-    if (!description || phoneNumber.length !== 10) {
+    if (!description || phoneNumber.length !== 10 || isNaN(Number(phoneNumber))) {
       alert("Description and Phone Number are required!");
-      return;
-    }
-
-    if (isNaN(Number(phoneNumber))) {
-      alert("Phone number must be a number!");
       return;
     }
 
     setLoading(true);
 
     try {
-      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests-to-teach/${requestToTeachId}`,
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/add-request-to-teach/${studyRequestId}`,
         {
           description,
           attachments,
@@ -94,15 +77,17 @@ export default function AddRequestToTeachPage() {
       }
     } catch (error) {
       console.error("Error submitting request to teach:", error);
-      alert("An error occurred while updating the request.");
+      alert("An error occurred while submitting the request.");
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading || !studyRequest) {
+  if (!studyRequest) {
     return (
-      <DotsLoader />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
+        <div className="text-2xl font-bold text-blue-500">Loading...</div>
+      </div>
     );
   }
 
@@ -111,7 +96,7 @@ export default function AddRequestToTeachPage() {
       {/* Page Header */}
       <div className="w-full py-10 bg-gray-950 shadow-lg">
         <h1 className="text-3xl font-extrabold text-blue-500 text-center">
-          Edit Teach Request
+          Apply to Teach
         </h1>
       </div>
 
@@ -199,7 +184,7 @@ export default function AddRequestToTeachPage() {
             }`}
             disabled={loading}
           >
-            {loading ? "Updating..." : "Update"}
+            {loading ? "Submitting..." : "Submit"}
           </button>
         </form>
       </div>
