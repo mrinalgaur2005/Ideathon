@@ -50,6 +50,7 @@
     "fuzzywuzzy": "^0.1.0",
     "groq": "^3.68.3",
     "groq-sdk": "^0.9.1",
+    "jwt-decode": "^4.0.0",
     "langchain": "^0.3.8",
     "leaflet": "^1.9.4",
     "livekit-server-sdk": "^2.9.6",
