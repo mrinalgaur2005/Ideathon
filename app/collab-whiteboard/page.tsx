@@ -12,7 +12,9 @@ const Whiteboard = () => {
   const lastPoint = useRef<{ x: number, y: number } | null>(null);
 
   useEffect(() => {
-    socket = io("http://localhost:4000");
+    socket = io("http://localhost:4000",{
+      allowEIO3: true
+    });
 
     // Listen for the whiteboard updates
     socket.on("whiteboard-update", (data) => {
