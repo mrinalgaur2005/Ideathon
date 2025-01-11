@@ -444,6 +444,7 @@ export interface AcceptedStudyRequest extends Document {
     teacherAttachments: string[];
     teacherPhoneNumber: number;
     studentPhoneNumber: number;
+    roomId: string;
 }
 
 const AcceptedStudyRequestSchema: Schema<AcceptedStudyRequest> = new Schema({
@@ -456,6 +457,7 @@ const AcceptedStudyRequestSchema: Schema<AcceptedStudyRequest> = new Schema({
     teacherAttachments: [ { type: String } ],
     teacherPhoneNumber: { type: Number, required: true },
     studentPhoneNumber: { type: Number, required: true },
+    roomId: { type: String, required: true },
 })
 
 interface Eventai {

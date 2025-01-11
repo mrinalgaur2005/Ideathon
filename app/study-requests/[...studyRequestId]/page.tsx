@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import DotsLoader from "../../../components/loading/dotLoader";
 import {useParams, useRouter } from "next/navigation";
@@ -11,6 +11,10 @@ export default function SingleRequestPage() {
   const router = useRouter();
   const params = useParams();
   const studyRequestId = params.studyRequestId?.[0];
+
+  const [rejectPopup, setRejectPopup] = useState<{visible: boolean, requestId: null|string}>({ visible: false, requestId: null });
+  const [acceptPopup, setAcceptPopup] = useState<{visible: boolean, requestId: null|string, phoneNumber: string}>({ visible: false, requestId: null, phoneNumber: "" });
+
 
   useEffect(() => {
     async function fetchSingleRequest() {
@@ -31,44 +35,53 @@ export default function SingleRequestPage() {
     }
 
     fetchSingleRequest();
-  }, [params.id, router, setLoading, setSingleRequest]);
+  }, [params.id, router, setLoading, setSingleRequest, studyRequestId]);
 
-  const handleAccept = async (requestId: string) => {
-    if (!singleRequest) return;
+  const handleAccept = async () => {
+    if (!acceptPopup.requestId || acceptPopup.phoneNumber.length !== 10 || isNaN(Number(acceptPopup.phoneNumber))) return;
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/requests-to-teach/${requestId}/accept`
+      setLoading(true);
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests/accept/${studyRequestId}/${acceptPopup.requestId}`,
+        { phoneNumber: Number(acceptPopup.phoneNumber) }
       );
       if (res.status === 200) {
         alert("Request accepted successfully!");
-        setSingleRequest({studyRequest: singleRequest?.studyRequest, requestsToTeach: singleRequest.requestsToTeach.filter((req) => req._id.toString() !== requestId)});
+        setAcceptPopup({ visible: false, requestId: null, phoneNumber: "" });
+        router.push("/accepted-requests");
       }
     } catch (error) {
       console.error("Error accepting request:", error);
       alert("An error occurred while accepting the request.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleReject = async (requestId: string) => {
+  const handleReject = async () => {
+    if (!rejectPopup.requestId) return;
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/requests-to-teach/${requestId}/reject`
+      setLoading(true);
+      const res = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests/accept/${studyRequestId}/${rejectPopup.requestId}`
       );
-      if (res.status === 200) {
+      if (res.status === 200 && singleRequest) {
         alert("Request rejected successfully!");
-        setSingleRequest((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            requestsToTeach: prev.requestsToTeach.filter((req) => req._id.toString() !== requestId),
-          };
+        setSingleRequest({
+            studyRequest: singleRequest?.studyRequest,
+            requestsToTeach: singleRequest.requestsToTeach.filter(
+              (req) => req._id.toString() !== rejectPopup.requestId
+            ),
         });
+        setRejectPopup({ visible: false, requestId: null });
       }
     } catch (error) {
       console.error("Error rejecting request:", error);
       alert("An error occurred while rejecting the request.");
+    } finally {
+      setLoading(false);
     }
   };
+
 
   if (isLoading || !singleRequest) {
     return <DotsLoader />;
@@ -188,13 +201,12 @@ export default function SingleRequestPage() {
                   <div className="mt-6 flex justify-end space-x-4">
                     <button
                       className="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
-                      onClick={() => handleAccept(request._id.toString())}
-                    >
+                      onClick={() => setAcceptPopup({ visible: true, requestId: request._id.toString(), phoneNumber: "" })}                    >
                       Accept
                     </button>
                     <button
                       className="bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
-                      onClick={() => handleReject(request._id.toString())}
+                      onClick={() => setRejectPopup({ visible: true, requestId: request._id.toString() })}
                     >
                       Reject
                     </button>
@@ -205,6 +217,67 @@ export default function SingleRequestPage() {
           )}
         </div>
       </div>
+
+      {/* Reject Popup */}
+      {rejectPopup.visible && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-6 rounded-lg shadow-xl w-full max-w-md">
+            <h2 className="text-xl font-bold text-red-500 text-center">Confirm Rejection</h2>
+            <p className="text-gray-300 text-center mt-4">
+              Are you sure you want to reject this request?
+            </p>
+            <div className="flex justify-end mt-6 space-x-4">
+              <button
+                className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
+                onClick={() => setRejectPopup({ visible: false, requestId: null })}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
+                onClick={handleReject}
+              >
+                Reject
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Accept Popup */}
+      {acceptPopup.visible && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-6 rounded-lg shadow-xl w-full max-w-md">
+            <h2 className="text-xl font-bold text-green-500 text-center">Confirm Acceptance</h2>
+            <p className="text-gray-300 text-center mt-4">
+              Please provide the phone number for confirmation.
+            </p>
+            <input
+              type="text"
+              className="mt-4 w-full px-4 py-2 text-black rounded-md"
+              placeholder="Enter phone number"
+              value={acceptPopup.phoneNumber}
+              onChange={(e) =>
+                setAcceptPopup({ ...acceptPopup, phoneNumber: e.target.value })
+              }
+            />
+            <div className="flex justify-end mt-6 space-x-4">
+              <button
+                className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
+                onClick={() => setAcceptPopup({ visible: false, requestId: null, phoneNumber: "" })}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
+                onClick={handleAccept}
+              >
+                Accept
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

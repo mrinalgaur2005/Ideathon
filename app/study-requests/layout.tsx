@@ -7,10 +7,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const navItems = [
-    { label: "Study Request", href: "/study-requests" },
+    { label: "Study Requests", href: "/study-requests" },
     { label: "My Requests", href: "/study-requests/my-requests" },
     { label: "My Requests to Teach", href: "/study-requests/my-requests-to-teach" },
     { label: "Add Request", href: "/study-requests/add-request" },
+    { label: "Accepted Requests", href: "/study-requests/accepted-requests" },
+    { label: "Accepted Requests to Teach", href: "/study-requests/accepted-requests-to-teach" },
   ];
 
   return (
@@ -19,9 +21,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <nav className="bg-gray-950 shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <h1 className="text-2xl font-bold text-blue-500">
-              Study Platform
-            </h1>
             <div className="flex space-x-4">
               {navItems.map((item) => (
                 <Link

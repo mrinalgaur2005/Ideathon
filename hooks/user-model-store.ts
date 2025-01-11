@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import mongoose from "mongoose";
-import {string} from "zod";
 
 interface Event {
     _id: mongoose.Types.ObjectId,
@@ -259,7 +258,48 @@ export interface SingleRequest {
     }[]
 }
 
+
+interface AcceptedRequest {
+    _id: mongoose.Types.ObjectId;
+    teacher: {
+        name: string;
+        student_id: string;
+        semester: number;
+        branch: string;
+        profile: string;
+    },
+    subjectId: string;
+    subjectName: string;
+    description: string;
+    studentAttachments: string[];
+    teacherAttachments: string[];
+    teacherPhoneNumber: number;
+    roomId: string;
+}
+
+
+interface AcceptedRequestToTeach {
+    _id: mongoose.Types.ObjectId;
+    student: {
+        name: string;
+        student_id: string;
+        semester: number;
+        branch: string;
+        profile: string;
+    },
+    subjectId: string;
+    subjectName: string;
+    description: string;
+    studentAttachments: string[];
+    teacherAttachments: string[];
+    studentPhoneNumber: number;
+    roomId: string;
+}
+
+
 interface ModelStore {
+    acceptedRequestsToTeach: AcceptedRequestToTeach[]|[];
+    acceptedRequests: AcceptedRequest[]|[];
     singleRequest: SingleRequest|null;
     myRequestsToTeach: MyRequestToTeach[]|[];
     myRequests: MyRequest[]|[];
@@ -281,6 +321,8 @@ interface ModelStore {
     allEvents: Event[];
     singleEvent:SingleEvent|null;
     isLoading: boolean;
+    setAcceptedRequestsToTeach: (acceptedRequestsToTeach: AcceptedRequestToTeach[]) => void;
+    setAcceptedRequests: (acceptedRequests: AcceptedRequest[]) => void;
     setSingleRequest: (singleRequest: SingleRequest) => void;
     setMyRequestsToTeach: (myRequestsToTeach: MyRequestToTeach[]) => void;
     setMyRequests: (myRequests: MyRequest[]) => void;
@@ -305,6 +347,8 @@ interface ModelStore {
 }
 
 export const useModel = create<ModelStore>((set) => ({
+    acceptedRequestsToTeach: [],
+    acceptedRequests: [],
     singleRequest: null,
     myRequestsToTeach: [],
     myRequests: [],
@@ -326,6 +370,8 @@ export const useModel = create<ModelStore>((set) => ({
     editClub:null,
     profile: null,
     isLoading: false,
+    setAcceptedRequestsToTeach: ((acceptedRequestsToTeach) => set({acceptedRequestsToTeach})),
+    setAcceptedRequests: ((acceptedRequests) => set({acceptedRequests})),
     setSingleRequest: ((singleRequest) => set({singleRequest})),
     setMyRequestsToTeach: ((myRequestsToTeach) => set({myRequestsToTeach})),
     setMyRequests: ((myRequests) => set({myRequests: myRequests})),
