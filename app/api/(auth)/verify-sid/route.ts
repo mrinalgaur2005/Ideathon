@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import  extractTextFromImageLinks, { extractDetails } from "../../../../lib/sidVerification";
 import { StudentModel, UserModel } from "../../../../model/User";
 import dbConnect from "../../../../lib/connectDb";
+import Groq from 'groq-sdk';
+
+const groqClient = new Groq({
+  apiKey: process.env.GROQ_API_KEY,
+});
 
 
 const extractNameFromEmail = (email: string | undefined): string | null => {
@@ -12,6 +17,27 @@ const extractNameFromEmail = (email: string | undefined): string | null => {
   const match = email.match(/^([a-zA-Z]+)\.bt\d+([a-z]+)@pec\.edu\.in$/);
   return match ? match[1] : null;
 };
+
+
+interface AiNameCheckerResponse {
+  choices: {
+    message: {
+      content: string | null;
+    };
+  }[];
+}
+
+const aiNameChecker = async (emailName: string, name: string): Promise<boolean> => {
+  const prompt = `I am going to give you two string, you have to tell me if they are same or not. \n\nString 1: ${emailName} \nString 2: ${name} \n\nAre these strings same? They dont have to be exactly equal. String like antriikshguppta and Antriksh Gupta are considered Same. One of the strings is coming from an OCR, so its expected to have some mistakes in reading. Your work is to overlook these mistakes and tell me by your thinking whether they are same names or not.\n\nPlease type yes or no and dont type any other text. just yes or no.`;
+
+  const completion: AiNameCheckerResponse = await groqClient.chat.completions.create({
+    messages: [{ role: 'user', content: prompt }],
+    model: 'llama3-8b-8192',
+  });
+
+  const result = completion.choices[0]?.message?.content;
+  return result === 'yes';
+}
 
 export async function POST(request: NextRequest) {
   console.log("inside api");
@@ -66,9 +92,11 @@ export async function POST(request: NextRequest) {
         console.log(`emailName ${emailName}`);
         console.log(name?.toLowerCase().trim().replace(/\s+/g, ''));
         
-
-        if (emailName && emailName.toLowerCase() === name?.toLowerCase().trim().replace(/\s+/g, '')) {
-          student.name = name;
+// emailName && emailName.toLowerCase() === name?.toLowerCase().trim().replace(/\s+/g, '')
+        if (await aiNameChecker(emailName as string, name as string)) {
+          if (name) {
+            student.name = name;
+          }
           student.sid_verification = true;
           student.branch = department as string;
           student.student_id = identityNo as string;
