@@ -82,17 +82,18 @@ export async function POST(request: NextRequest) {
       const results = await extractTextFromImageLinks(imageLinks);
 
       if (results[image]) {
-        const { name, department, identityNo } = extractDetails(results[image]);
+        const { name, department, identityNo } = await extractDetails(results[image]);
 
-        console.log(department);
-        console.log(name);
+        console.log("HELLO ANTRIKSH" + department);
+        console.log("HELLO ANTRIKSH"+ name);
+        console.log("HELLO ANTRIKSH"+ identityNo);
 
         const emailName = extractNameFromEmail(student.email as string);
 
         console.log(`emailName ${emailName}`);
         console.log(name?.toLowerCase().trim().replace(/\s+/g, ''));
         
-// emailName && emailName.toLowerCase() === name?.toLowerCase().trim().replace(/\s+/g, '')
+        // emailName && emailName.toLowerCase() === name?.toLowerCase().trim().replace(/\s+/g, '')
         if (await aiNameChecker(emailName as string, name as string)) {
           if (name) {
             student.name = name;
