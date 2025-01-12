@@ -97,6 +97,7 @@ export async function PATCH(req: Request, { params }: { params: { studyRequestId
     //
     await RequestToTeachModel.deleteMany({studyRequestId: studyRequestObjectId});
     studyRequest.accepted = true;
+    studyRequest.applied = [];
     await studyRequest.save();
 
     return NextResponse.json({status: 200});

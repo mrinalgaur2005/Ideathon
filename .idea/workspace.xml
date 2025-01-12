@@ -5,6 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
+      <change afterPath="$PROJECT_DIR$/app/admin/announcements/add/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/admin/announcements/edit/[...id]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/admin/announcements/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/admin/announcements/[...id]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/admin/announcements/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/teacher/announcements/[...id]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/teacher/announcements/add/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/teacher/announcements/edit/[...id]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/teacher/announcements/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/admin/post-announcement/route.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/announcements/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/user/announcements/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/study-requests/my-requests/accept/[...studyRequestId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/study-requests/my-requests/accept/[...studyRequestId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/teacher/class-announcement/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/teacher/announcements/route.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -15,9 +29,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript JSX File" />
         <option value="tsconfig.json" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -53,31 +67,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/ideathon/app/api/admin/user&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/ideathon/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/vaibhav-verma/WebstormProjects/ideathon/app/api/teacher/announcements",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "/home/vaibhav-verma/WebstormProjects/ideathon/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/api/teacher/announcements" />
       <recent name="$PROJECT_DIR$/app/api/admin/user" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/teacher/announcements/edit/[...id]" />
+      <recent name="$PROJECT_DIR$/app/api/user" />
       <recent name="$PROJECT_DIR$/app/api/study-requests/accepted-requests/[...acceptedStudyRequestId]" />
       <recent name="$PROJECT_DIR$/app/api/study-requests/my-requests" />
       <recent name="$PROJECT_DIR$/app/api/study-requests" />
-      <recent name="$PROJECT_DIR$/app/api/study-requests/my-requests-to-teach" />
-      <recent name="$PROJECT_DIR$/app/api/study-requests/add-request-to-teach/[...studyRequestId]" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -184,7 +199,7 @@
       <workItem from="1736578088376" duration="1169000" />
       <workItem from="1736580717395" duration="8639000" />
       <workItem from="1736609464635" duration="10431000" />
-      <workItem from="1736661826883" duration="11723000" />
+      <workItem from="1736661826883" duration="24205000" />
     </task>
     <servers />
   </component>
