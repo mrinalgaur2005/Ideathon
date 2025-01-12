@@ -3,8 +3,14 @@ import {getServerSession, User} from "next-auth";
 import {authOptions} from "@/app/api/(auth)/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
 import mongoose from "mongoose";
-import {AcceptedStudyRequestModel, RequestToTeachModel, StudyRequestModel} from "@/model/User";
-import {uuidV4} from "mongodb/src/utils";
+import {
+  AcceptedStudyRequestModel,
+  RequestToTeach,
+  RequestToTeachModel,
+  StudyRequest,
+  StudyRequestModel
+} from "@/model/User";
+import {v4 as uuidv4} from "uuid";
 
 export async function PATCH(req: Request, { params }: { params: { studyRequestId: string[] } }) {
   try {
@@ -48,25 +54,28 @@ export async function PATCH(req: Request, { params }: { params: { studyRequestId
       )
     }
 
-    const studyRequest = await StudyRequestModel.findOne({ _id: studyRequestObjectId, user_id: userId });
+    const studyRequest: StudyRequest|null = await StudyRequestModel.findOne({ _id: studyRequestObjectId, user_id: userId });
 
     if (!studyRequest) {
       return NextResponse.json(
         {error: "failed to find study request."},
-        {status: 500}
+        {status: 404}
       )
     }
 
-    const requestToTeach = await RequestToTeachModel.findOne({ _id: requestToTeachObjectId });
+    const requestToTeach: RequestToTeach|null = await RequestToTeachModel.findOne({ _id: requestToTeachObjectId });
 
     if (!requestToTeach) {
       return NextResponse.json(
         {error: "failed to find request to teach."},
-        {status: 500}
+        {status: 404}
       )
     }
 
+    const roomId = `S-${uuidv4()}`;
+
     const acceptedStudyRequest = await AcceptedStudyRequestModel.create({
+      studyRequestId: studyRequestObjectId,
       studentId: studyRequest.user_id,
       teacherId: requestToTeach.user_id,
       subjectId: studyRequest.subjectId,
@@ -76,7 +85,7 @@ export async function PATCH(req: Request, { params }: { params: { studyRequestId
       teacherAttachments: requestToTeach.attachments,
       teacherPhoneNumber: requestToTeach.phoneNumber,
       studentPhoneNumber: phoneNumber,
-      roomId: uuidV4(),
+      roomId,
     })
 
     if (!acceptedStudyRequest) {
@@ -85,13 +94,14 @@ export async function PATCH(req: Request, { params }: { params: { studyRequestId
         {status: 500}
       )
     }
-
+    //
     await RequestToTeachModel.deleteMany({studyRequestId: studyRequestObjectId});
-    await StudyRequestModel.deleteOne({_id: studyRequestObjectId});
+    studyRequest.accepted = true;
+    await studyRequest.save();
 
     return NextResponse.json({status: 200});
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'An error occurred while updating study request.' }, { status: 500 });
+    return NextResponse.json({ error: 'An error occurred while accepting study request.' }, { status: 500 });
   }
 }

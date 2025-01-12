@@ -23,7 +23,8 @@ export async function GET() {
       {
         $match: {
           $nor: [
-            { user_id: userId }
+            { user_id: userId },
+            { accepted: true }
           ]
         }
       },

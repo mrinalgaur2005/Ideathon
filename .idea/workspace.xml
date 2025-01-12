@@ -5,16 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/api/study-requests/accepted-requests-to-teach/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/study-requests/accepted-requests/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/study-requests/my-requests/accept/[...studyRequestId]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/study-requests/my-requests/reject/[...studyRequestId]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/study-requests/accepted-requests-to-teach/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/study-requests/accepted-requests/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/study-requests/accepted-requests-to-teach/[...acceptedStudyRequestId]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/study-requests/accepted-requests/[...acceptedStudyRequestId]/route.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/study-requests/[...studyRequestId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/study-requests/[...studyRequestId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/study-requests/accepted-requests/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/study-requests/accepted-requests/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/study-requests/my-requests/[...studyRequestId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/study-requests/my-requests/[...studyRequestId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/study-requests/my-requests/accept/[...studyRequestId]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/study-requests/my-requests/accept/[...studyRequestId]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/study-requests/my-requests/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/study-requests/my-requests/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/study-requests/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/study-requests/route.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/study-requests/[...studyRequestId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/[...studyRequestId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-requests/accepted-requests-to-teach/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/accepted-requests-to-teach/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-requests/accepted-requests/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/accepted-requests/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-requests/add-request-to-teach/[...studyRequestId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/add-request-to-teach/[...studyRequestId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-requests/edit-request-to-teach/[...requestToTeachId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/edit-request-to-teach/[...requestToTeachId]/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/study-requests/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/user-model-store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/user-model-store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-requests/my-requests-to-teach/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/my-requests-to-teach/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-requests/my-requests/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/my-requests/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/study-requests/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -26,6 +35,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="TypeScript JSX File" />
+        <option value="tsconfig.json" />
         <option value="TypeScript File" />
       </list>
     </option>
@@ -82,11 +92,11 @@
       <recent name="$PROJECT_DIR$/app/api/admin/user" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/api/study-requests/my-requests-to-teach" />
+      <recent name="$PROJECT_DIR$/app/api/study-requests/accepted-requests/[...acceptedStudyRequestId]" />
       <recent name="$PROJECT_DIR$/app/api/study-requests/my-requests" />
+      <recent name="$PROJECT_DIR$/app/api/study-requests" />
+      <recent name="$PROJECT_DIR$/app/api/study-requests/my-requests-to-teach" />
       <recent name="$PROJECT_DIR$/app/api/study-requests/add-request-to-teach/[...studyRequestId]" />
-      <recent name="$PROJECT_DIR$/app/api/study-requests/edit-request/[...studyRequestId]" />
-      <recent name="$PROJECT_DIR$/app/api/teacher/subjects/groups/[...subjectId]" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -191,7 +201,9 @@
       <workItem from="1736424912533" duration="12432000" />
       <workItem from="1736494266531" duration="2126000" />
       <workItem from="1736578088376" duration="1169000" />
-      <workItem from="1736580717395" duration="7622000" />
+      <workItem from="1736580717395" duration="8639000" />
+      <workItem from="1736609464635" duration="10431000" />
+      <workItem from="1736661826883" duration="10466000" />
     </task>
     <servers />
   </component>

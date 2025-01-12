@@ -30,6 +30,34 @@ export default function AcceptedRequestsPage() {
     fetchAcceptedRequests();
   }, [setAcceptedRequests, setLoading]);
 
+  const handleCancelMeeting = async (id: string) => {
+    try {
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/accepted-requests/${id}`);
+      if (res.status === 200) {
+        alert("Meeting canceled successfully!");
+        setAcceptedRequests(acceptedRequests.filter((request) => request._id.toString() !== id));
+      } else {
+        console.error("Failed to cancel meeting");
+      }
+    } catch (error) {
+      console.error("Error canceling meeting:", error);
+    }
+  };
+
+  const handleMarkCompleted = async (id: string) => {
+    try {
+      const res = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/accepted-requests/${id}`);
+      if (res.status === 200) {
+        alert("Meeting marked as completed!");
+        setAcceptedRequests(acceptedRequests.filter((request) => request._id.toString() !== id));
+      } else {
+        console.error("Failed to mark meeting as completed");
+      }
+    } catch (error) {
+      console.error("Error marking meeting as completed:", error);
+    }
+  };
+
   if (isLoading) {
     return <DotsLoader />;
   }
@@ -37,7 +65,7 @@ export default function AcceptedRequestsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
       {/* Page Header */}
-      <div className="w-full py-10 bg-gray-950 shadow-lg">
+      <div className="w-full py-8 bg-gray-950 shadow-lg">
         <h1 className="text-3xl font-extrabold text-blue-500 text-center">
           Accepted Requests
         </h1>
@@ -110,13 +138,25 @@ export default function AcceptedRequestsPage() {
                   Teacher&#39;s Phone: <span className="font-semibold text-white">{request.teacherPhoneNumber}</span>
                 </p>
 
-                {/* Join Room Button */}
-                <div className="mt-6 flex justify-end">
+                {/* Buttons */}
+                <div className="mt-6 flex justify-end gap-4">
                   <button
                     className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
                     onClick={() => router.push(`/study-room/${request.roomId}`)}
                   >
                     Join Room
+                  </button>
+                  <button
+                    className="bg-red-600 hover:bg-red-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
+                    onClick={() => handleCancelMeeting(request._id.toString())}
+                  >
+                    Cancel Meeting
+                  </button>
+                  <button
+                    className="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
+                    onClick={() => handleMarkCompleted(request._id.toString())}
+                  >
+                    Mark Completed
                   </button>
                 </div>
               </div>

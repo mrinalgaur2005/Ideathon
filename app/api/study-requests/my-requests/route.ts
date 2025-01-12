@@ -21,7 +21,8 @@ export async function GET() {
     const studyRequests = await StudyRequestModel.aggregate([
       {
         $match: {
-          user_id: userId
+          user_id: userId,
+          accepted: false,
         }
       },
       {

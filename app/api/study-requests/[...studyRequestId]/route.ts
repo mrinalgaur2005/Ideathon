@@ -38,8 +38,8 @@ export async function GET(req: Request, { params }: { params: { studyRequestId: 
 
     const studyRequest = await StudyRequestModel.findOne({ _id: studyRequestObjectId, user_id: userId });
 
-    if (!studyRequest) {
-      return NextResponse.json({ error: 'Study request not found' }, {status: 404});
+    if (!studyRequest || studyRequest.accepted === true) {
+      return NextResponse.json({ error: 'Study request not found or accepted' }, {status: 404});
     }
 
     const requestsToTeach = await RequestToTeachModel.aggregate([

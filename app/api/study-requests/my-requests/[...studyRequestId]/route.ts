@@ -38,9 +38,9 @@ export async function GET(req: Request, { params }: { params: { studyRequestId: 
 
     const studyRequest = await StudyRequestModel.findOne({ _id: studyRequestObjectId, user_id: userId });
 
-    if (!studyRequest) {
+    if (!studyRequest || studyRequest.accepted === true) {
       return NextResponse.json(
-        {error: "study request not found"},
+        {error: "study request not found or accepted"},
         {status: 404}
       )
     }

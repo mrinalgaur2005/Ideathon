@@ -42,12 +42,17 @@ export default function SingleRequestPage() {
     try {
       setLoading(true);
       const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests/accept/${studyRequestId}/${acceptPopup.requestId}`,
-        { phoneNumber: Number(acceptPopup.phoneNumber) }
+        {phoneNumber: Number(acceptPopup.phoneNumber)},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
       );
       if (res.status === 200) {
         alert("Request accepted successfully!");
         setAcceptPopup({ visible: false, requestId: null, phoneNumber: "" });
-        router.push("/accepted-requests");
+        router.push("/study-requests/accepted-requests");
       }
     } catch (error) {
       console.error("Error accepting request:", error);
@@ -55,6 +60,11 @@ export default function SingleRequestPage() {
     } finally {
       setLoading(false);
     }
+
+    // const res = await axios.get("/api/health");
+    // if (res.status === 200) {
+    //   alert("Accepted request successfully");
+    // }
   };
 
   const handleReject = async () => {
@@ -62,7 +72,7 @@ export default function SingleRequestPage() {
     try {
       setLoading(true);
       const res = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests/accept/${studyRequestId}/${rejectPopup.requestId}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/study-requests/my-requests/reject/${studyRequestId}/${rejectPopup.requestId}`
       );
       if (res.status === 200 && singleRequest) {
         alert("Request rejected successfully!");
@@ -90,7 +100,7 @@ export default function SingleRequestPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
       {/* Page Header */}
-      <div className="w-full py-10 bg-gray-950 shadow-lg">
+      <div className="w-full py-8 bg-gray-950 shadow-lg">
         <h1 className="text-3xl font-extrabold text-blue-500 text-center">
           Study Request Details
         </h1>

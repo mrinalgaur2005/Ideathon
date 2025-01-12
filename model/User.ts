@@ -403,7 +403,8 @@ export interface StudyRequest extends Document {
     description: string;
     attachments: string[];
     price: number;
-    applied: mongoose.Schema.Types.ObjectId[];  // id of people who applied
+    applied: mongoose.Schema.Types.ObjectId[]; // id of people who applied
+    accepted: boolean;
 }
 
 const StudyRequestSchema: Schema<StudyRequest> = new Schema({
@@ -413,7 +414,8 @@ const StudyRequestSchema: Schema<StudyRequest> = new Schema({
     description: { type: String, required: true },
     attachments: [{ type: String }],
     price: { type: Number, required: true },
-    applied: [{ type: Schema.Types.ObjectId }]
+    applied: [{ type: Schema.Types.ObjectId }],
+    accepted: [{ type: Boolean, default: false }],
 })
 
 
@@ -435,6 +437,7 @@ const RequestToTeachSchema: Schema<RequestToTeach> = new Schema({
 
 
 export interface AcceptedStudyRequest extends Document {
+    studyRequestId: mongoose.Schema.Types.ObjectId;
     studentId: mongoose.Schema.Types.ObjectId;
     teacherId: mongoose.Schema.Types.ObjectId;
     subjectId: string;
@@ -448,6 +451,7 @@ export interface AcceptedStudyRequest extends Document {
 }
 
 const AcceptedStudyRequestSchema: Schema<AcceptedStudyRequest> = new Schema({
+    studyRequestId: { type: Schema.Types.ObjectId, ref: "StudyRequest", required: true },
     studentId: { type: Schema.Types.ObjectId, ref: "Student" },
     teacherId: { type: Schema.Types.ObjectId, ref: "Student" },
     subjectId: { type: String, required: true },
