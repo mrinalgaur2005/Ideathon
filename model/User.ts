@@ -416,7 +416,7 @@ const StudyRequestSchema: Schema<StudyRequest> = new Schema({
     attachments: [{ type: String }],
     price: { type: Number, required: true },
     applied: [{ type: Schema.Types.ObjectId }],
-    accepted: [{ type: Boolean, default: false }],
+    accepted: { type: Boolean, default: false,  required: true },
 })
 
 
