@@ -66,7 +66,7 @@ export default function AdminAnnouncementsPage() {
       <div className="w-full py-8 bg-gray-950 shadow-lg flex justify-center items-center space-x-4">
         <h1 className="text-3xl font-extrabold text-blue-500 text-center">All Announcement</h1>
         <button
-          onClick={() => router.push("/admin/announcements")}
+          onClick={() => router.push("/admin/announcements/add")}
           className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-semibold shadow-lg transition-all duration-300"
         >
           Add Announcements

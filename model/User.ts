@@ -473,7 +473,7 @@ export interface Announcement extends Document {
 const AnnouncementModelSchema: Schema<Announcement> = new Schema({
     announcementText: { type: String, required: true },
     department: { type: String, required: true }
-})
+}, {timestamps: true})
 
 interface Eventai {
     title: string;
@@ -534,7 +534,7 @@ const TeacherAnnouncementSchema: Schema<TeacherAnnouncement> = new Schema({
     teacherId: { type: Schema.Types.ObjectId, ref: "Teacher", required: true },
     announcementText: { type: String, required: true },
     subjectCode: { type: String, required: true }
-})
+}, {timestamps: true});
 
 const AnnouncementModel: Model<Announcement> = 
     mongoose.models.Announcement || mongoose.model<Announcement>("Announcement", AnnouncementModelSchema)
