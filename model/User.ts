@@ -1,4 +1,5 @@
 import { strict } from "assert";
+import { Mode } from "fs";
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { v4 as uuidv4 } from 'uuid'
 import { string } from "zod";
@@ -464,6 +465,16 @@ const AcceptedStudyRequestSchema: Schema<AcceptedStudyRequest> = new Schema({
     roomId: { type: String, required: true },
 })
 
+export interface Announcement extends Document {
+    announcementText: string;
+    department: string;
+}
+
+const AnnouncementModelSchema: Schema<Announcement> = new Schema({
+    announcementText: { type: String, required: true },
+    department: { type: String, required: true }
+})
+
 interface Eventai {
     title: string;
     description: string;
@@ -513,6 +524,23 @@ const AiChatBotSchema: Schema<AiChatBot> = new Schema({
     { collection: 'aiChatBot' }
 );
 
+export interface ClassAnnouncement extends Document {
+    announcementText: string;
+    subjectCode: string;
+
+}
+
+const ClassAnnouncementModelSchema: Schema<ClassAnnouncement> = new Schema({
+    announcementText: { type: String, required: true },
+    subjectCode: { type: String, required: true }
+})
+
+const AnnouncementModel: Model<Announcement> = 
+    mongoose.models.Announcement || mongoose.model<Announcement>("Announcement", AnnouncementModelSchema)
+
+const ClassAnnouncementModel: Model<ClassAnnouncement> = 
+    mongoose.models.ClassAnnouncement || mongoose.model<ClassAnnouncement>("ClassAnnouncement", ClassAnnouncementModelSchema)
+    
 const aiChatBotModel: Model<AiChatBot> =
     mongoose.models.aiChatBot || mongoose.model<AiChatBot>("aiChatBot", AiChatBotSchema);
 
@@ -559,6 +587,7 @@ const AcceptedStudyRequestModel: Model<AcceptedStudyRequest> =
     mongoose.models.AcceptedStudyRequest || mongoose.model<AcceptedStudyRequest>("AcceptedStudyRequest", AcceptedStudyRequestSchema);
 
 export {
+    ClassAnnouncementModel,
     UserModel,
     StudentModel,
     TeacherModel,
@@ -574,4 +603,5 @@ export {
     StudyRequestModel,
     RequestToTeachModel,
     AcceptedStudyRequestModel,
+    AnnouncementModel,
 };
