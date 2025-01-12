@@ -105,7 +105,8 @@ export async function POST(req: Request) {
       description,
       attachments,
       price,
-      applied: []
+      applied: [],
+      accepted: false,
     })
 
     if (!studyRequest) {

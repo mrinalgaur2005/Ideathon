@@ -2,7 +2,7 @@ import dbConnect from "@/lib/connectDb";
 import mongoose from "mongoose";
 import { authOptions } from "../../(auth)/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
-import { User, AnnouncementModel, UserModel } from "@/model/User";
+import { User, AnnouncementModel } from "@/model/User";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -23,26 +23,16 @@ export async function POST(request: Request) {
           );
         }
 
-        let body;
-        try {
-            body = await request.json();
-        } catch (e) {
-            return NextResponse.json(
-                { error: "Invalid request body" },
-                { status: 400 }
-            );
-        }
+        const { description, department } = await request.json();
 
-        const { description, department } = body;
-
-        if (!description || typeof description !== 'string') {
+        if (!description.trim() || typeof description !== 'string') {
             return NextResponse.json(
                 { error: "Valid description is required" },
                 { status: 400 }
             );
         }
 
-        if (!department || typeof department !== 'string') {
+        if (!department.trim() || typeof department !== 'string') {
             return NextResponse.json(
                 { error: "Valid department is required" },
                 { status: 400 }
