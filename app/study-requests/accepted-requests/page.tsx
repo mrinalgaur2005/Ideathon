@@ -14,7 +14,7 @@ export default function AcceptedRequestsPage() {
 
   useEffect(() => {
     socket = io("http://localhost:4000", {
-      allowEIO3: true
+      allowEIO3: true,
     });
   }, []);
 
@@ -64,6 +64,11 @@ export default function AcceptedRequestsPage() {
     } catch (error) {
       console.error("Error marking meeting as completed:", error);
     }
+  };
+
+  const handleJoinRoom = (roomId: string) => {
+    socket.emit("join-room", roomId);
+    router.push(`/study-room/${roomId}`);
   };
 
   if (isLoading) {
@@ -150,10 +155,7 @@ export default function AcceptedRequestsPage() {
                 <div className="mt-6 flex justify-end gap-4">
                   <button
                     className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
-                    onClick={() => {
-                      socket.emit("join-room", request.roomId);
-                      router.push(`/study-room/${request.roomId}`);
-                    }}
+                    onClick={() => handleJoinRoom(request.roomId)}
                   >
                     Join Room
                   </button>

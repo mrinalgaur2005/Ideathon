@@ -1,10 +1,9 @@
-'use client';
-
+"use client"
 import { useEffect, useRef, useState } from 'react';
 import io, { Socket } from 'socket.io-client';
-import { MediaRoom } from '@/components/avcall/media-room';
 import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { MediaRoom } from '@/components/avcall/media-room';
 
 let socket: typeof Socket;
 
@@ -12,79 +11,89 @@ const StudyRoom = () => {
     const params = useParams();
     const roomId = params.roomId?.[0];
     const { data: session, status } = useSession();
-    const [showWhiteboard, setShowWhiteboard] = useState(false);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const isDrawing = useRef(false);
-    const lastPoint = useRef<{ x: number, y: number } | null>(null);
+    const lastPoint = useRef<{ x: number; y: number } | null>(null);
+
+    const [coordinates, setCoordinates] = useState<{ x: number; y: number } | null>(null);
 
     useEffect(() => {
-        if (!showWhiteboard) return;
-
+        // Initialize the socket connection
+        console.log('Initializing socket connection...');
         socket = io('http://localhost:4000', {
             allowEIO3: true,
         });
 
-        // Listen for whiteboard updates
-        socket.on("whiteboard-update", (data) => {
-          const canvas = canvasRef.current;
-          const ctx = canvas?.getContext("2d");
-          if (ctx && data) {
-            const { x, y, type } = data;
-            if (type === "start") {
-              ctx.beginPath();
-              ctx.moveTo(x, y);
-            } else if (type === "draw") {
-              ctx.lineTo(x, y);
-              ctx.stroke();
-            }
-          }
-        });
+        // Handle updates from other users
+        socket.on('whiteboard-update', (data) => {
+            console.log('Received whiteboard update:', data);  // Log received data
+            const canvas = canvasRef.current;
+            const ctx = canvas?.getContext('2d');
+            if (ctx && data) {
+                const { x, y, type } = data;
+                console.log(`Processing data on canvas: ${x}, ${y}, ${type}`);  // Log canvas actions
+                if (type === 'start') {
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                } else if (type === 'draw') {
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                }
 
-        socket.on("ondown", ({x,y}) => {
-          const canvas = canvasRef.current;
-          const ctx = canvas?.getContext("2d");
-          if (ctx) {
-            ctx.moveTo(x, y);
-          }
+                // Update coordinates on the canvas
+                setCoordinates({ x, y });
+            }
         });
 
         return () => {
+            console.log('Disconnecting socket...');
             socket.disconnect();
         };
-    }, [showWhiteboard]);
+    }, []);
 
     const handleMouseDown = (e: React.MouseEvent) => {
-      isDrawing.current = true;
-      const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
-      if (ctx) {
-        const { offsetX, offsetY } = e.nativeEvent;
-        lastPoint.current = { x: offsetX, y: offsetY }; // Store the start point
-        ctx.beginPath();
-        ctx.moveTo(offsetX, offsetY);
-  
-        socket.emit('down', roomId, { x: offsetX, y: offsetY });
-        socket.emit("whiteboard-update", { roomId, x: offsetX, y: offsetY, type: "start" });
-      }
+        console.log('Mouse down event triggered');
+        isDrawing.current = true;
+        const canvas = canvasRef.current;
+        const ctx = canvas?.getContext('2d');
+        if (ctx) {
+            const { offsetX, offsetY } = e.nativeEvent;
+            lastPoint.current = { x: offsetX, y: offsetY };
+            ctx.beginPath();
+            ctx.moveTo(offsetX, offsetY);
+
+            // Emit the starting point to other users
+            console.log(`Emitting start event: x: ${offsetX}, y: ${offsetY}`);
+            socket.emit('whiteboard-update', { roomId, data: { x: offsetX, y: offsetY, type: 'start' } });
+        }
     };
-  
+
     const handleMouseMove = (e: React.MouseEvent) => {
-      if (!isDrawing.current || !lastPoint.current) return;
-  
-      const canvas = canvasRef.current;
-      const ctx = canvas?.getContext("2d");
-      if (ctx) {
-        const { offsetX, offsetY } = e.nativeEvent;
-        ctx.lineTo(offsetX, offsetY);
-        ctx.stroke();
-        socket.emit("whiteboard-update", { roomId, data: { x: offsetX, y: offsetY, type: "draw" } });
-        lastPoint.current = { x: offsetX, y: offsetY }; // Update the last point as the new position
-      }
+        if (!isDrawing.current || !lastPoint.current) return;
+
+        const canvas = canvasRef.current;
+        const ctx = canvas?.getContext('2d');
+        if (ctx) {
+            const { offsetX, offsetY } = e.nativeEvent;
+            console.log(`Mouse move: x: ${offsetX}, y: ${offsetY}`);
+            ctx.lineTo(offsetX, offsetY);
+            ctx.stroke();
+
+            // Emit the drawing data to other users
+            console.log(`Emitting draw event: x: ${offsetX}, y: ${offsetY}`);
+            socket.emit('whiteboard-update', {
+                roomId,
+                data: { x: offsetX, y: offsetY, type: 'draw' },
+            });
+
+            lastPoint.current = { x: offsetX, y: offsetY };
+        }
     };
 
     const handleMouseUp = () => {
-      isDrawing.current = false;
-      lastPoint.current = null; // Reset the last point when drawing ends
+        console.log('Mouse up event triggered');
+        isDrawing.current = false;
+        lastPoint.current = null;
     };
 
     if (status === 'loading') {
@@ -92,29 +101,30 @@ const StudyRoom = () => {
     }
 
     return (
-        <div>
-            <MediaRoom roomId={roomId as string} studentName={session?.user.username as string} />
+        <div className="flex flex-col items-center min-h-screen bg-gray-100 py-6">
+            {/* Media Room */}
+            <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
+                <MediaRoom roomId={roomId as string} studentName={session?.user.username as string} />
+            </div>
 
-            <button
-                onClick={() => setShowWhiteboard(!showWhiteboard)}
-                style={{ margin: '10px', padding: '10px', fontSize: '16px' }}
-            >
-                {showWhiteboard ? 'Close Whiteboard' : 'Start Whiteboard'}
-            </button>
-
-            {showWhiteboard && (
-                <div>
-                    <canvas
-                        ref={canvasRef}
-                        width={800}
-                        height={600}
-                        style={{ border: '1px solid black', marginTop: '10px' }}
-                        onMouseDown={handleMouseDown}
-                        onMouseMove={handleMouseMove}
-                        onMouseUp={handleMouseUp}
-                    />
-                </div>
-            )}
+            {/* Whiteboard */}
+            <div className="mt-6 w-full max-w-4xl">
+                <h2 className="text-xl font-semibold text-center mb-4">Collaborative Whiteboard</h2>
+                <canvas
+                    ref={canvasRef}
+                    width={800}
+                    height={600}
+                    className="border-2 border-gray-300 rounded-md shadow-lg"
+                    onMouseDown={handleMouseDown}
+                    onMouseMove={handleMouseMove}
+                    onMouseUp={handleMouseUp}
+                />
+                {coordinates && (
+                    <div className="mt-4 text-center text-xl">
+                        <p>Current Coordinates: X: {coordinates.x}, Y: {coordinates.y}</p>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
