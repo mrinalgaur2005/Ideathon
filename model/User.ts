@@ -323,6 +323,7 @@ export interface Attendance extends Document {
         lectureCount: number;
     }[];
     groupName: string;
+    students: string[];
 }
 
 const AttendanceSchema: Schema<Attendance> = new Schema({
@@ -335,6 +336,7 @@ const AttendanceSchema: Schema<Attendance> = new Schema({
         lectureCount: { type: Number, required: true },
     }],
     groupName: { type: String, required: true },
+    students: [ { type: String, ref: "Student" }],
 });
 
 
