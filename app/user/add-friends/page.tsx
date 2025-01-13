@@ -64,7 +64,7 @@ export default function AddFriendsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white overflow-auto">
       {/* Page Header */}
       {/* <div className="w-full py-10 bg-gray-950 shadow-lg">
         <h1 className="text-3xl font-extrabold text-center text-blue-500 tracking-wide">
@@ -90,7 +90,7 @@ export default function AddFriendsPage() {
             No friends found matching your search.
           </div>
         ) : (
-          <div className="w-full max-w-5xl max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
+          <div className="w-full max-w-5xl max-h-[70vh]">
             {filteredFriends.map((friend) => (
               <div
                 key={friend._id.toString()}

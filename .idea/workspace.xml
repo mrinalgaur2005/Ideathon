@@ -5,8 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_13_25,_8_28 PM_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_13_25__8_28PM__Changes_.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/homepage/admin.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/homepage/student.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/homepage/teacher.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/student/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/student/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/teacher/subjects/groups/attendance/show/[...subjectId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/teacher/subjects/groups/attendance/show/[...subjectId]/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -188,6 +194,9 @@
       <workItem from="1736609464635" duration="10431000" />
       <workItem from="1736661826883" duration="29277000" />
       <workItem from="1736745014949" duration="1257000" />
+      <workItem from="1736750325263" duration="1628000" />
+      <workItem from="1736764910004" duration="3159000" />
+      <workItem from="1736779876545" duration="4298000" />
     </task>
     <servers />
   </component>
@@ -225,16 +234,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fixup! recovered files" />
     <option name="LAST_COMMIT_MESSAGE" value="fixup! recovered files" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/hooks/user-model-store.ts</url>
-          <line>164</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
