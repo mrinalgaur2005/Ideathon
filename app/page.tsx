@@ -8,8 +8,6 @@ import StudentHomePage from "@/components/homepage/student";
 export default function HomePage() {
   const session= useSession();
 
-  console.log(session);
-
   if (session.data && !session.data.user.isStudent) {
     if (session.data.user.isAdmin) {
       return (

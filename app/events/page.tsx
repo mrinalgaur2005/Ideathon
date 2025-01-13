@@ -64,19 +64,8 @@ export default function EventsPage() {
     setPage(1);
   }, [activeTab]);
 
-  const dropdownItems = [
-    { label: "Events", href: "/events" },
-    { label: "Dashboard", href: "/dashboard" },
-    { label: "Home", href: "/" },
-  ];
-
   return (
-    <div className="flex flex-col md:flex-row h-screen w-full bg-gradient-to-b from-[#1A202C] to-[#2D3748] overflow-auto relative">
-      {/* Navigation Button */}
-      <div className="absolute top-5 right-10 z-100">
-        <NavigatorButton buttonText="Navigate" dropdownItems={dropdownItems} />
-      </div>
-
+    <div className="flex flex-col md:flex-row h-screen w-full bg-gradient-to-b from-[#0B0C10] to-[#1F2833] overflow-auto relative">
       {/* Main Content */}
       <div className="flex flex-col w-full md:w-4/5 h-full items-center mt-6 md:mt-12 px-4">
         {/* Tabs */}

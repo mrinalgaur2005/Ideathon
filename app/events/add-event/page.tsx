@@ -89,7 +89,7 @@ export default function AddEventPage() {
 
   const dropdownItems = [
     { label: "Events", href: "/events" },
-    { label: "Dashboard", href: "/dashboard" },
+    { label: "Dashboard", href: "/profile" },
     { label: "Home", href: "/" },
   ];
 
