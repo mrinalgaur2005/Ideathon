@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import EventCard from "../../components/events/card";
 import FilterBox from "../../components/events/filterbox";
 import { useEffect, useState, useMemo } from "react";
@@ -48,7 +48,7 @@ export default function EventsPage() {
     const fetchAllEvents = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events`);
+        const response = await axios.get(`/api/events`);
         const events = await response.data;
         setAllEvents(events);
       } catch (error) {
@@ -75,8 +75,8 @@ export default function EventsPage() {
               key={tab}
               className={`px-4 md:px-6 py-2 rounded-lg text-white font-semibold transition-all duration-300 ease-in-out ${
                 activeTab === tab.toLowerCase().replace(/\s+/g, "")
-                  ? "bg-[#070257] text-black scale-105 shadow-md"
-                  : "bg-[#1F2833] hover:bg-[#0a0894] hover:scale-105 hover:shadow-lg"
+                  ? "bg-[#2563EB] text-black scale-105 shadow-md"
+                  : "bg-[#2D3748] hover:bg-[#2B6CB0] hover:scale-105 hover:shadow-lg"
               }`}
               onClick={() => setActiveTab(tab.toLowerCase().replace(/\s+/g, ""))}
             >
@@ -89,6 +89,8 @@ export default function EventsPage() {
         <div className="flex flex-col w-full h-5/6 items-center overflow-y-auto z-10">
           {isLoading ? (
             <div className="text-white">Loading...</div>
+          ) : filteredEvents.length === 0 ? (
+            <div className="text-white">No events found</div>
           ) : (
             selectedEvents.map((event) => (
               <EventCard
@@ -111,14 +113,14 @@ export default function EventsPage() {
         <div className="flex flex-row items-center justify-between w-full md:w-1/3 h-20 text-white mt-4">
           <button
             onClick={() => page > 1 && setPage(page - 1)}
-            className="text-sm md:text-lg font-bold h-10 md:h-12 px-4 md:px-8 bg-gradient-to-br from-[#0728f9] to-[#127b76] text-black rounded shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+            className="text-sm md:text-lg font-bold h-10 md:h-12 px-4 md:px-8 bg-gradient-to-br from-[#38B2AC] to-[#319795] text-black rounded shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
           >
             Previous
           </button>
           <div className="text-white text-base md:text-xl font-semibold">{page}</div>
           <button
             onClick={() => page < maxPage && setPage(page + 1)}
-            className="text-sm md:text-lg font-bold h-10 md:h-12 px-5 md:px-8 bg-gradient-to-br from-[#0d7c74] to-[#0f12a4] text-black rounded shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
+            className="text-sm md:text-lg font-bold h-10 md:h-12 px-5 md:px-8 bg-gradient-to-br from-[#319795] to-[#38B2AC] text-black rounded shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center"
           >
             Next
           </button>
@@ -129,7 +131,7 @@ export default function EventsPage() {
       <div className="w-full md:w-1/5 flex flex-col items-center mt-4 md:mt-8">
         {/* Toggle Button for Mobile */}
         <button
-          className="text-lg font-bold bg-gradient-to-br from-[#2a11e2] to-[#45A29E] text-black w-36 rounded mb-4 md:mb-8 hover:scale-105 transition-all md:hidden"
+          className="text-lg font-bold bg-gradient-to-br from-[#ED8936] to-[#F6AD55] text-black w-36 rounded mb-4 md:mb-8 hover:scale-105 transition-all md:hidden"
           onClick={() => setShowFilters(!showFilters)}
         >
           {showFilters ? "Hide Filters" : "Show Filters"}
@@ -149,7 +151,7 @@ export default function EventsPage() {
 
         {/* Add Event Button */}
         <button
-          className="text-lg font-bold bg-gradient-to-br from-[#061083] to-[#45A29E] text-black w-36 rounded mt-6 hover:scale-105 transition-all"
+          className="text-lg font-bold bg-gradient-to-br from-[#2B6CB0] to-[#63B3ED] text-black w-36 rounded mt-6 hover:scale-105 transition-all"
           onClick={() => router.push("/events/add-event")}
         >
           Add Event
