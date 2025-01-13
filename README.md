@@ -2,10 +2,17 @@
   
   *Your Academic Compass in the Campus* 
   
-  [![Next.js](https://img.shields.io/badge/Built%20with-Next.js-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
-  [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-  [![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-  [![Socket.io](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
+[![Next.js](https://img.shields.io/badge/Built%20with-Next.js-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![WebSocket](https://img.shields.io/badge/WebSocket-010101?style=for-the-badge&logo=websocket&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
+[![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
+[![GROQ](https://img.shields.io/badge/GROQ-F06835?style=for-the-badge&logo=sanity&logoColor=white)](https://www.sanity.io/docs/groq)
+[![Qdrant](https://img.shields.io/badge/Qdrant-E94D33?style=for-the-badge&logo=qdrant&logoColor=white)](https://qdrant.tech/)
+[![Next.js 15](https://img.shields.io/badge/Next.js%2015-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![OpenStreetMap](https://img.shields.io/badge/OpenStreetMap-7EBC6F?style=for-the-badge&logo=openstreetmap&logoColor=white)](https://www.openstreetmap.org/)
+[![LiveKit](https://img.shields.io/badge/LiveKit-4537DE?style=for-the-badge&logo=livekit&logoColor=white)](https://livekit.io/)
+
 </div>
 
 ## 🌟 Overview
@@ -53,18 +60,18 @@ College Compus is your all-in-one college companion, developed for the ACM Ideat
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: Next.js 14, TailwindCSS, Socket.io-client
-- **Backend**: Node.js, Express.js, Socket.io
-- **Database**: MongoDB
-- **Authentication**: JWT, NextAuth.js
-- **Maps**: Leaflet.js
-- **Real-time**: WebRTC, Socket.io
+- **Frontend**: Next.js 15, TailwindCSS, Socket.io-client,
+- **Backend**: Node.js, Express.js, Websocket, Groq AI
+- **Database**: MongoDB, Qdrant Vector DB
+- **Authentication**: JWT, NextAuth.js, NodeMailer
+- **Maps**: OpenStreetMap
+- **Real-time**: WebSocket, Livekit
 
 ## 🚀 Getting Started
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/college-compus.git
+git clone https://github.com/VaibhavVerma27/Ideathon
 
 # Install dependencies
 cd college-compus
@@ -113,9 +120,9 @@ Access the entire backend api routes through this [Pastebin Link](https://pasteb
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="images/Screenshot_20250114_003732.png/" alt="Home" width="200"/>
-  <img src="images/Screenshot_20250114_003900.png" alt="Clubs" width="200"/>
-  <img src="images/Screenshot_20250114_003945.png" alt="Dashbaord" width="200"/>
+  <img src="images/Screenshot_20250114_003732.png/" alt="Home" width="800"/>
+  <img src="images/Screenshot_20250114_003900.png" alt="Clubs" width="800"/>
+  <img src="images/Screenshot_20250114_003945.png" alt="Dashbaord" width="800"/>
 </div>
 
 ## 🙏 Acknowledgments
@@ -128,5 +135,5 @@ Access the entire backend api routes through this [Pastebin Link](https://pasteb
 <div align="center">
   Made with ❤️ by PEC Students
   
-  [Website]([https://college-compus.vercel.app](https://pec.ac.in/)) · [Report Bug](https://github.com/VaibhavVerma/Ideathon/issues) · [Request Feature](https://github.com/VaibhavVerma/Ideathon/issues)
+  [Website]([https://college-compus.vercel.app](https://pec.ac.in/)) · [Report Bug](https://github.com/VaibhavVerma27/Ideathon/issues) · [Request Feature](https://github.com/VaibhavVerma27/Ideathon/issues)
 </div>
