@@ -1,11 +1,13 @@
+import {router} from "next/client";
+
 export default function TeacherHomePage() {
   const teacherFeatures = [
-    { name: "Make Announcements", description: "Share updates with your class.", color: "bg-emerald-600", hover: "hover:bg-emerald-700" },
-    { name: "Add Resources", description: "Upload materials for students.", color: "bg-purple-600", hover: "hover:bg-purple-700" },
-    { name: "Create Attendance Group", description: "Organize students into attendance groups.", color: "bg-orange-600", hover: "hover:bg-orange-700" },
-    { name: "Take Attendance", description: "Mark student attendance.", color: "bg-teal-600", hover: "hover:bg-teal-700" },
-    { name: "Upload Marks", description: "Submit student grades for exams.", color: "bg-pink-600", hover: "hover:bg-pink-700" },
-    { name: "View Attendance", description: "Review attendance records.", color: "bg-cyan-600", hover: "hover:bg-cyan-700" },
+    { name: "Make Announcements", description: "Share updates with your class.", color: "bg-emerald-600", hover: "hover:bg-emerald-700", func: ()=> router.push("/teacher/announcements/add") },
+    { name: "Add Resources", description: "Upload materials for students.", color: "bg-purple-600", hover: "hover:bg-purple-700", func: ()=> router.push("/teacher/subjects") },
+    { name: "Create Attendance Group", description: "Organize students into attendance groups.", color: "bg-orange-600", hover: "hover:bg-orange-700", func: ()=> router.push("/teacher/subjects") },
+    { name: "Take Attendance", description: "Mark student attendance.", color: "bg-teal-600", hover: "hover:bg-teal-700", func: ()=> router.push("/teacher/subjects") },
+    { name: "Upload Marks", description: "Submit student grades for exams.", color: "bg-pink-600", hover: "hover:bg-pink-700", func: ()=> router.push("/teacher/marks") },
+    { name: "View Attendance", description: "Review attendance records.", color: "bg-cyan-600", hover: "hover:bg-cyan-700", func: ()=> router.push("/teacher/subjects") },
   ];
 
   return (

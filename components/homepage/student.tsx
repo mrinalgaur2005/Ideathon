@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import moment from "moment";
+import {useRouter} from "next/navigation";
 
 export default function StudentHomePage() {
   const [adminAnnouncements, setAdminAnnouncements] = useState<{announcementText: string, department: string, createdAt: Date, updatedAt: Date}[]>([]);
   const [teacherAnnouncements, setTeacherAnnouncements] = useState<{announcementText: string, subjectCode: string, createdAt: Date, updatedAt: Date}[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchAnnouncements() {
@@ -99,7 +101,10 @@ export default function StudentHomePage() {
               Join clubs to connect with like-minded peers. Share ideas, collaborate
               on projects, and build your network.
             </p>
-            <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg">
+            <button
+              className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg"
+              onClick={() => router.push("/clubs")}
+            >
               Explore Clubs
             </button>
           </div>
@@ -111,7 +116,10 @@ export default function StudentHomePage() {
               Stay updated with all upcoming events and workshops happening across the
               campus.
             </p>
-            <button className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-lg">
+            <button
+              className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-lg"
+              onClick={() => router.push("/events")}
+            >
               View Events
             </button>
           </div>
@@ -122,7 +130,10 @@ export default function StudentHomePage() {
             <p className="text-gray-300">
               Access your personal dashboard to view your marks, the clubs you are part of, and your profile details.
             </p>
-            <button className="mt-4 bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded-lg">
+            <button
+              className="mt-4 bg-cyan-600 hover:bg-cyan-700 text-white py-2 px-4 rounded-lg"
+              onClick={() => router.push("/dashboard/student")}
+            >
               Open Dashboard
             </button>
           </div>
@@ -133,7 +144,9 @@ export default function StudentHomePage() {
             <p className="text-gray-300">
               Keep track of your attendance records, review attendance percentages, and stay updated on your class participation.
             </p>
-            <button className="mt-4 bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-lg">
+            <button
+              className="mt-4 bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-lg"
+            >
               Track Attendance
             </button>
           </div>
@@ -145,7 +158,10 @@ export default function StudentHomePage() {
               Access study materials, previous question papers, and helpful guides
               curated by your professors.
             </p>
-            <button className="mt-4 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg">
+            <button
+              className="mt-4 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg"
+              onClick={() => router.push("/resources")}
+            >
               Access Resources
             </button>
           </div>
@@ -157,7 +173,10 @@ export default function StudentHomePage() {
               Discover and connect with your classmates and peers. See their live
               location on campus.
             </p>
-            <button className="mt-4 bg-pink-600 hover:bg-pink-700 text-white py-2 px-4 rounded-lg">
+            <button
+              className="mt-4 bg-pink-600 hover:bg-pink-700 text-white py-2 px-4 rounded-lg"
+              onClick={() => router.push("/MAP")}
+            >
               Find Friends
             </button>
           </div>
@@ -169,7 +188,10 @@ export default function StudentHomePage() {
               Post study requests or teach others. Collaborate with fellow students
               to learn and grow together.
             </p>
-            <button className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-lg">
+            <button
+              className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-lg"
+              onClick={() => router.push("/study-requests")}
+            >
               Study Together
             </button>
           </div>
@@ -181,7 +203,10 @@ export default function StudentHomePage() {
               Report campus-related issues like maintenance problems or academic
               concerns. Get timely resolutions.
             </p>
-            <button className="mt-4 bg-rose-600 hover:bg-rose-700 text-white py-2 px-4 rounded-lg">
+            <button
+              className="mt-4 bg-rose-600 hover:bg-rose-700 text-white py-2 px-4 rounded-lg"
+              onClick={() => router.push("/issues")}
+            >
               Report Issues
             </button>
           </div>
