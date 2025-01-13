@@ -80,7 +80,7 @@ export default function MyRequestsToTeachPage() {
         {myRequestsToTeach.length === 0 ? (
           <div className="text-gray-400 text-lg mt-20">No requests found.</div>
         ) : (
-          <div className="w-full max-w-5xl max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
+          <div className="w-full max-w-5xl max-h-[70vh]">
             {myRequestsToTeach.map((request) => (
               <div
                 key={request._id.toString()}
