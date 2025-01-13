@@ -5,14 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_13_25,_8_28 PM_[Changes]/shelved.patch" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_1_13_25__8_28PM__Changes_.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/homepage/admin.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/homepage/student.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/homepage/teacher.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/teacher/subjects/groups/attendance/show/[...subjectId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/teacher/subjects/groups/attendance/show/[...subjectId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/clubs/add-club/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/clubs/add-club/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/clubs/edit-club/[...clubId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/clubs/edit-club/[...clubId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/clubs/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/subjects/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/subjects/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/subjects/students/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/subjects/students/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/subjects/teachers/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/subjects/teachers/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/user/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/user/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/user/make-admin/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/user/make-admin/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/user/make-teacher/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/user/make-teacher/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/homepage/student.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/homepage/student.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -196,7 +200,7 @@
       <workItem from="1736745014949" duration="1257000" />
       <workItem from="1736750325263" duration="1628000" />
       <workItem from="1736764910004" duration="3159000" />
-      <workItem from="1736779876545" duration="4298000" />
+      <workItem from="1736779876545" duration="7852000" />
     </task>
     <servers />
   </component>
@@ -209,8 +213,18 @@
     </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="6a35ed3b-0ed1-49df-9598-09b527d43acf" value="TOOL_WINDOW" />
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
+        <entry key="6a35ed3b-0ed1-49df-9598-09b527d43acf">
+          <value>
+            <State />
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State>

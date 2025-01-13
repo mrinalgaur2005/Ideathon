@@ -1,10 +1,10 @@
-"use client"
-import {CldUploadButton} from "next-cloudinary";
+"use client";
 
-import {useEffect, useState} from "react";
+import { CldUploadButton } from "next-cloudinary";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import {useParams, useRouter} from "next/navigation";
-import {useModel} from "../../../../../hooks/user-model-store";
+import { useParams, useRouter } from "next/navigation";
+import { useModel } from "../../../../../hooks/user-model-store";
 import mongoose from "mongoose";
 import DotsLoader from "../../../../../components/loading/dotLoader";
 
@@ -12,7 +12,7 @@ export default function AddClubPage() {
   const [clubName, setClubName] = useState<string>("");
   const [clubLogo, setClubLogo] = useState<string>("");
   const [secyId, setSecyId] = useState<string>("");
-  const [clubIdSecs, setClubIdSecs] = useState<string[]>([])
+  const [clubIdSecs, setClubIdSecs] = useState<string[]>([]);
   const [studentId, setStudentId] = useState<string>("");
   const [clubMembers, setClubMembers] = useState<string[]>([]);
   const [clubEvents, setClubEvents] = useState<mongoose.Types.ObjectId[]>([]);
@@ -21,7 +21,6 @@ export default function AddClubPage() {
   const router = useRouter();
   const params = useParams();
   const clubId = params.clubId?.[0];
-
 
   useEffect(() => {
     async function fetchData() {
@@ -53,7 +52,6 @@ export default function AddClubPage() {
     return <DotsLoader />;
   }
 
-
   function handleLogoUpload(result: any) {
     if (result.event === "success") {
       setClubLogo(result.info.secure_url);
@@ -73,13 +71,12 @@ export default function AddClubPage() {
   async function handleUpdateClub() {
     try {
       const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/admin/clubs/edit-club/${clubId}`, {
-          clubName,
-          clubLogo,
-          clubIdSecs,
-          clubMembers,
-          clubEvents,
-        }
-      )
+        clubName,
+        clubLogo,
+        clubIdSecs,
+        clubMembers,
+        clubEvents,
+      });
 
       if (res.status === 200) {
         console.log("Club updated successfully");
@@ -184,5 +181,5 @@ export default function AddClubPage() {
         </button>
       </div>
     </>
-  )
+  );
 }

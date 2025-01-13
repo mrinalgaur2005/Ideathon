@@ -4,7 +4,7 @@ import io, { Socket } from "socket.io-client";
 
 let socket: typeof Socket;
 
-const Whiteboard = () => {
+export const Whiteboard = () => {
   const [roomId, setRoomId] = useState("");
   const [connectedRoom, setConnectedRoom] = useState("");
   const canvasRef = useRef<HTMLCanvasElement>(null);
