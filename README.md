@@ -113,9 +113,9 @@ Access the entire backend api routes through this [Pastebin Link](https://pasteb
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="Ideathon/images/Screenshot_20250114_003732.png" alt="Home" width="200"/>
-  <img src="Ideathon/images/Screenshot_20250114_003900.png" alt="Clubs" width="200"/>
-  <img src="Ideathon/images/Screenshot_20250114_003945.png" alt="Dashbaord" width="200"/>
+  <img src="images/Screenshot_20250114_003732.png/" alt="Home" width="200"/>
+  <img src="images/Screenshot_20250114_003900.png" alt="Clubs" width="200"/>
+  <img src="images/Screenshot_20250114_003945.png" alt="Dashbaord" width="200"/>
 </div>
 
 ## 🙏 Acknowledgments
@@ -128,5 +128,5 @@ Access the entire backend api routes through this [Pastebin Link](https://pasteb
 <div align="center">
   Made with ❤️ by PEC Students
   
-  [Website](https://college-compus.vercel.app) · [Report Bug](https://github.com/yourusername/college-compus/issues) · [Request Feature](https://github.com/yourusername/college-compus/issues)
+  [Website]([https://college-compus.vercel.app](https://pec.ac.in/)) · [Report Bug](https://github.com/VaibhavVerma/Ideathon/issues) · [Request Feature](https://github.com/VaibhavVerma/Ideathon/issues)
 </div>
