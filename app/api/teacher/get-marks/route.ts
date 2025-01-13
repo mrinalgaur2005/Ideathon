@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error('Error in GET /api/marks:', error);
     return NextResponse.json(
-      { message: 'Internal Server Error', error: error.message },
+      { message: 'Internal Server Error', error: (error as any).message },
       { status: 500 }
     );
   }
