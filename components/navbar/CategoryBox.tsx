@@ -22,13 +22,17 @@ const CategoryBox: React.FC<CategoryBoxProps> = ({
       lowerCaseLabel === "clubs" ||
       lowerCaseLabel === "events" ||
       lowerCaseLabel === "issues" ||
-      lowerCaseLabel === "home"
+      lowerCaseLabel === "study-requests" ||
+      lowerCaseLabel === "resources"
     ) {
       url = `/${lowerCaseLabel}`;
     } else if (lowerCaseLabel === "map") {
       url = "/MAP";
     } else if (lowerCaseLabel === "friends") {
       url = `/user/friends`;
+    }
+    else if (lowerCaseLabel === "home") {
+      url = `/`;
     }
 
     if (url) {
