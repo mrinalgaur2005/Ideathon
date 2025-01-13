@@ -1,8 +1,5 @@
-import { strict } from "assert";
-import { Mode } from "fs";
 import mongoose, { Schema, Document, Model } from "mongoose";
 import { v4 as uuidv4 } from 'uuid'
-import { string } from "zod";
 
 export interface User extends Document {
     username: string;
