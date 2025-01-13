@@ -111,7 +111,7 @@ export default function IssuesPage() {
             No issues have been added yet.
           </div>
         ) : (
-          <div className="w-full max-w-5xl max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-800">
+          <div className="w-full max-w-5xl max-h-[70vh]">
             {issues?.map((issue) => (
               <div
                 key={issue._id.toString()}
