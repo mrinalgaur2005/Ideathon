@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const UploadMarksPage = () => {
   const { data: session } = useSession();
@@ -10,6 +11,7 @@ const UploadMarksPage = () => {
   const [subjectId, setSubjectId] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -60,6 +62,7 @@ const UploadMarksPage = () => {
       alert(error.response?.data?.error || "An error occurred while uploading the file.");
     } finally {
       setLoading(false);
+      router.push('/teacher/marks/show-marks');
     }
   };
 
