@@ -1,16 +1,16 @@
 'use client'
-import React, { useEffect, useState } from 'react';
-import ClubCard from "../../../components/club/clubCard";
-import MarksCard from "../../../components/student/marksCard";
+import React, { useEffect } from 'react';
 import axios from "axios";
 import { useRouter } from 'next/navigation';
 import { useModel } from '../../../hooks/user-model-store';
 import DotsLoader from "../../../components/loading/dotLoader";
+import { FaBook, FaIdCard, FaGraduationCap, FaSchool } from "react-icons/fa";
+
+
 
 const Student = () => {
   const { profile, setProfile, setLoading } = useModel();
   const router = useRouter();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -38,96 +38,105 @@ const Student = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white p-6">
-      {/* Navigation Button and Dropdown Menu */}
-      <div className="absolute top-4 right-4">
-        <button
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow-xl transition-all duration-300"
-        >
-          Navigate
-        </button>
-        {dropdownOpen && (
-          <div className="absolute top-12 right-0 w-48 bg-gray-800 border border-blue-500 rounded-lg shadow-lg">
-            <ul className="space-y-2 p-2">
-              <li className="text-blue-500 hover:text-white cursor-pointer transition-colors duration-200">Events</li>
-              <li className="text-blue-500 hover:text-white cursor-pointer transition-colors duration-200">Map</li>
-              <li className="text-blue-500 hover:text-white cursor-pointer transition-colors duration-200">Clubs</li>
-            </ul>
-          </div>
-        )}
-      </div>
-
-      <div className="max-w-7xl mx-auto space-y-8">
-        <h1 className="text-3xl font-extrabold text-center text-blue-500 tracking-wide mb-8">
-          Student Profile
-        </h1>
-
-        {/* Student Profile Section */}
-        <div className="bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="w-32 h-32 md:w-40 md:h-40">
-              <img
-                src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg"
-                alt="Profile"
-                className="w-full h-full object-cover rounded-full border-4 border-blue-500 shadow-lg"
-              />
-            </div>
-
-            <div className="flex-1 space-y-4">
-              {[
-                { label: "Name", value: profile.name },
-                { label: "SID", value: profile.student_id },
-                { label: "Branch", value: profile.branch },
-                { label: "Semester", value: profile.semester },
-              ].map((field, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between border-b border-blue-500/30 py-2"
-                >
-                  <span className="text-blue-500 font-semibold">{field.label}</span>
-                  <span className="text-white">{field.value}</span>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-10 px-4">
+      <div className="max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg shadow-xl">
+        {/* Student Details Section */}
+        <div className="bg-gray-900 p-6 rounded-lg shadow-lg">
+          <div className="flex items-center space-x-6">
+            <img
+              src={profile.profile}
+              width={120}
+              height={120}
+              className="rounded-full shadow-lg border-4 border-blue-500"
+            />
+            <div>
+              <h1 className="text-4xl font-bold text-blue-400">{profile.name}</h1>
+              <div className="mt-2 text-gray-300 space-y-1">
+                <div className="flex items-center space-x-2">
+                  <FaIdCard className="text-yellow-400" />
+                  <p>Student ID: {profile.student_id}</p>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Joined Clubs Section */}
-        <div className="bg-gray-800 rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-blue-500 mb-6 text-center">
-            Joined Clubs
-          </h2>
-          <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex-1 space-y-4 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900">
-              {profile.clubsPartOf.map((club) => (
-                <ClubCard key={club._id.toString()} clubName={club.clubName} clubLogo={club.clubLogo} />
-              ))}
-            </div>
-            <div className="md:w-48 text-center">
-              <div className="text-lg text-white mb-2">Clubs Joined</div>
-              <div className="text-3xl font-bold text-blue-500">
-                {profile.clubsPartOf.length}
+                <div className="flex items-center space-x-2">
+                  <FaGraduationCap className="text-green-400" />
+                  <p>Branch: {profile.branch}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <FaSchool className="text-pink-400" />
+                  <p>Semester: {profile.semester}</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Updated Marks Section */}
-        <div className="bg-gray-800 rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-blue-500 mb-6 text-center">
-            Academic Performance
+        {/* Subject Marks Section */}
+        <div className="mt-10">
+          <h2 className="text-2xl font-semibold text-yellow-400 mb-6">
+            Subject Marks
           </h2>
-          <div className="flex flex-col items-center">
-            <div className="w-full max-w-4xl bg-gray-900 rounded-xl border-2 border-blue-500 shadow-lg shadow-blue-500/20 p-6">
-              <div className="grid grid-cols-1 gap-4 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-800">
-                <MarksCard subjectMarks={profile.subjectMarks as any} />
+          <div className="space-y-6">
+            {profile.subjectMarks.map((subject, index) => (
+              <div
+                key={index}
+                className="bg-gray-900 p-6 rounded-lg shadow-lg"
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-bold text-blue-300">
+                    {subject.subjectId}
+                  </h3>
+                  <FaBook className="text-2xl text-blue-500" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  {subject.allMarks.map((mark, idx) => (
+                    <div
+                      key={idx}
+                      className="flex justify-between items-center bg-gray-800 p-4 rounded-lg shadow-md"
+                    >
+                      <span className="text-sm font-medium text-gray-300">
+                        {mark.examType}:
+                      </span>
+                      <span className="text-sm font-bold text-gray-200">
+                        {mark.marks} Marks
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="mt-4 pt-4 border-t border-blue-500/30 flex justify-between items-center text-sm text-gray-400">
-                <span>Scroll to view all subjects</span>
-                <span className="text-blue-400">Semester {profile.semester}</span>
+            ))}
+          </div>
+        </div>
+
+        {/* Clubs Section */}
+        <div className="mt-10">
+          <h2 className="text-2xl font-semibold text-green-400 mb-6">Clubs</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {profile.clubsPartOf.map((club) => (
+              <div
+                key={club._id.toString()}
+                className="bg-gray-900 p-4 rounded-lg shadow-lg flex items-center space-x-4"
+              >
+                <img
+                  src={club.clubLogo}
+                  alt={club.clubName}
+                  width={60}
+                  height={60}
+                  className="rounded-full"
+                />
+                <div>
+                  <h3 className="text-lg font-semibold text-blue-300">
+                    {club.clubName}
+                  </h3>
+                  <button
+                    className="mt-2 text-sm text-white bg-blue-600 hover:bg-blue-700 py-1 px-3 rounded-lg"
+                    onClick={() => {
+                      router.push(`/clubs/${club._id.toString()}`);
+                    }}
+                  >
+                    Show Club Details
+                  </button>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

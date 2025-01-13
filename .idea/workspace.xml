@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/student/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/student/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,9 +16,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="TypeScript JSX File" />
         <option value="tsconfig.json" />
         <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
       </list>
     </option>
   </component>
@@ -58,7 +59,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/ideathon/app/api/admin/user&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/vaibhav-verma/WebstormProjects/ideathon/app/api/teacher/announcements&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -70,14 +71,15 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/api/teacher/announcements" />
       <recent name="$PROJECT_DIR$/app/api/admin/user" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/teacher/announcements/edit/[...id]" />
+      <recent name="$PROJECT_DIR$/app/api/user" />
       <recent name="$PROJECT_DIR$/app/api/study-requests/accepted-requests/[...acceptedStudyRequestId]" />
       <recent name="$PROJECT_DIR$/app/api/study-requests/my-requests" />
       <recent name="$PROJECT_DIR$/app/api/study-requests" />
-      <recent name="$PROJECT_DIR$/app/api/study-requests/my-requests-to-teach" />
-      <recent name="$PROJECT_DIR$/app/api/study-requests/add-request-to-teach/[...studyRequestId]" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -184,7 +186,8 @@
       <workItem from="1736578088376" duration="1169000" />
       <workItem from="1736580717395" duration="8639000" />
       <workItem from="1736609464635" duration="10431000" />
-      <workItem from="1736661826883" duration="11723000" />
+      <workItem from="1736661826883" duration="29277000" />
+      <workItem from="1736745014949" duration="1257000" />
     </task>
     <servers />
   </component>

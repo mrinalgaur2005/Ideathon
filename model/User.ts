@@ -473,7 +473,7 @@ export interface Announcement extends Document {
 const AnnouncementModelSchema: Schema<Announcement> = new Schema({
     announcementText: { type: String, required: true },
     department: { type: String, required: true }
-})
+}, {timestamps: true})
 
 interface Eventai {
     title: string;
@@ -524,22 +524,23 @@ const AiChatBotSchema: Schema<AiChatBot> = new Schema({
     { collection: 'aiChatBot' }
 );
 
-export interface ClassAnnouncement extends Document {
+export interface TeacherAnnouncement extends Document {
+    teacherId: mongoose.Schema.Types.ObjectId;
     announcementText: string;
     subjectCode: string;
-
 }
 
-const ClassAnnouncementModelSchema: Schema<ClassAnnouncement> = new Schema({
+const TeacherAnnouncementSchema: Schema<TeacherAnnouncement> = new Schema({
+    teacherId: { type: Schema.Types.ObjectId, ref: "Teacher", required: true },
     announcementText: { type: String, required: true },
     subjectCode: { type: String, required: true }
-})
+}, {timestamps: true});
 
 const AnnouncementModel: Model<Announcement> = 
     mongoose.models.Announcement || mongoose.model<Announcement>("Announcement", AnnouncementModelSchema)
 
-const ClassAnnouncementModel: Model<ClassAnnouncement> = 
-    mongoose.models.ClassAnnouncement || mongoose.model<ClassAnnouncement>("ClassAnnouncement", ClassAnnouncementModelSchema)
+const TeacherAnnouncementModel: Model<TeacherAnnouncement> =
+    mongoose.models.TeacherAnnouncement || mongoose.model<TeacherAnnouncement>("TeacherAnnouncement", TeacherAnnouncementSchema)
     
 const aiChatBotModel: Model<AiChatBot> =
     mongoose.models.aiChatBot || mongoose.model<AiChatBot>("aiChatBot", AiChatBotSchema);
@@ -587,7 +588,7 @@ const AcceptedStudyRequestModel: Model<AcceptedStudyRequest> =
     mongoose.models.AcceptedStudyRequest || mongoose.model<AcceptedStudyRequest>("AcceptedStudyRequest", AcceptedStudyRequestSchema);
 
 export {
-    ClassAnnouncementModel,
+    TeacherAnnouncementModel,
     UserModel,
     StudentModel,
     TeacherModel,
