@@ -38,100 +38,98 @@ const Student = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-start w-full bg-gradient-to-b from-[#0B0C10] to-[#1F2833] p-10 relative">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white p-6">
       {/* Navigation Button and Dropdown Menu */}
-      <div className="absolute top-3 right-4" >
+      <div className="absolute top-4 right-4">
         <button
           onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="bg-gradient-to-r from-[#66FCF1] to-[#45A29E] text-black rounded-sm shadow-lg transform mb-3 px-3 hover:scale-105 transition-transform duration-300 ease-in-out h-15"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold shadow-xl transition-all duration-300"
         >
-         Navigate
-          
+          Navigate
         </button>
         {dropdownOpen && (
-          <div className="absolute top-14 right-0 w-48 bg-[#0B0C10] border border-cyan-300 rounded-lg shadow-md">
+          <div className="absolute top-12 right-0 w-48 bg-gray-800 border border-blue-500 rounded-lg shadow-lg">
             <ul className="space-y-2 p-2">
-              <li className="text-[#66FCF1] hover:text-white cursor-pointer">Events</li>
-              <li className="text-[#66FCF1] hover:text-white cursor-pointer">Map</li>
-              <li className="text-[#66FCF1] hover:text-white cursor-pointer">Clubs</li>
+              <li className="text-blue-500 hover:text-white cursor-pointer transition-colors duration-200">Events</li>
+              <li className="text-blue-500 hover:text-white cursor-pointer transition-colors duration-200">Map</li>
+              <li className="text-blue-500 hover:text-white cursor-pointer transition-colors duration-200">Clubs</li>
             </ul>
           </div>
         )}
       </div>
 
-      <div className="text-2xl font-bold text-[#66FCF1] mb-1 text-center">
-        Student Profile
-      </div>
+      <div className="max-w-7xl mx-auto space-y-8">
+        <h1 className="text-3xl font-extrabold text-center text-blue-500 tracking-wide mb-8">
+          Student Profile
+        </h1>
 
-      {/* Student Profile Section */}
-      <div
-        className="flex flex-col md:flex-row items-center w-full max-w-screen-sm bg-[#0B0C10] border-2 rounded-lg border-cyan-300 shadow-md shadow-cyan-300/50 p-3 mb-6 space-y-10 md:space-y-5 md:space-x-5
-        h-fit overflow-hidden"
-      >
-        <div className="flex flex-col w-full md:w-2/3 space-y-2">
-          {[
-            { label: "Name", value: profile.name },
-            { label: "SID", value: profile.student_id },
-            { label: "Branch", value: profile.branch },
-            { label: "Semester", value: profile.semester },
-          ].map((field, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between py-1 text-sm font-semibold text-white border-b border-cyan-500"
-            >
-              <div className="w-1/3 text-[#66FCF1]">
-                {field.label}
-              </div>
-              <div className="w-2/3 text-right">
-                {field.value}
+        {/* Student Profile Section */}
+        <div className="bg-gray-800 rounded-lg shadow-lg p-6 transform hover:scale-105 transition-transform duration-300">
+          <div className="flex flex-col md:flex-row items-center gap-6">
+            <div className="w-32 h-32 md:w-40 md:h-40">
+              <img
+                src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg"
+                alt="Profile"
+                className="w-full h-full object-cover rounded-full border-4 border-blue-500 shadow-lg"
+              />
+            </div>
+
+            <div className="flex-1 space-y-4">
+              {[
+                { label: "Name", value: profile.name },
+                { label: "SID", value: profile.student_id },
+                { label: "Branch", value: profile.branch },
+                { label: "Semester", value: profile.semester },
+              ].map((field, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between border-b border-blue-500/30 py-2"
+                >
+                  <span className="text-blue-500 font-semibold">{field.label}</span>
+                  <span className="text-white">{field.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Joined Clubs Section */}
+        <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+          <h2 className="text-2xl font-bold text-blue-500 mb-6 text-center">
+            Joined Clubs
+          </h2>
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex-1 space-y-4 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-900">
+              {profile.clubsPartOf.map((club) => (
+                <ClubCard key={club._id.toString()} clubName={club.clubName} clubLogo={club.clubLogo} />
+              ))}
+            </div>
+            <div className="md:w-48 text-center">
+              <div className="text-lg text-white mb-2">Clubs Joined</div>
+              <div className="text-3xl font-bold text-blue-500">
+                {profile.clubsPartOf.length}
               </div>
             </div>
-          ))}
-        </div>
-
-        <div
-          className="flex items-center justify-center w-20 h-20 md:w-1/4 md:h-24 border-2 rounded-full border-cyan-300 shadow-md shadow-cyan-300/50 overflow-hidden"
-        >
-          <img
-            src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg"
-            alt="Profile"
-            className="w-full h-full object-cover"
-          />
-        </div>
-      </div>
-
-      {/* Joined Clubs Section */}
-      <div className="w-full max-w-screen-sm text-lg font-bold mt-6 text-[#66FCF1] text-center">
-        Joined Clubs
-      </div>
-      <div
-        className="flex flex-col md:flex-row w-full max-w-screen-sm bg-[#0B0C10] border-4 rounded-lg border-cyan-300 shadow-md shadow-cyan-300/50 p-3 mb-6 space-y-4 md:space-y-0 md:space-x-4
-        min-h-[17rem]"
-      >
-        <div className="flex flex-col w-full md:w-3/4 space-y-2 overflow-y-auto">
-          {profile.clubsPartOf.map((club) => (
-            <ClubCard key={club._id as any} clubName={club.clubName} clubLogo={club.clubLogo} />
-          ))}
-        </div>
-        <div className="flex flex-col items-center w-full md:w-1/4 space-y-2">
-          <div className="text-base font-bold text-white">
-            Number of Clubs joined:
-          </div>
-          <div className="text-xl font-bold text-[#66FCF1]">
-            {profile.clubsPartOf.length}
           </div>
         </div>
-      </div>
 
-      {/* Marks Section */}
-      <div className="w-full max-w-screen-sm text-lg font-bold mt-6 text-[#66FCF1] text-center">
-        Marks
-      </div>
-      <div
-        className="flex flex-col w-full max-w-screen-sm bg-[#0B0C10] border-4 rounded-lg border-cyan-300 shadow-md shadow-cyan-300/50 p-3 space-y-2 overflow-y-auto
-        max-h-[14rem]"
-      >
-        <MarksCard subjectMarks={profile.subjectMarks as any} />
+        {/* Updated Marks Section */}
+        <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+          <h2 className="text-2xl font-bold text-blue-500 mb-6 text-center">
+            Academic Performance
+          </h2>
+          <div className="flex flex-col items-center">
+            <div className="w-full max-w-4xl bg-gray-900 rounded-xl border-2 border-blue-500 shadow-lg shadow-blue-500/20 p-6">
+              <div className="grid grid-cols-1 gap-4 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-800">
+                <MarksCard subjectMarks={profile.subjectMarks as any} />
+              </div>
+              <div className="mt-4 pt-4 border-t border-blue-500/30 flex justify-between items-center text-sm text-gray-400">
+                <span>Scroll to view all subjects</span>
+                <span className="text-blue-400">Semester {profile.semester}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
