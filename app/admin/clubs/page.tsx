@@ -1,8 +1,8 @@
-'use client'
+"use client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import axios from "axios";
-import {useModel} from "../../../hooks/user-model-store";
+import { useModel } from "../../../hooks/user-model-store";
 import DotsLoader from "../../../components/loading/dotLoader";
 
 export default function ClubsPage() {
@@ -48,7 +48,6 @@ export default function ClubsPage() {
       </div>
     );
   }
-
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
