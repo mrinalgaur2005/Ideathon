@@ -1,14 +1,22 @@
 "use client";
-
+import io, { Socket } from "socket.io-client";
 import { useEffect } from "react";
 import axios from "axios";
 import DotsLoader from "../../../components/loading/dotLoader";
 import { useRouter } from "next/navigation";
-import {useModel} from "@/hooks/user-model-store";
+import { useModel } from "@/hooks/user-model-store";
+
+let socket: typeof Socket;
 
 export default function AcceptedRequestsPage() {
-  const { isLoading, setLoading, acceptedRequests, setAcceptedRequests} = useModel();
+  const { isLoading, setLoading, acceptedRequests, setAcceptedRequests } = useModel();
   const router = useRouter();
+
+  useEffect(() => {
+    socket = io("http://localhost:4000", {
+      allowEIO3: true
+    });
+  }, []);
 
   useEffect(() => {
     async function fetchAcceptedRequests() {
@@ -142,7 +150,10 @@ export default function AcceptedRequestsPage() {
                 <div className="mt-6 flex justify-end gap-4">
                   <button
                     className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg font-semibold shadow-lg transition-all duration-300"
-                    onClick={() => router.push(`/study-room/${request.roomId}`)}
+                    onClick={() => {
+                      socket.emit("join-room", request.roomId);
+                      router.push(`/study-room/${request.roomId}`);
+                    }}
                   >
                     Join Room
                   </button>
