@@ -5,15 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
-      <change afterPath="$PROJECT_DIR$/app/api/teacher/profile/route.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/teacher/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/teacher/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/events/add-event/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/add-event/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/events/edit-event/[...eventId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/edit-event/[...eventId]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/events/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/middleware.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/User.ts" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/clubs/edit-club/[...clubId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/edit-club/[...clubId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/clubs/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/clubs/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/clubs/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -82,11 +77,11 @@
       <recent name="$PROJECT_DIR$/app/api/admin/user" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/admin" />
       <recent name="$PROJECT_DIR$/app/teacher/announcements/edit/[...id]" />
       <recent name="$PROJECT_DIR$/app/api/user" />
       <recent name="$PROJECT_DIR$/app/api/study-requests/accepted-requests/[...acceptedStudyRequestId]" />
       <recent name="$PROJECT_DIR$/app/api/study-requests/my-requests" />
-      <recent name="$PROJECT_DIR$/app/api/study-requests" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -197,7 +192,7 @@
       <workItem from="1736745014949" duration="1257000" />
       <workItem from="1736750325263" duration="1628000" />
       <workItem from="1736764910004" duration="3159000" />
-      <workItem from="1736779876545" duration="11077000" />
+      <workItem from="1736779876545" duration="12607000" />
     </task>
     <servers />
   </component>

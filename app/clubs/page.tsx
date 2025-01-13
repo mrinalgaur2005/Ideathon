@@ -31,9 +31,7 @@ export default function ClubsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white flex items-center justify-center">
-        <DotsLoader />
-      </div>
+      <DotsLoader />
     );
   }
 
