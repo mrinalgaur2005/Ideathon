@@ -42,7 +42,7 @@ export default function RootLayout({
 
           {children}
           <FloatingChatbot />
-          <SignOutButton />
+          {/* <SignOutButton /> */}
           <Toaster />
         </body>
       </AuthProvider>
