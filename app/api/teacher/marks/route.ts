@@ -4,10 +4,10 @@ import { writeFile, createReadStream } from "fs";
 import { unlink } from "fs/promises";
 import { join } from "path";
 import csvParser from "csv-parser";
-import { authOptions } from "../../../(auth)/auth/[...nextauth]/options";
-import dbConnect from "../../../../../lib/connectDb";
-import { SubjectModel } from "../../../../../model/User";
-import { getAiMarks } from "../../../../../lib/aiMarks";
+import { authOptions } from "../../(auth)/auth/[...nextauth]/options";
+import dbConnect from "../../../../lib/connectDb";
+import { SubjectModel } from "../../../../model/User";
+import { getAiMarks } from "../../../../lib/aiMarks";
 
 interface CSVRow {
   student_id: string;
@@ -15,8 +15,7 @@ interface CSVRow {
 }
 
 export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { teacherId: string } }
+  req: NextRequest
 ) {
   let filePath: string | null = null;
 
@@ -29,15 +28,6 @@ export async function PATCH(
       return NextResponse.json(
         { error: "Unauthorized. User must be logged in." },
         { status: 401 }
-      );
-    }
-
-    const teacherId = params.teacherId;
-
-    if (!teacherId) {
-      return NextResponse.json(
-        { error: "Teacher ID is required." },
-        { status: 400 }
       );
     }
 
