@@ -14,28 +14,32 @@ interface MarkerData {
   distance?: number // Distance in km
 }
 
+interface EventData {
+  title: string
+  venue: string
+  coordinates: {
+    lat: number
+    lng: number
+  }
+}
+
 const OpenStreetmap: React.FC = () => {
   const [center, setCenter] = useState<LatLngExpression>({ lat: 30.7652305, lng: 76.7846207 })
   const [userLocation, setUserLocation] = useState<LatLngExpression | null>(null)
   const [markers, setMarkers] = useState<Record<string, MarkerData>>({})
   const [studentId, setStudentId] = useState<string>('')
+  const [events, setEvents] = useState<EventData[]>([])
   const wsRef = useRef<WebSocket | null>(null)
   const userLocationRef = useRef<LatLngExpression | null>(null)
-  const ZOOM_LEVEL = 17
   const sendLocationTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  const ZOOM_LEVEL = 17
 
   // Lock map within these bounds
   const MAX_BOUNDS: LatLngBoundsExpression = [
-    [30.690355, 76.723096], // Southwest corner
-    [30.774525,76.798471], // Northeast corner
+    [30.690355, 76.723096],
+    [30.774525, 76.798471],
   ]
-
-  const RECTANGLE_BOUNDS = {
-    minLatitude: Math.min(30.762473, 30.766436, 30.770325, 30.767316),
-    maxLatitude: Math.max(30.762473, 30.766436, 30.770325, 30.767316),
-    minLongitude: Math.min(76.782157, 76.779274, 76.790160, 76.791514),
-    maxLongitude: Math.max(76.782157, 76.779274, 76.790160, 76.791514),
-  }
 
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number): number => {
     const R = 6371000 // Radius of Earth in meters
@@ -51,16 +55,6 @@ const OpenStreetmap: React.FC = () => {
     return R * c // Distance in meters
   }
 
-  const isWithinRectangle = (latitude: number, longitude: number): boolean => {
-    const { minLatitude, maxLatitude, minLongitude, maxLongitude } = RECTANGLE_BOUNDS
-    return (
-      latitude >= minLatitude &&
-      latitude <= maxLatitude &&
-      longitude >= minLongitude &&
-      longitude <= maxLongitude
-    )
-  }
-
   useEffect(() => {
     const fetchStudentId = async () => {
       try {
@@ -69,9 +63,6 @@ const OpenStreetmap: React.FC = () => {
           const fetchedStudentId = response.data.student_id
           setStudentId(fetchedStudentId)
           localStorage.setItem('studentId', fetchedStudentId)
-          console.log('Fetched Student ID:', fetchedStudentId)
-        } else {
-          console.error('Student ID is empty in API response')
         }
       } catch (error) {
         console.error('Failed to fetch student ID:', error)
@@ -81,63 +72,60 @@ const OpenStreetmap: React.FC = () => {
     const storedStudentId = localStorage.getItem('studentId')
     if (storedStudentId) {
       setStudentId(storedStudentId)
-      console.log('Using stored Student ID:', storedStudentId)
     } else {
       fetchStudentId()
     }
   }, [])
 
   useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/events/event-coords')
+        if (response.data?.events) {
+          setEvents(response.data.events)
+        }
+      } catch (error) {
+        console.error('Failed to fetch events:', error)
+      }
+    }
+
+    fetchEvents()
+  }, [])
+
+  useEffect(() => {
     if (!studentId) return
-    
+
     const socket = new WebSocket(`${process.env.NEXT_PUBLIC_WS_URL}`)
     wsRef.current = socket
 
     socket.onopen = () => {
-      console.log('Connected to WebSocket server')
       sendLocation()
     }
 
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)
-        console.log('Received data:', data)
-
         if (data.latitudeData && data.latitudeData.length > 0) {
           const updatedMarkers: Record<string, MarkerData> = {}
           data.latitudeData.forEach((marker: any) => {
-            console.log(isWithinRectangle(marker.latitude,marker.longitude));
-            
-            if (isWithinRectangle(marker.latitude, marker.longitude)) {
-              console.log('correct way');
-              
-              const distance = userLocation
-                ? calculateDistance(
-                    userLocation.lat,
-                    userLocation.lng,
-                    marker.latitude,
-                    marker.longitude
-                  )
-                : null
-              updatedMarkers[marker.student_id] = {
-                student_id: marker.student_id,
-                latitude: marker.latitude,
-                longitude: marker.longitude,
-                distance: distance ? parseFloat((distance / 1000).toFixed(2)) : undefined,
-              }
+            const distance = userLocation
+              ? calculateDistance(
+                  userLocation.lat,
+                  userLocation.lng,
+                  marker.latitude,
+                  marker.longitude
+                )
+              : null
+            updatedMarkers[marker.student_id] = {
+              student_id: marker.student_id,
+              latitude: marker.latitude,
+              longitude: marker.longitude,
+              distance: distance ? parseFloat((distance / 1000).toFixed(2)) : undefined,
             }
           })
           setMarkers(updatedMarkers)
-          // console.log('Markers are:', JSON.stringify(markers, null, 2));
-          Object.values(markers).forEach((marker) => {
-            console.log('Marker details:', marker);
-          });
-          
         } else {
-          console.log('inside this');
-          
           setMarkers({})
-          console.log('No friends found or outside the rectangle.')
         }
         sendLocation()
       } catch (error) {
@@ -166,7 +154,6 @@ const OpenStreetmap: React.FC = () => {
     }
 
     const geoError = (error: GeolocationPositionError) => {
-      console.error('Geolocation error:', error.message)
       setUserLocation({ lat: 0, lng: 0 })
     }
 
@@ -176,8 +163,6 @@ const OpenStreetmap: React.FC = () => {
         timeout: 5000,
         maximumAge: 0,
       })
-    } else {
-      console.warn('Geolocation not supported by the browser')
     }
   }, [])
 
@@ -192,15 +177,19 @@ const OpenStreetmap: React.FC = () => {
           longitude: userLocationRef.current.lng,
         }
         wsRef.current.send(JSON.stringify(locationData))
-        console.log('Sent location data:', locationData)
       }, 1000)
-    } else {
-      console.warn('WebSocket not open or user location not available')
     }
   }
 
   const customIcon = new L.Icon({
     iconUrl: 'https://res.cloudinary.com/dlinkc1gw/image/upload/v1735823181/qq0ndgdcexmxhxnnbgln.png',
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, 32],
+  })
+
+  const eventIcon = new L.Icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/149/149064.png',
     iconSize: [32, 32],
     iconAnchor: [16, 32],
     popupAnchor: [0, 32],
@@ -220,7 +209,7 @@ const OpenStreetmap: React.FC = () => {
         zoom={ZOOM_LEVEL}
         style={{ height: '500px', width: '100%' }}
         maxBounds={MAX_BOUNDS}
-        maxBoundsViscosity={1.0} // Prevents the map from panning outside bounds
+        maxBoundsViscosity={1.0}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -237,6 +226,20 @@ const OpenStreetmap: React.FC = () => {
               Friend ID: {marker.student_id}
               <br />
               Distance: {marker.distance ? `${marker.distance} km` : 'Calculating...'}
+            </Popup>
+          </Marker>
+        ))}
+
+        {events.map((event, index) => (
+          <Marker
+            key={index}
+            position={[event.coordinates.lat, event.coordinates.lng]}
+            icon={eventIcon}
+          >
+            <Popup>
+              Event: {event.title}
+              <br />
+              Venue: {event.venue}
             </Popup>
           </Marker>
         ))}
