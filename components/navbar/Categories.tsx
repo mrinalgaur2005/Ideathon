@@ -21,6 +21,12 @@ export const categories = [
   {
     label: "Friends",
   },
+  {
+    label: "Study-Requests"
+  },
+  {
+    label: "Resources"
+  }
 ];
 
 function Categories() {

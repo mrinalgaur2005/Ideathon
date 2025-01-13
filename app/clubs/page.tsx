@@ -50,7 +50,7 @@ export default function ClubsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-b overflow-auto from-gray-900 via-gray-800 to-black text-white">
       {/* Page Header */}
       {/* <div className="w-full py-10 bg-gray-950 shadow-lg">
         <h1 className="text-4xl font-extrabold text-center text-blue-500 tracking-wide">
@@ -60,7 +60,7 @@ export default function ClubsPage() {
 
       {/* Clubs List */}
       <div className="flex flex-col items-center px-4">
-        <div className="w-full max-w-7xl max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+        <div className="w-full max-w-7xl max-h-[80vh]">
           {allClubs.map((club) => (
             <div
               key={club._id.toString()}
