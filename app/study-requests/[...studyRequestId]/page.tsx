@@ -60,11 +60,6 @@ export default function SingleRequestPage() {
     } finally {
       setLoading(false);
     }
-
-    // const res = await axios.get("/api/health");
-    // if (res.status === 200) {
-    //   alert("Accepted request successfully");
-    // }
   };
 
   const handleReject = async () => {
@@ -96,6 +91,8 @@ export default function SingleRequestPage() {
   if (isLoading || !singleRequest) {
     return <DotsLoader />;
   }
+
+  console.log(singleRequest);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">

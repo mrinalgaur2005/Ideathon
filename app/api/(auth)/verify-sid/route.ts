@@ -150,19 +150,47 @@ export async function POST(request: NextRequest) {
       student.student_id = identityNo;
       user.sid_verification = true;
 
+
+      const clubsMember = await ClubModel.aggregate([
+        {
+          $match: {
+            clubMembers: identityNo
+          }
+        }
+      ])
+
+      if (!clubsMember) {
+        return NextResponse.json(
+          {error: "failed to fetch clubs where student is member"},
+          {status: 500}
+        )
+      }
+
+      const clubsHead = await ClubModel.aggregate([
+        {
+          $match: {
+            clubIdSecs: identityNo
+          }
+        }
+      ])
+
+      if (!clubsHead) {
+        return NextResponse.json(
+          {error: "failed to fetch clubs where student is member"},
+          {status: 500}
+        )
+      }
+
+      const clubsPartOf = clubsMember.map((club) => club._id);
+      const clubsHeadOf = clubsHead.map((club) => club._id);
+
+      student.clubsPartOf = clubsPartOf;
+      student.clubsHeadOf = clubsHeadOf;
+
       await Promise.all([
         student.save(),
         user.save()
       ]);
-
-
-      const clubsMemberOf = await ClubModel.aggregate([
-        {
-          $match: {
-            clubMembers:
-          }
-        }
-      ])
 
       return NextResponse.json({
         success: true,
