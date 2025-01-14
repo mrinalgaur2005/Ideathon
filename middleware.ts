@@ -30,16 +30,15 @@ export async function middleware(request: NextRequest) {
       url.pathname.startsWith('/verify'))
   ) {
     if (token.isTeacher) {
-      return NextResponse.redirect(new URL('/dashboard/teacher', request.url));
+      return NextResponse.redirect(new URL('/profile/teacher', request.url));
     } else {
-      return NextResponse.redirect(new URL('/dashboard/student', request.url));
+      return NextResponse.redirect(new URL('/profile/student', request.url));
     }
   }
 
-  if (!token && url.pathname.startsWith('/dashboard')) {
+  if (!token && url.pathname.startsWith('/profile')) {
     return NextResponse.redirect(new URL('/sign-in', request.url));
   }
-
 
   if (
     !token &&
@@ -55,10 +54,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(
       new URL('/verify-sid/${token?.username}, request.url')
     );
-
-  
-  if(!token?.sid_verification && url.pathname.startsWith('/dashboard/student')){
-    return NextResponse.redirect(new URL(`/verify-sid/${token?.username}`, request.url));
   }
 
   return NextResponse.next();
