@@ -29,6 +29,15 @@ export default function EventCard({
 }: EventCardProps) {
   const [interested, setInterested] = useState(isInterested);
 
+  const formatDescription = (description: string) => {
+    return description.split('\n').map((line, index) => (
+      <span key={index}>
+        {line}
+        <br />
+      </span>
+    ));
+  };
+
   async function handleInterested() {
     try {
       const res = await axios.patch(
@@ -76,9 +85,9 @@ export default function EventCard({
           </div>
 
           {/* Description */}
-          <p className="mt-4 text-sm sm:text-base text-gray-400 leading-relaxed max-h-24 sm:max-h-32 overflow-hidden hover:overflow-auto transition-all duration-300">
-            {description}
-          </p>
+          <div className="mt-4 text-sm sm:text-base text-gray-400 leading-relaxed max-h-24 sm:max-h-32 overflow-hidden hover:overflow-auto transition-all duration-300 whitespace-pre-line">
+            {formatDescription(description)}
+          </div>
         </div>
 
         {/* Time, Venue, and Hosted By */}
