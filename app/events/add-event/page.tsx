@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { CldUploadButton } from "next-cloudinary";
-import NavigatorButton from "@/components/general/navigator";
 import DotsLoader from "@/components/loading/dotLoader";
 import EventMap from "../../test/page"; // Imported EventMap instead of MapComponent
 
@@ -20,6 +19,7 @@ export default function AddEventPage() {
   const [clubs, setClubs] = useState<{ clubName: string }[]>([]);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const uploadPreset = process.env.NEXT_PUBLIC_CLOUDNARY_UPLOAD_PRESET as string;
@@ -70,34 +70,30 @@ export default function AddEventPage() {
     }
   }
 
-  async function fetchClubs() {
-    try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/clubs/head`);
-      if (response.status === 403) router.push("/");
-      setClubs(response.data);
-    } catch (err) {
-      console.error(err);
-      router.push("/");
-    }
-  }
 
   useEffect(() => {
+    async function fetchClubs() {
+      try {
+        setLoading(true);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/clubs/head`);
+        if (response.status === 403) router.push("/");
+        setClubs(response.data);
+      } catch (err) {
+        console.error(err);
+        router.push("/");
+      } finally {
+        setLoading(false);
+      }
+
+    }
+
     fetchClubs();
-  }, []);
+  }, [router]);
 
-  if (clubs.length === 0) return <DotsLoader />;
-
-  const dropdownItems = [
-    { label: "Events", href: "/events" },
-    { label: "Dashboard", href: "/profile" },
-    { label: "Home", href: "/" },
-  ];
+  if (loading || clubs.length === 0) return <DotsLoader />;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-black to-[#0B0C10] p-4">
-      <div className="absolute top-6 right-6">
-        <NavigatorButton buttonText="Navigate" dropdownItems={dropdownItems} />
-      </div>
       <div className="w-full max-w-4xl p-6 bg-gradient-to-br from-[#1F2833] to-[#0B0C10] text-white rounded-lg shadow-xl">
         <h1 className="text-4xl font-bold text-center mb-8 text-gray-300">Add Event</h1>
 
