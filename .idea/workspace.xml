@@ -6,8 +6,11 @@
   <component name="ChangeListManager">
     <list default="true" id="3d45d623-ee8a-421e-8d0d-07f88c3fd10c" name="Changes" comment="fixup! recovered files">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/(auth)/verify-sid/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/(auth)/verify-sid/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/study-requests/[...studyRequestId]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/study-requests/[...studyRequestId]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/add-friends/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friends/add-friends/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/friend-requests/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friends/friend-requests/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friends/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/requests-sent/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/friends/requests-sent/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/homepage/student.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/homepage/student.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,6 +197,7 @@
       <workItem from="1736779876545" duration="17843000" />
       <workItem from="1736827225342" duration="2213000" />
       <workItem from="1736841852981" duration="1575000" />
+      <workItem from="1736869453749" duration="1496000" />
     </task>
     <servers />
   </component>
