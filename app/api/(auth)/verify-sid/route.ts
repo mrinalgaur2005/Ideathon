@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import  extractTextFromImageLinks, { extractDetails } from "../../../../lib/sidVerification";
-import { StudentModel, UserModel } from "../../../../model/User";
+import {ClubModel, StudentModel, UserModel} from "../../../../model/User";
 import dbConnect from "../../../../lib/connectDb";
 import Groq from 'groq-sdk';
 
@@ -154,6 +154,15 @@ export async function POST(request: NextRequest) {
         student.save(),
         user.save()
       ]);
+
+
+      const clubsMemberOf = await ClubModel.aggregate([
+        {
+          $match: {
+            clubMembers:
+          }
+        }
+      ])
 
       return NextResponse.json({
         success: true,
