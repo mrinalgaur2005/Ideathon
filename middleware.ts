@@ -18,17 +18,17 @@ export async function middleware(request: NextRequest) {
       url.pathname.startsWith('/verify'))
   ) {
     if (token.isTeacher) {
-      return NextResponse.redirect(new URL('/profile/teacher', request.url));
+      return NextResponse.redirect(new URL('/dashboard/teacher', request.url));
     } else {
-      return NextResponse.redirect(new URL('/profile/student', request.url));
+      return NextResponse.redirect(new URL('/dashboard/student', request.url));
     }
   }
 
-  if (!token && url.pathname.startsWith('/profile')) {
+  if (!token && url.pathname.startsWith('/dashboard')) {
     return NextResponse.redirect(new URL('/sign-in', request.url));
   }
   
-  if(!token?.sid_verification && url.pathname.startsWith('/profile/student')){
+  if(!token?.sid_verification && url.pathname.startsWith('/dashboard/student')){
     return NextResponse.redirect(new URL(`/verify-sid/${token?.username}`, request.url));
   }
 
