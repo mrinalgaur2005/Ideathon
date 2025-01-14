@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import  extractTextFromImageLinks, { extractDetails } from "../../../../lib/sidVerification";
+import extractTextFromImageLinks, { extractDetails } from "../../../../lib/sidVerification";
 import { StudentModel, UserModel } from "../../../../model/User";
 import dbConnect from "../../../../lib/connectDb";
 import Groq from 'groq-sdk';
@@ -7,7 +7,6 @@ import Groq from 'groq-sdk';
 const groqClient = new Groq({
   apiKey: process.env.GROQ_API_KEY,
 });
-
 
 const extractNameFromEmail = (email: string | undefined): string | null => {
   if (!email || typeof email !== 'string') {
@@ -17,15 +16,6 @@ const extractNameFromEmail = (email: string | undefined): string | null => {
   const match = email.match(/^([a-zA-Z]+)\.bt\d+([a-z]+)@pec\.edu\.in$/);
   return match ? match[1] : null;
 };
-
-
-interface AiNameCheckerResponse {
-  choices: {
-    message: {
-      content: string | null;
-    };
-  }[];
-}
 
 const correctNamefromEmail = async (email: string | undefined): Promise<string | null> => {
   const prompt = `I am going to give you an email, from that email you have to return me the name of the person. The email is in the format: name.btxxxxx@pec.edu.in. So for example for an email antrikshgupta.bt23cseds@pec.edu.in, you have the return me the name as Antriksh Gupta. and send no other text, just the name in correct format, ${email}`
@@ -39,25 +29,21 @@ const correctNamefromEmail = async (email: string | undefined): Promise<string |
 const aiNameChecker = async (emailName: string, name: string): Promise<boolean> => {
   const prompt = `I am going to give you two string, you have to tell me if they are same or not. \n\nString 1: ${emailName} \nString 2: ${name} \n\nAre these strings same? They dont have to be exactly equal. String like antriikshguppta and Antriksh Gupta are considered Same. One of the strings is coming from an OCR, so its expected to have some mistakes in reading. Your work is to overlook these mistakes and tell me by your thinking whether they are same names or not.\n\nPlease type yes or no and dont type any other text. just yes or no.`;
 
-  const completion: AiNameCheckerResponse = await groqClient.chat.completions.create({
+  const completion = await groqClient.chat.completions.create({
     messages: [{ role: 'user', content: prompt }],
     model: 'llama3-8b-8192',
   });
 
-  const result = completion.choices[0]?.message?.content;
-  return result === 'yes';
+  return completion.choices[0]?.message?.content === 'yes';
 }
 
-// route.ts
 export async function POST(request: NextRequest) {
   console.log("Processing SID verification request");
-
   await dbConnect();
 
   try {
     const { username, image } = await request.json();
 
-    // Fix 1: Better input validation
     if (!username || typeof username !== 'string' || !image || typeof image !== 'string') {
       return NextResponse.json(
         { success: false, message: 'Invalid username or image data' },
@@ -65,13 +51,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fix 2: Parallel database queries
     const [user, student] = await Promise.all([
       UserModel.findOne({ username: username }),
       StudentModel.findOne({ name: username })
     ]);
 
-    // Fix 3: Better error handling for missing records
     if (!student || !user) {
       console.log("User or student record not found:", { user: !!user, student: !!student });
       return NextResponse.json(
@@ -81,13 +65,13 @@ export async function POST(request: NextRequest) {
     }
 
     if (student.sid_verification) {
+      console.log(`SID verification already completed for student: ${username}`);
       return NextResponse.json(
         { success: false, message: 'SID verification already completed' },
         { status: 400 }
       );
     }
 
-    // Fix 4: Image processing with proper error handling
     const imageLinks = [image];
     const results = await extractTextFromImageLinks(imageLinks);
     
@@ -100,11 +84,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fix 5: Extract and validate details
     const { name, department, identityNo } = await extractDetails(results[image]);
     
-    if (!name || !department || !identityNo) {
-      console.log("Failed to extract required details:", { name, department, identityNo });
+    if (!name || !identityNo) {
+      console.log("Failed to extract required details:", { name, identityNo });
       user.sid_verification = false;
       await user.save();
       return NextResponse.json(
@@ -113,7 +96,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fix 6: More robust email name extraction and comparison
     const emailName = extractNameFromEmail(student.email as string);
     if (!emailName) {
       return NextResponse.json(
@@ -122,12 +104,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fix 7: Name verification with better error handling
     try {
       const namesMatch = await aiNameChecker(emailName, name);
       if (!namesMatch) {
         user.sid_verification = false;
         await user.save();
+        console.log("Name mismatch between email and extracted text:", { emailName, name });
         return NextResponse.json(
           { success: false, message: 'Name mismatch between email and extracted text' },
           { status: 400 }
@@ -141,12 +123,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fix 8: Transaction-like updates
     try {
       const correctedName = await correctNamefromEmail(student.email);
       student.name = correctedName ?? name;
       student.sid_verification = true;
-      student.branch = department;
+      if (department) student.branch = department; // Only update branch if department was extracted
       student.student_id = identityNo;
       user.sid_verification = true;
 
@@ -171,7 +152,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error verifying user:', error);
     return NextResponse.json(
-      { success: false, message: 'Internal server error during verification' },
+      { success: false, message: 'Internal server error during verification Try with a new and more clear image.' },
       { status: 500 }
     );
   }
