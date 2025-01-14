@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { CldUploadButton } from "next-cloudinary";
 import NavigatorButton from "@/components/general/navigator";
 import DotsLoader from "@/components/loading/dotLoader";
-import MapComponent from "@/components/map/mapComponent";
+import EventMap from '../../../test/page'
 
 export default function EditEventPage() {
   const [eventCoordinates, setEventCoordinates] = useState<{ lat: number; lng: number } | null>(null);
@@ -255,12 +255,16 @@ export default function EditEventPage() {
         </div>
 
         {/* Map Component for Location Selection */}
-        <div className="mt-8">
-          <MapComponent
-            initialLocation={eventCoordinates}
-            onLocationSelect={handleLocationSelect}
-          />
-        </div>
+                 <div className="mt-8">
+                    <EventMap
+                      onLocationSelect={handleLocationSelect} // Using EventMap instead of MapComponent
+                    />
+                    {eventCoordinates && (
+                      <p className="text-gray-300 mt-2">
+                        Selected Location: Latitude {eventCoordinates.lat}, Longitude {eventCoordinates.lng}
+                      </p>
+                    )}
+                  </div>
 
         <div className="mt-8 flex justify-center">
           <button
