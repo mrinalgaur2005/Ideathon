@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { CldUploadButton } from "next-cloudinary";
 import NavigatorButton from "@/components/general/navigator";
 import DotsLoader from "@/components/loading/dotLoader";
-import MapComponent from "@/components/map/mapComponent";
+import EventMap from "../../test/page"; // Imported EventMap instead of MapComponent
 
 export default function AddEventPage() {
   const [eventCoordinates, setEventCoordinates] = useState<{ lat: number; lng: number } | null>(null);
@@ -165,8 +165,9 @@ export default function AddEventPage() {
           </div>
 
           <div className="mt-8">
-            <label className="block text-lg font-semibold text-gray-300">Event Venue (Map)</label>
-            <MapComponent onLocationSelect={handleLocationSelect} />
+            <EventMap
+              onLocationSelect={handleLocationSelect} // Using EventMap instead of MapComponent
+            />
             {eventCoordinates && (
               <p className="text-gray-300 mt-2">
                 Selected Location: Latitude {eventCoordinates.lat}, Longitude {eventCoordinates.lng}
@@ -175,15 +176,15 @@ export default function AddEventPage() {
           </div>
 
           <div>
-          <label className="block text-lg font-semibold text-gray-300">Event Venue</label>
-          <input
-            value={eventVenue}
-            onChange={(e) => setEventVenue(e.target.value)}
-            type="text"
-            placeholder="Event Heading"
-            className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
-          />
-        </div>
+            <label className="block text-lg font-semibold text-gray-300">Event Venue</label>
+            <input
+              value={eventVenue}
+              onChange={(e) => setEventVenue(e.target.value)}
+              type="text"
+              placeholder="Event Heading"
+              className="w-full p-2 rounded bg-[#1F2833] border border-blue-300 focus:ring-2 focus:ring-cyan-500"
+            />
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
