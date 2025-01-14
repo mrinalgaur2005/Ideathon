@@ -5,18 +5,16 @@ const nextConfig = {
     '/api/**/*': ['./node_modules/**/*.wasm', './node_modules/**/*.proto']
   },
   webpack: (config) => {
-    // Fix for `import type` issues
+    // Ensure TypeScript and JavaScript are handled correctly
     config.module.rules.push({
-      test: /\.(ts|js)$/,
-      use: [
-        {
-          loader: 'babel-loader',
-          options: {
-            presets: ['next/babel']
-          }
-        }
-      ],
-      exclude: /node_modules/
+      test: /\.(ts|tsx|js|jsx)$/,
+      exclude: /node_modules/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['next/babel'],
+        },
+      },
     });
 
     return config;
