@@ -1,37 +1,27 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useModel } from "../../../hooks/user-model-store";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
+import StudentCard from "../../../components/student/studentCard";
 import mongoose from "mongoose";
 import DotsLoader from "../../../components/loading/dotLoader";
-import { FaMapMarkerAlt, FaClock, FaTags, FaUser } from "react-icons/fa";
+import { motion } from "framer-motion";
 
-
-interface SingleEvent {
+interface InterestedMembers {
   _id: mongoose.Types.ObjectId;
-  poster: string;
-  heading: string;
-  eventHostedBy: string;
-  description: string;
-  tags: string[];
-  eventTime: Date;
-  eventVenue: string;
-  isInterested: boolean;
-  interestedMembersArr: {
-    _id: mongoose.Types.ObjectId;
-    name: string;
-    student_id: string;
-    profile: string
-  } [];
-  eventAttachments: string[]
+  name: string;
+  profile: string;
+  student_id: string;
 }
 
 export default function Event() {
+  const [interested, setInterested] = useState<boolean>(false);
+  const [interestedMembers, setInterestedMembers] = useState<InterestedMembers[]>([]);
   const router = useRouter();
   const params = useParams();
   const eventId = params.eventId?.[0];
-  const [eventData, setEventData] = useState<SingleEvent | null>(null);
-  const [loading, setLoading] = useState(false);
+  const { singleEvent, setSingleEvent, setLoading } = useModel();
 
   useEffect(() => {
     if (!eventId) return;
@@ -41,7 +31,9 @@ export default function Event() {
       try {
         const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/${eventId}`);
         if (res.status === 200) {
-          setEventData(res.data.data);
+          setSingleEvent(res.data.data);
+          setInterested(res.data.data.isInterested);
+          setInterestedMembers(res.data.data.interestedMembersArr);
         } else {
           router.push("/");
         }
@@ -54,149 +46,169 @@ export default function Event() {
     }
 
     fetchData();
-  }, [eventId, setLoading, router]);
+  }, [eventId, setSingleEvent, setLoading, router]);
 
-  async function toggleInterested() {
-    if (!eventData) return;
+  if (!singleEvent) {
+    return <DotsLoader />;
+  }
 
+  const event = singleEvent;
+
+  const formatDescription = (description: string) => {
+    return description.split('\n').map((line, index) => (
+      <span key={index}>
+        {line}
+        <br />
+      </span>
+    ));
+  };
+
+  async function handleInterested() {
+    if (!event) return;
+
+    const { _id } = event;
     try {
-      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${eventId}`);
+      const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/events/interested/${_id.toString()}`);
       if (res.status === 200) {
-        if (eventData.isInterested) {
-          setEventData({
-            ...eventData,
-            isInterested: !eventData.isInterested,
-            interestedMembersArr: eventData.interestedMembersArr.filter((member) => member._id.toString() !== res.data.studentInfo._id.toString()),
-          });
+        if (!interested) {
+          setInterestedMembers((prev) => [...prev, res.data.studentInfo]);
         } else {
-          setEventData({
-            ...eventData,
-            isInterested: !eventData.isInterested,
-            interestedMembersArr: [...eventData.interestedMembersArr, res.data.studentInfo],
-          });
+          setInterestedMembers((prev) =>
+            prev.filter((item) => item._id.toString() !== res.data.studentInfo._id.toString())
+          );
         }
+        setInterested((prev) => !prev);
       }
     } catch (error) {
       console.log(error);
     }
   }
 
-  if (!eventData || loading) {
-    return <DotsLoader />;
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-10 px-4">
-      <div className="max-w-5xl mx-auto bg-gray-800 p-8 rounded-lg shadow-2xl">
-        {/* Event Poster */}
-        <div className="mb-6">
-          <img
-            src={eventData.poster}
-            alt={eventData.heading}
-            className="rounded-lg shadow-md w-full"
-          />
+    <div className="min-h-screen bg-gradient-to-b from-[#0f0f0f] to-[#181717] text-gray-300 pb-16">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12"
+      >
+        {/* Event Header */}
+        <div className="flex flex-col lg:flex-row gap-8 mb-12">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="flex-1"
+          >
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
+              <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300 mb-4 sm:mb-0">
+                {event?.heading}
+              </h1>
+              <button
+                className={`transform hover:scale-105 transition-all duration-300 px-6 py-2 rounded-lg font-semibold ${
+                  interested
+                    ? "bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/25"
+                    : "bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-lg shadow-red-500/25"
+                }`}
+                onClick={handleInterested}
+              >
+                {interested ? "Interested" : "Not Interested"}
+              </button>
+            </div>
+            <div className="bg-[#1a1a1a] rounded-xl p-6 border border-blue-900/30 shadow-xl backdrop-blur-sm">
+              <h2 className="text-xl font-semibold mb-3 text-blue-400">Description</h2>
+              <p className="leading-relaxed whitespace-pre-line">
+                {formatDescription(event?.description)}
+              </p>
+            </div>
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className="lg:w-1/3 h-full"
+          >
+            <div className="h-full min-h-[400px]">
+              <img
+                src={event?.poster}
+                className="w-full h-full object-cover rounded-xl shadow-2xl border border-blue-900/30 transform hover:scale-[1.02] transition-transform duration-300"
+                alt="Event Poster"
+              />
+            </div>
+          </motion.div>
         </div>
 
         {/* Event Details */}
-        <div className="space-y-6">
-          <h1 className="text-4xl font-extrabold text-blue-400">{eventData.heading}</h1>
-          <p className="text-lg text-gray-300">{eventData.description}</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex items-center space-x-4 bg-gray-900 p-4 rounded-lg shadow-md">
-              <FaUser className="text-yellow-400 text-2xl" />
-              <p className="text-gray-300">
-                Hosted by: <span className="text-blue-300 font-semibold">{eventData.eventHostedBy}</span>
-              </p>
-            </div>
-            <div className="flex items-center space-x-4 bg-gray-900 p-4 rounded-lg shadow-md">
-              <FaClock className="text-green-400 text-2xl" />
-              <p className="text-gray-300">
-                Time:{" "}
-                <span className="text-blue-300 font-semibold">
-                  {new Date(eventData.eventTime).toLocaleString()}
-                </span>
-              </p>
-            </div>
-            <div className="flex items-center space-x-4 bg-gray-900 p-4 rounded-lg shadow-md">
-              <FaMapMarkerAlt className="text-red-400 text-2xl" />
-              <p className="text-gray-300">
-                Venue: <span className="text-blue-300 font-semibold">{eventData.eventVenue}</span>
-              </p>
-            </div>
-            <div className="flex items-center space-x-4 bg-gray-900 p-4 rounded-lg shadow-md">
-              <FaTags className="text-pink-400 text-2xl" />
-              <p className="text-gray-300">
-                Tags:{" "}
-                {eventData.tags.map((tag, index) => (
-                  <span key={index} className="text-blue-300">
-                    {tag}
-                    {index < eventData.tags.length - 1 && ", "}
-                  </span>
-                ))}
-              </p>
-            </div>
-          </div>
-
-          {/* Interested Button */}
-          <button
-            onClick={toggleInterested}
-            className={`w-full py-3 rounded-lg text-lg font-bold shadow-md ${
-              eventData.isInterested
-                ? "bg-red-600 hover:bg-red-700"
-                : "bg-green-600 hover:bg-green-700"
-            }`}
+        <div className="flex flex-col lg:flex-row gap-8">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="flex-1 space-y-6"
           >
-            {eventData.isInterested ? "Not Interested" : "Interested"}
-          </button>
-        </div>
-
-        {/* Interested Members */}
-        {eventData.interestedMembersArr.length > 0 && (
-          <div className="mt-10">
-            <h2 className="text-2xl font-bold text-yellow-400 mb-6">Interested Members</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {eventData.interestedMembersArr.map((member) => (
-                <div
-                  key={member._id.toString()}
-                  className="bg-gray-900 p-4 rounded-lg shadow-md flex items-center space-x-4"
-                >
-                  <img
-                    src={member.profile}
-                    className="w-14 h-14 rounded-full shadow-lg border-2 border-blue-400"
-                  />
-                  <div>
-                    <h3 className="text-lg font-semibold text-blue-300">
-                      {member.name}
-                    </h3>
-                    <p className="text-sm text-gray-400">{member.student_id}</p>
+            <div className="grid sm:grid-cols-2 gap-6">
+              <div className="bg-[#1a1a1a] rounded-xl p-6 border border-blue-900/30 shadow-xl backdrop-blur-sm">
+                <h2 className="text-xl font-semibold mb-4 text-blue-400">Event Details</h2>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <span className="font-semibold text-gray-400">Venue:</span>
+                    <span>{event.eventVenue}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-semibold text-gray-400">Date:</span>
+                    <span>{new Date(event?.eventTime).toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-semibold text-gray-400">Hosted By:</span>
+                    <span>{event?.eventHostedBy}</span>
                   </div>
                 </div>
-              ))}
+              </div>
+              <div className="bg-[#1a1a1a] rounded-xl p-6 border border-blue-900/30 shadow-xl backdrop-blur-sm">
+                <h2 className="text-xl font-semibold mb-4 text-blue-400">Tags</h2>
+                <div className="flex flex-wrap gap-2">
+                  {event?.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-3 py-1 bg-blue-900/20 rounded-full text-sm font-medium text-blue-400"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
-          </div>
-        )}
-
-        {/* Attachments */}
-        {eventData.eventAttachments.length > 0 && (
-          <div className="mt-10">
-            <h2 className="text-2xl font-bold text-green-400 mb-6">Event Attachments</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {eventData.eventAttachments.map((attachment, index) => (
-                <a
-                  key={index}
-                  href={attachment}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-gray-900 p-4 rounded-lg shadow-md hover:bg-gray-700"
-                >
-                  Attachment {index + 1}
-                </a>
-              ))}
+            <div className="bg-[#1a1a1a] rounded-xl p-6 border border-blue-900/30 shadow-xl backdrop-blur-sm">
+              <h2 className="text-xl font-semibold mb-4 text-blue-400">Attachments</h2>
+              {/* Attachments content */}
             </div>
-          </div>
-        )}
-      </div>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="lg:w-1/3"
+          >
+            <div className="bg-[#1a1a1a] rounded-xl p-6 border border-blue-900/30 shadow-xl backdrop-blur-sm h-[600px] overflow-y-auto">
+              <h2 className="text-xl font-semibold mb-6 text-blue-400 sticky top-0 bg-[#1a1a1a] py-2">
+                Interested People
+              </h2>
+              <div className="space-y-4">
+                {interestedMembers.map((member) => (
+                  <div key={member.student_id} className="transform hover:scale-[1.02] transition-transform duration-300">
+                    <StudentCard
+                      name={member.name}
+                      student_id={member.student_id}
+                      profile={member.profile}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </motion.div>
     </div>
   );
-};
+}

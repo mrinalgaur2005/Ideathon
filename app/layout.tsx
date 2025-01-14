@@ -9,6 +9,11 @@ import FloatingChatbot from "../components/chatBot/chatBot";
 import Navbar from "@/components/navbar/Navbar";
 import ClientOnly from "@/components/ClientOnly";
 
+const ArchivoBlack = localFont({
+  src: "./fonts/ArchivoBlack-Regular.ttf",
+  variable: "--font-archivo",
+  weight: "100 900",
+})
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -34,7 +39,7 @@ export default function RootLayout({
     <html lang="en">
       <AuthProvider>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} ${ArchivoBlack.variable} antialiased`}
         >
           <ClientOnly>
             <Navbar />

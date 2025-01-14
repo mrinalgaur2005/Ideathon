@@ -49,7 +49,7 @@ function Categories() {
     sm:px-2
     px-4"
     >
-      <div className="pt-4 flex flex-row items-center justify-between overflow-x-auto">
+      <div className="pt-4 flex flex-row items-center justify-between overflow-x-auto font-archivo">
         {categories.map((item) => (
           <CategoryBox
             key={item.label}

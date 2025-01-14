@@ -21,6 +21,7 @@
     "@langchain/google-genai": "^0.1.6",
     "@livekit/components-react": "^2.6.11",
     "@livekit/components-styles": "^1.1.4",
+    "@next/font": "^14.2.15",
     "@nextui-org/react": "^2.6.5",
     "@qdrant/qdrant-js": "^1.12.0",
     "@radix-ui/react-checkbox": "^1.1.3",
